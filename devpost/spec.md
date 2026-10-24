@@ -47,6 +47,8 @@ Nothing here needs an account, a key, or a paid plan.
 - **Run the tests:** `npm test` (runs `node --test`).
 - **Demo recording:** open the local address and record the board with a screen recorder. The video should show finding and cracking the cipher, a wrong guess pinning a clue, the LIAR stamp, solving the case, the rank, and pasting the share card.
 - **Showing a specific case:** adding `?case=2` to the address loads that case instead of today's, and `?fresh` ignores saved progress. This is a demo and testing aid, so all ten cases can be recorded on any day.
+- **Live:** https://szarroug3.github.io/cluedle/ (GitHub Pages, served from `main`). Add `?case=N&fresh` to play a specific case from scratch.
+- **Source:** https://github.com/szarroug3/cluedle
 - **Optional playable link (nice to have):** GitHub Pages serves the repository's static files as is, so the same files work there with no changes. Deploy steps belong to `6-ship`. GitHub commands should target github.com explicitly. [GitHub Pages docs](https://docs.github.com/en/pages).
 
 ## Look and Feel

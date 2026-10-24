@@ -4,6 +4,8 @@ Wordle for armchair detectives. Every day there's a new 1940s-noir murder on a c
 
 Everything is hand-written and rule-based. There's no AI at runtime, no server, and no account.
 
+**Play it:** https://szarroug3.github.io/cluedle/
+
 ## How to play
 
 - **Accuse.** Pick up the GUILTY stamp, stamp a suspect, a motive, and a weapon, then make the accusation. Each guess tells you how many of the three are right, never which ones. Every miss pins up a new clue.
