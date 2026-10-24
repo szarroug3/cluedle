@@ -19,7 +19,7 @@ function el(tag, className, text) {
 }
 
 // A dimmed layer over the board holding one card. Escape, the ×, or a click outside closes it.
-function openOverlay(stage, card, onClose) {
+export function openOverlay(stage, card, onClose) {
   const overlay = el("div", "overlay");
   const close = el("button", "overlay-close", "×");
   close.type = "button";

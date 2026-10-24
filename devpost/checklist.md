@@ -29,7 +29,7 @@ Build mode: fast
   Learner check: Without looking at the case file, try to spot the scrawl on the board, find the key in the story, and crack it. Was it too hidden, too obvious, or about right — and did the reveal feel satisfying?
   Commit: `Add the hidden cipher and decoder wheel`
 
-- [ ] **3. Accuse with the GUILTY stamp, unlock clues, and reach an ending**
+- [x] **3. Accuse with the GUILTY stamp, unlock clues, and reach an ending**
   Becomes usable: Picking up the GUILTY stamp, stamping a suspect, a motive, and a weapon, and pressing **Make the accusation** uses one guess and shows how many of the three are right, never which. Earlier numbered stamps stay on the cards, a wrong guess pins up the next clue, a full match shows **CASE CLOSED**, and a fifth miss shows **GONE COLD** with the true culprit, motive, weapon, and cost.
   Why now: With the kernel proven, this completes the core Wordle-style loop, so a full case can be played start to finish. Stamping is also the trickiest pointer interaction, so it's better found out now than late.
   PRD ref: `prd.md > The Core Journey` (steps 6, 7, 9), `prd.md > Accusing With the GUILTY Stamp`, `prd.md > Clues Unlocking`, `prd.md > Case Ending`
@@ -82,11 +82,12 @@ Build mode: fast
 ## Hands-on Checkpoints
 
 - [x] Early usable behavior explored — after slice 1, the look test: the learner approves or adjusts the board's noir look before any rules are wired up (feedback: scrawl and key too easy → decoys and buried key; 4 suspects brute-forceable → 6 of each; approved)
-- [ ] Kernel feel explored — after slice 2: the learner tries to find and crack the cipher cold, to tune how hidden the scrawl is
+- [x] Kernel feel explored — after slice 2: the learner tries to find and crack the cipher cold, to tune how hidden the scrawl is (feedback: only the scrawl opened a decoder → every scrap opens the same close-up and the answer is written on a blank card; wheels → sliding letter strips; cursor bug fixed; weapons added with count-only feedback; approved)
 - [ ] Final kick-the-tires exploration and feedback completed
 
 ## Final Review
 
+- [ ] Polish: redraw the ink blots, the tries-left drops, and the guesses-left shells (learner found them ugly at the cipher checkpoint)
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

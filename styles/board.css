@@ -349,6 +349,15 @@
 .just-pinned { animation: pin-up 0.45s cubic-bezier(0.2, 0.8, 0.3, 1.2); }
 @keyframes pin-up { from { transform: translateY(-30px) rotate(-12deg) scale(1.15); opacity: 0; } }
 
+/* Clues pinned after wrong guesses. */
+.clue { width: 212px; min-height: 118px; padding: 9px 12px 10px; }
+.clue-text {
+  margin: 5px 0 0;
+  font-family: var(--font-type);
+  font-size: 11.5px;
+  line-height: 1.35;
+}
+
 /* Empty spots where clues will be pinned. */
 .clue-slot {
   position: absolute;

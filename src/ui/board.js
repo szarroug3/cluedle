@@ -192,6 +192,25 @@ export function fillBlankCard(stage, text) {
   item.classList.add("just-pinned");
 }
 
+// A clue pinned into its slot after a wrong guess.
+export function pinClue(stage, index, text, { animate = true } = {}) {
+  const slot = stage.querySelector(`.clue-slot[data-clue="${index}"]`);
+  if (!slot) return;
+  const paper = el("div", "paper clue");
+  paper.append(el("div", "card-label", `Clue ${index + 1}`), el("p", "clue-text", text));
+  const item = pinItem(`clue:${index}`, "clue", LAYOUT.clues[index], null, paper);
+  if (animate) item.classList.add("just-pinned");
+  slot.replaceWith(item);
+}
+
+// A spent guess on the rail shows how many of its three parts were right.
+export function markGuessSpent(stage, index, rightCount) {
+  const shell = stage.querySelectorAll(".shell")[index];
+  shell.classList.add("spent");
+  shell.textContent = `${rightCount}/3`;
+  shell.title = `Guess ${index + 1}: ${rightCount} of 3 right`;
+}
+
 function clueSlot(index, slot) {
   const node = el("div", "clue-slot", "Pending");
   node.dataset.clue = String(index);
