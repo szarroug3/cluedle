@@ -85,6 +85,7 @@ const stamps = createStamps(stage, {
     weapon: byId(caseData.weapons, "name"),
   },
   guessNumber: () => progress.guesses.length + 1,
+  onReopen: showCaseEnding,
   suspects: caseData.suspects,
   onFlagLiar(suspectId, truthIndex) {
     const step = flagLiar(progress, caseData.suspects, suspectId, truthIndex);
@@ -122,6 +123,8 @@ function restoreBoard() {
 }
 
 stage.addEventListener("click", (event) => {
+  // Picking up a stamp or opening the how-to-play puts the string down.
+  if (event.target.closest(".stamp-guilty, .stamp-liar, .help-button")) string.stop();
   if (stamps.handleClick(event)) return;
   if (string.handleClick(event)) return;
   if (event.target.closest(".help-button")) {

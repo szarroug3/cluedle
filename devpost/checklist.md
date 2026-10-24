@@ -89,6 +89,10 @@ Build mode: fast
 
 - [ ] Polish: redraw the ink blots, the tries-left drops, and the guesses-left shells (learner found them ugly at the cipher checkpoint)
 - [ ] Blank card: hovering a letter in either strip highlights that whole row across both strips, to make matching letters easier
+- [x] Share card copies to the clipboard in a real browser (learner pasted it; the preview pane blocks the clipboard)
+- [ ] Red string stays on after tying, until the spool is clicked again or another tool is picked up
+- [ ] Once the case ends, the accusation button reopens the ending and its share card
+- [ ] CONFIDENTIAL tab on the case file is easy to read
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

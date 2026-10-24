@@ -39,7 +39,7 @@ function placeMark(mark, number) {
   mark.style.setProperty("--stamp-rot", `${-12 + ((number - 1) % 5) * 6}deg`);
 }
 
-export function createStamps(stage, { names, guessNumber, onAccuse, suspects, onFlagLiar }) {
+export function createStamps(stage, { names, guessNumber, onAccuse, suspects, onFlagLiar, onReopen }) {
   ensureInkFilter();
   const board = stage.querySelector(".board");
   const trays = { guilty: stage.querySelector(".stamp-guilty"), liar: stage.querySelector(".stamp-liar") };
@@ -75,7 +75,9 @@ export function createStamps(stage, { names, guessNumber, onAccuse, suspects, on
 
   function refresh() {
     for (const kind of KINDS) lines[kind].textContent = pending[kind] ? names[kind](pending[kind]) : "—";
-    accuseButton.disabled = ended || KINDS.some((kind) => !pending[kind]);
+    // Once the case is over, the slip's button brings the ending (and its share card) back.
+    accuseButton.textContent = ended ? "Reopen the ending" : "Make the accusation";
+    accuseButton.disabled = !ended && KINDS.some((kind) => !pending[kind]);
     trays.guilty.classList.toggle("lifted", held === "guilty");
     trays.liar.classList.toggle("lifted", held === "liar");
     trays.liar.classList.toggle("used", liarUsed);
@@ -119,6 +121,10 @@ export function createStamps(stage, { names, guessNumber, onAccuse, suspects, on
 
   accuseButton.addEventListener("click", () => {
     if (accuseButton.disabled) return;
+    if (ended) {
+      onReopen();
+      return;
+    }
     const number = guessNumber();
     const result = onAccuse({ suspectId: pending.suspect, motiveId: pending.motive, weaponId: pending.weapon });
     if (!result || result.rejected) return;
@@ -224,6 +230,11 @@ export function createStamps(stage, { names, guessNumber, onAccuse, suspects, on
       if (event.target.closest(".stamp-liar")) {
         pickUp("liar");
         return true;
+      }
+      // The spool trades places with a stamp in hand.
+      if (event.target.closest(".spool")) {
+        putDown();
+        return false;
       }
       if (!held) return false;
       if (held === "liar") {

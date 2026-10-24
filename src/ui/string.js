@@ -1,5 +1,6 @@
 // Red string between pins, for the player's own thinking. Click the spool, then pin A, then pin B,
-// to tie a string; click a string to take it down. The rules never read it.
+// to tie a string; the spool stays in hand for the next one until it's clicked again or another tool
+// is picked up. Click a string to take it down. The rules never read it.
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -72,7 +73,8 @@ export function createString(stage, { strings, onChange }) {
       strings.push([a, b]);
       onChange(strings);
     }
-    setThreading(false);
+    first.classList.remove("string-first");
+    first = null;
     draw();
   }
 
@@ -110,5 +112,9 @@ export function createString(stage, { strings, onChange }) {
       return false;
     },
     redraw: draw,
+    // Put the spool down, e.g. when another tool is picked up.
+    stop() {
+      if (threading) setThreading(false);
+    },
   };
 }

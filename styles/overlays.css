@@ -403,12 +403,12 @@
   left: 60px;
   padding: 7px 26px 9px;
   border-radius: 8px 8px 0 0;
-  background: #6c6378;
+  background: var(--red);
   font-family: var(--font-type);
-  font-size: 14px;
+  font-size: 15px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--paper);
 }
 .folder-label { padding: 22px 30px 26px; transform: rotate(1.5deg); }
 .folder-number {
