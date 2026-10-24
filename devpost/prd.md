@@ -15,7 +15,7 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 2. **How to play (first visit only).** Before the first case opens, a short how-to-play explains the stamps, the five guesses, the hidden cipher, and the red string. It can be reopened later from the board.
 3. **The board.** Opening the file shows the murder board: the newspaper-clipping story, 6 suspect cards, 6 motive cards, 6 witness statements, a tray with the **GUILTY** and **LIAR** stamps, a red-string spool, and the five guesses remaining.
 4. **Read.** The player reads the story and the statements. They can draw red string between any pins to track their thinking.
-5. **Find and crack the cipher (any time, optional).** A sharp-eyed player spots an odd scrawl hidden on the board. Clicking it brings the encrypted card forward with a decoder wheel. They set the wheel to the key they found in the story and press **Decode**. They get three tries; each wrong try blots out more of the message for good.
+5. **Find and crack the cipher (any time, optional).** Every scrap on the board can be brought forward to read up close, and one of them, a pencil scrawl, is encrypted. Nothing marks which. A sharp-eyed player works out which scrap is the code, finds its key in the story, and decodes it on paper. They write the message on the **blank card** pinned to the board, using its two alphabet wheels as a helper, and pin it. They get three tries; each wrong answer runs ink over more of the scrawl for good.
 6. **Accuse.** The player picks up the **GUILTY** stamp, stamps a suspect card, stamps a motive card, and confirms. Each stamp changes color to show whether that half was right.
 7. **Miss → new clue.** A wrong accusation uses a guess and pins up a new plain clue.
 8. **Catch the liar (any time, optional).** The player stamps **LIAR** on a witness statement and picks what really happened from a few options. It's free, but they get one shot.
@@ -27,8 +27,9 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 
 - **Case file cover** — the first thing seen each day. Case number, date, title, **Open the file**.
 - **How to play** — a short overlay shown once before the first case, and reopenable from the board.
-- **The murder board** — the one main surface. Everything in the case lives here as pinned items: newspaper-clipping story, suspect cards, motive cards, witness statements, unlocked clues, and the hidden cipher scrawl. The stamp tray, red-string spool, and guesses remaining sit at the edge of the board.
-- **Decoder card** — the cipher card brought forward over the board, with the scrambled text, the decoder wheel, **Decode**, and the tries remaining. Closing it returns to the board.
+- **The murder board** — the one main surface. Everything in the case lives here as pinned items: newspaper-clipping story, suspect cards, motive cards, witness statements, unlocked clues, scraps of evidence (one of them the cipher scrawl), and the blank card. The stamp tray, red-string spool, and guesses remaining sit at the edge of the board.
+- **Close look** — any scrap brought forward over the board to read; every scrap looks the same here.
+- **Blank card** — brought forward over the board, with a space to write the decoded message, two spinnable alphabet wheels as a helper, **Pin it**, and the tries remaining. Closing it returns to the board.
 - **Case ending** — over the board: **CASE CLOSED** or **GONE COLD**, what happened, the consequences, the detective rank, and **Copy share card**. On a return visit, it also shows the countdown to the next case.
 
 ## Look and Feel
@@ -73,15 +74,18 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 
 ### Finding and Cracking the Cipher
 Source: `scope.md > The Unique Kernel`.
-- The encrypted clue is hidden on the board from the start as part of the scenery (for example, a scrawl on the back of a photo or in the margin of the clipping). Nothing announces it.
-- Clicking it opens the decoder card. The text does not unscramble as the wheel turns; the player sets the wheel and presses **Decode** to commit.
-- Three tries. A right try unscrambles the message with a satisfying reveal. Each wrong try permanently blots out more of the message, so a crack on the second or third try reveals less.
-- After three wrong tries, the card stays scrambled.
+- The encrypted clue is hidden on the board from the start as part of the scenery (for example, a pencil scrawl in a photo's margin), among decoy scraps written in the same hand. Nothing announces it.
+- Every scrap, the scrawl included, opens the same plain close-up. The game never says which scrap is the code; the player works it out and decodes it themselves, on paper.
+- The **blank card** is pinned to the board from the start. It holds a space to write the decoded message and two alphabet wheels the player can spin to line up letters. The wheels are only a helper: they never decode or check anything.
+- The player writes the message and presses **Pin it**. Only letters count; spacing, punctuation, and capitals don't, and a typo or two is forgiven. Letters already lost to ink may be guessed or left out.
+- Three tries. A right answer flips the real message into place and leaves it written on the blank card. Each wrong answer permanently runs ink over more of the scrawl, so the rest is harder to decode and a crack on the second or third try reveals less.
+- After three wrong tries, the blank card no longer takes answers.
 - Cracking never uses a guess. A player who never finds or cracks the cipher can still solve the case.
-- [ ] Turning the wheel alone never reveals readable text.
-- [ ] A right Decode on the first try shows the full message.
-- [ ] A right Decode after one or two wrong tries shows the message with more of it blotted out.
-- [ ] After three wrong tries, Decode is no longer available and the message stays scrambled.
+- [ ] Every scrap opens the same close-up, with nothing marking the cipher.
+- [ ] Spinning the wheels never reveals or checks anything.
+- [ ] Writing the right message on the first try shows the full message.
+- [ ] A right message after one or two wrong tries shows it with more blotted out.
+- [ ] After three wrong tries, the blank card no longer takes answers and the scrawl stays scrambled.
 - [ ] Cipher tries never change the guesses remaining.
 
 ### Red String
@@ -141,7 +145,7 @@ Source: `scope.md > The POC Boundary` (cheap version).
 - **Rubber stamps for accusing** — tactile, detective-like, and past guesses stay on the board as a record.
 - **Stamp color shows feedback** — right or wrong per half, read straight off the board.
 - **LIAR stamp, one shot, free** — mirrors the GUILTY stamp; catching the liar is something the player does, so it can count toward the rank.
-- **Decoder wheel with a Decode commit and three tries that blot out more each miss** — keeps the satisfying reveal, stops brute-forcing a 25-key cipher, and rewards cracking it earlier.
+- **Decode it yourself, then write it on a blank card, with three tries that blot out more each miss** — finding the code is real work (no scrap gives itself away by opening a decoder), the wheels help without solving it, and the reveal still lands on a right answer.
 - **Gone-cold ending tells what not catching them cost** — gives losing weight.
 - **Return visit shows the finished board and a countdown** — the board is the record of how you solved it.
 - **1940s noir in reds, purples, and blues; no orange, yellow, or green** — the learner's palette, applied to the share card too.
@@ -166,7 +170,7 @@ Everything under `## Features and Behavior` and `## States and Boundaries`, with
 ## Non-Goals
 - **Accusing by dragging red string** — the string is for thinking (`scope.md > Explicitly Cut`).
 - **Accounts or a server** — progress lives on the player's device.
-- **Live unscrambling as the wheel turns** — it would make brute-forcing the cipher trivial.
+- **The game decoding for the player** — the wheels on the blank card only line up alphabets; turning them never unscrambles anything, which would make brute-forcing trivial.
 - **AI at runtime** — everything is hand-written and rule-based.
 
 ## Open Questions

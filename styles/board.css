@@ -292,17 +292,28 @@
 /* Things worth a closer look. The scrawl and the decoys share one cursor, so none stands out. */
 .scrawl,
 .pin-evidence { cursor: zoom-in; }
+.scrawl .blot { font-size: 15px; }
 
-/* The cracked cipher, pinned to the board. */
-.decoded { width: 270px; padding: 10px 14px 12px; }
-.decoded .card-label { color: var(--purple); }
+/* The blank card: a ruled index card waiting for a decoded message. */
+.blank-card {
+  width: 270px;
+  min-height: 110px;
+  padding: 10px 14px 12px;
+  cursor: pointer;
+  background-image:
+    linear-gradient(to bottom, transparent 24px, var(--red) 24px, var(--red) 25.5px, transparent 25.5px),
+    repeating-linear-gradient(to bottom, transparent 0 20px, rgba(47, 90, 168, 0.28) 20px 21px),
+    var(--noise),
+    linear-gradient(170deg, #f4f0e8, var(--paper-shade));
+}
+.blank-card .card-label { color: var(--purple); }
 .decoded-text {
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   font-family: var(--font-type);
   font-size: 13px;
-  line-height: 1.45;
+  line-height: 21px;
 }
-.decoded .blot { font-size: 11px; }
+.decoded-text .blot { font-size: 11px; }
 .just-pinned { animation: pin-up 0.45s cubic-bezier(0.2, 0.8, 0.3, 1.2); }
 @keyframes pin-up { from { transform: translateY(-30px) rotate(-12deg) scale(1.15); opacity: 0; } }
 

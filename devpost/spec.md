@@ -23,7 +23,7 @@ PRD ref: `prd.md > The Core Journey`.
 3. **How to play.** If `cluedle:seenHowTo` isn't set, `howToPlay.js` shows the overlay and sets it when closed.
 4. **The board.** `board.js` lays out the case's pins from the case file data and redraws anything already in the progress: past stamps, unlocked clues, strings, cipher state.
 5. **Red string.** `string.js` adds or removes a string between two pins and saves it. Rules never read it.
-6. **Decoder.** Clicking the hidden scrawl opens `decoder.js`. **Decode** calls `cipher.js` with the wheel's shift. Right → the message, with blots for earlier misses. Wrong → one more blot stage. The result is saved.
+6. **Cipher.** Clicking any scrap, the scrawl included, opens the same close-up from `decoder.js`. Clicking the blank card opens it with its two wheels. **Pin it** calls `cipher.js` with the written answer. Right → the real message flips in, with blots for earlier misses, and stays on the blank card. Wrong → one more blot stage on the scrawl. The result is saved.
 7. **Accuse.** `stamps.js` collects a GUILTY stamp on a suspect and a motive. Confirm calls `rules.js`, which checks both halves, records the guess, and says whether a clue unlocks or the case has ended. The stamps recolor blue or red, a new clue pins up, and progress is saved.
 8. **LIAR.** `stamps.js` collects a LIAR stamp on a statement, then the player picks a truth. `rules.js` records the one shot, and the stamp recolors.
 9. **Ending.** When `rules.js` says closed or cold, `rank.js` scores the run (closed only), and `ending.js` shows the ending and rank.
@@ -92,9 +92,10 @@ PRD ref: `prd.md > Accusing With the GUILTY Stamp`, `prd.md > Clues Unlocking`, 
 ### Cipher (`src/game/cipher.js`)
 - `encode(text, shift)` and `decode(text, shift)`: a letter-shift (Caesar) cipher over A–Z, keeping case, spaces, and punctuation.
 - The case stores the **plaintext** and the **shift**; the scrambled text is made with `encode`, so it can't drift out of sync.
-- `attempt(state, shift)` → right or wrong. It allows three tries, then locks.
+- `matchesMessage(answer, readable)` → whether the written answer matches the message as far as it can still be read: letters only, blotted letters may be guessed or skipped, and about one letter in ten may be wrong.
+- `attempt(state, cipher, answer, seed)` → right or wrong. It allows three tries, then locks.
 - `blotted(plaintext, wrongTries, seed)` → the message with a fixed share of letters replaced by ink blots: none after zero misses, about 30% after one, about 60% after two. Which letters blot is decided by a seeded shuffle from the case id, so the same case always blots the same way, and blots only add up. The case can list `keepWords` that never blot, so a partly blotted clue stays useful.
-- Turning the wheel only changes a number in the decoder; it never calls `decode`.
+- The wheels on the blank card never call into `cipher.js`; they only line up two alphabets.
 PRD ref: `prd.md > Finding and Cracking the Cipher`.
 
 ### Rank (`src/game/rank.js`)
@@ -143,10 +144,10 @@ PRD ref: `prd.md > Accusing With the GUILTY Stamp`, `prd.md > Catching the Liar 
 - Saved in progress as pin-id pairs and redrawn on load.
 PRD ref: `prd.md > Red String`.
 
-### Decoder Card (`src/ui/decoder.js`)
-- Shows the scrambled (or blotted) message, a draggable or arrow-turnable wheel showing shifts 1–25, **Decode**, and tries left.
-- On a right try, it plays the unscramble animation: letters flip into place left to right, and blotted letters stay as ink.
-- Once cracked, the message is pinned to the board as a clue.
+### Close Look and Blank Card (`src/ui/decoder.js`)
+- **Close look:** any scrap (decoys and the scrawl alike) brought forward to read, with blots drawn as ink. No controls, so nothing marks the cipher.
+- **Blank card:** a space to write the decoded message, two alphabet rings that can each be dragged (the inner one also turns with the arrow buttons or keys), the gap between them shown on the hub, **Pin it**, and tries left.
+- On a right answer, it plays the reveal: the real message flips into place left to right, and blotted letters stay as ink. As the card closes, the blank card on the board fills in with the message.
 PRD ref: `prd.md > Finding and Cracking the Cipher`.
 
 ### Case Ending (`src/ui/ending.js`)
@@ -167,7 +168,8 @@ PRD ref: `prd.md > Case Ending`, `prd.md > Share Card`, `prd.md > States and Bou
                  truthOptions: [string], truthIndex }],   // only on the lie
   clues:      [string],          // plain clues, in unlock order (4: one per possible miss)
   photo:      { caption },       // a pinned photograph; scenery, and a place to hide the scrawl
-  evidence:   [{ id, kind, label, note }],  // decoy scraps (matchbook, ticket, prescription) in the same pencil hand as the scrawl
+  evidence:   [{ id, kind, label, note }],  // decoy scraps (matchbook, ticket, prescription) in the same pencil hand as the scrawl;
+                                            // every scrap opens the same close-up
   cipher: {
     hiddenOn: "photo",           // which pin hides the scrawl
     plaintext: "...",

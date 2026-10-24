@@ -1,4 +1,4 @@
-/* Cards brought forward over the board: the decoder and close looks at evidence. */
+/* Cards brought forward over the board: close looks at scraps, and the blank card. */
 
 .overlay {
   position: absolute;
@@ -35,14 +35,18 @@
 @keyframes fade-in { from { opacity: 0; } }
 @keyframes bring-forward { from { transform: scale(0.85) rotate(-3deg); opacity: 0; } }
 
-/* ---- Decoder ---- */
+/* ---- The blank card ---- */
 
-.decoder {
-  width: 760px;
+.blank-card-open {
+  width: 780px;
   padding: 26px 34px 30px;
   transform: rotate(-0.6deg);
+  background-image:
+    repeating-linear-gradient(to bottom, transparent 0 31px, rgba(47, 90, 168, 0.16) 31px 32px),
+    var(--noise),
+    linear-gradient(170deg, #f4f0e8, var(--paper-shade));
 }
-.decoder > .card-label { color: var(--purple); }
+.blank-card-open > .card-label { color: var(--purple); }
 .decoder-title {
   margin: 4px 0 16px;
   font-family: var(--font-news);
@@ -50,19 +54,28 @@
   font-size: 28px;
 }
 
-.decoder-message {
-  min-height: 132px;
-  padding: 14px 18px;
-  border: 1px solid rgba(31, 27, 38, 0.25);
-  background: rgba(255, 255, 255, 0.35);
-  font-size: 34px;
-  line-height: 1.25;
-  letter-spacing: 0.08em;
-  white-space: normal;
+.answer,
+.revealed {
+  display: block;
+  width: 100%;
+  min-height: 118px;
+  padding: 12px 16px;
+  border: 1px solid rgba(31, 27, 38, 0.3);
+  background: rgba(255, 255, 255, 0.45);
+  font-family: var(--font-type);
+  font-size: 22px;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  color: var(--ink);
 }
-.decoder-message .word { display: inline-block; white-space: nowrap; }
-.decoder-message .ch { display: inline-block; }
-.decoder-message .flip {
+.answer { resize: none; text-transform: uppercase; }
+.answer::placeholder { text-transform: none; color: rgba(74, 68, 82, 0.6); }
+.answer:focus { outline: 2px solid var(--purple); outline-offset: 2px; }
+.answer:disabled { opacity: 0.55; }
+.revealed[hidden], .answer[hidden] { display: none; }
+.word { display: inline-block; white-space: nowrap; }
+.ch { display: inline-block; }
+.revealed .flip {
   color: var(--ink);
   animation: flip-in 0.35s ease-out;
 }
@@ -96,20 +109,20 @@
   touch-action: none;
 }
 .wheel:active { cursor: grabbing; }
-.wheel.locked { cursor: not-allowed; opacity: 0.55; }
 .wheel-svg { display: block; width: 100%; height: 100%; }
 .wheel-outer { fill: var(--purple); stroke: #3f2566; stroke-width: 3; }
 .wheel-inner { fill: var(--paper); stroke: #3f2566; stroke-width: 2; }
 .wheel-hub { fill: #2c1a46; }
-.ring-plain { transition: transform 0.25s cubic-bezier(0.3, 0.7, 0.4, 1.2); }
+.ring { transition: transform 0.25s cubic-bezier(0.3, 0.7, 0.4, 1.2); }
+.wheel-pointer { fill: var(--red); }
 .wheel-letter {
   font-family: var(--font-type);
   font-size: 15px;
   text-anchor: middle;
   dominant-baseline: middle;
 }
-.ring-cipher .wheel-letter { fill: var(--paper); }
-.ring-plain .wheel-letter { fill: var(--ink); }
+.ring-outer .wheel-letter { fill: var(--paper); }
+.ring-inner .wheel-letter { fill: var(--ink); }
 .wheel-number {
   font-family: var(--font-news);
   font-weight: 900;
@@ -141,7 +154,7 @@
 }
 .drop.spent { background: none; border: 2px dashed rgba(31, 27, 38, 0.35); }
 
-.decode-button {
+.pin-button {
   align-self: flex-start;
   margin-top: 6px;
   padding: 10px 28px;
@@ -155,8 +168,8 @@
   text-transform: uppercase;
   cursor: pointer;
 }
-.decode-button:hover:not(:disabled) { background: #57308a; }
-.decode-button:disabled { background: transparent; color: rgba(107, 63, 160, 0.5); border-color: rgba(107, 63, 160, 0.35); cursor: not-allowed; }
+.pin-button:hover:not(:disabled) { background: #57308a; }
+.pin-button:disabled { background: transparent; color: rgba(107, 63, 160, 0.5); border-color: rgba(107, 63, 160, 0.35); cursor: not-allowed; }
 
 .decoder-status {
   min-height: 2.6em;
@@ -186,4 +199,5 @@
 .close-look .evidence-label { font-size: 16px; }
 .close-look.evidence-matchbook { padding-top: 0; }
 .close-look.evidence-matchbook .evidence-label { margin: 0 -64px 0 -36px; padding: 18px 36px; font-size: 26px; }
-.close-look-note { margin-top: 16px; font-size: 40px; color: var(--pencil); }
+.close-look-note { max-width: 700px; margin-top: 16px; font-size: 40px; line-height: 1.15; white-space: normal; color: var(--pencil); }
+.close-look-note .anchor { width: 22px; height: 28px; vertical-align: middle; }

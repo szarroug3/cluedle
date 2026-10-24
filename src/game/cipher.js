@@ -1,5 +1,5 @@
-// Letter-shift (Caesar) cipher over A–Z, the three-try Decode, and ink blots for each miss.
-// No DOM here: the decoder card calls these and draws the result.
+// Letter-shift (Caesar) cipher over A–Z, checking the player's written answer, and ink blots
+// for each wrong answer. No DOM here: the board and the blank card call these and draw the result.
 
 export const MAX_TRIES = 3;
 export const BLOT = "█";
@@ -26,11 +26,38 @@ export function isLocked(state) {
   return state.cracked || state.wrongTries >= MAX_TRIES;
 }
 
-// One press of Decode. Returns the new cipher state; never changes the input.
-export function attempt(state, cipher, shift) {
+const lettersOf = (text) => text.toUpperCase().replace(/[^A-Z\u2588]/g, "");
+
+// Does the written answer match the message, as far as it can still be read?
+// Only letters count. Blotted letters may be guessed or left out, and about one
+// letter in ten may be wrong, so a typo or two doesn't cost a try.
+export function matchesMessage(answer, readable) {
+  const target = [...lettersOf(readable)];
+  const input = [...answer.toUpperCase().replace(/[^A-Z]/g, "")];
+  const known = target.filter((ch) => ch !== BLOT).length;
+  const allowed = Math.max(2, Math.floor(known * 0.1));
+
+  // Edit distance where a blot matches any letter, or nothing, for free.
+  let row = Array.from({ length: input.length + 1 }, (_, j) => j);
+  for (const ch of target) {
+    const next = [ch === BLOT ? row[0] : row[0] + 1];
+    for (let j = 1; j <= input.length; j++) {
+      next[j] =
+        ch === BLOT
+          ? Math.min(row[j], row[j - 1], next[j - 1] + 1)
+          : Math.min(row[j] + 1, next[j - 1] + 1, row[j - 1] + (ch === input[j - 1] ? 0 : 1));
+    }
+    row = next;
+  }
+  return row[input.length] <= allowed;
+}
+
+// One written answer on the blank card. Returns the new cipher state; never changes the input.
+export function attempt(state, cipher, answer, seed) {
   if (isLocked(state)) return { correct: false, rejected: true, state };
-  if (shift === cipher.shift) return { correct: true, state: { ...state, found: true, cracked: true } };
-  return { correct: false, state: { ...state, found: true, wrongTries: state.wrongTries + 1 } };
+  const readable = blotted(cipher.plaintext, state.wrongTries, seed, cipher.keepWords);
+  if (matchesMessage(answer, readable)) return { correct: true, state: { ...state, cracked: true } };
+  return { correct: false, state: { ...state, wrongTries: state.wrongTries + 1 } };
 }
 
 // Small seeded random generator, so the same case always blots the same letters.

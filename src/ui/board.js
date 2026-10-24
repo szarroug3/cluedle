@@ -1,5 +1,6 @@
 // The murder board: lays out every pin from the case data on a fixed 1600×1000 stage.
-import { encode, BLOT } from "../game/cipher.js";
+import { BLOT } from "../game/cipher.js";
+import { ANCHOR } from "./decoder.js";
 
 export const STAGE_WIDTH = 1600;
 export const STAGE_HEIGHT = 1000;
@@ -44,7 +45,7 @@ const LAYOUT = {
     { x: 36, y: 714, r: 0.6 },
     { x: 260, y: 718, r: -1.3 },
   ],
-  decoded: { x: 770, y: 704, r: -2 },
+  blankCard: { x: 770, y: 704, r: -2 },
 };
 
 const PORTRAIT = `
@@ -130,50 +131,62 @@ function statementPaper(statement) {
   return paper;
 }
 
-function photoPaper(caseData) {
+function photoPaper(caseData, scrawlText) {
   const paper = el("figure", "paper photo");
   const image = el("div", "photo-image");
   image.innerHTML = GLASSHOUSE;
   paper.append(image, el("figcaption", "photo-caption", caseData.photo.caption));
-  if (caseData.cipher.hiddenOn === "photo") paper.append(scrawl(caseData.cipher));
+  if (caseData.cipher.hiddenOn === "photo") paper.append(scrawl(scrawlText));
   return paper;
 }
 
-const ANCHOR = `
-  <svg class="anchor" viewBox="0 0 20 24" aria-hidden="true">
-    <circle cx="10" cy="4" r="2.6"/>
-    <path d="M10 6.5V21 M5 10.5H15 M3 15c1 4.5 4 6 7 6s6-1.5 7-6 M3 15l-1.5 1.8 M17 15l1.5 1.8"/>
-  </svg>`;
-
 // The hidden encrypted clue: pencil like the other scraps, only the start of the message,
 // signed with the little anchor that points to the key. Nothing announces it.
-function scrawl(cipher) {
-  const text = encode(cipher.plaintext, cipher.shift);
-  const node = el("div", "scrawl hand", `${text.slice(0, 22).trim()}…`);
-  node.insertAdjacentHTML("beforeend", ANCHOR);
+function scrawl(text) {
+  const node = el("div", "scrawl hand");
   node.dataset.pin = "scrawl";
+  fillScrawl(node, text);
   return node;
+}
+
+function fillScrawl(node, text) {
+  node.replaceChildren();
+  for (const ch of `${text.slice(0, 22).trim()}\u2026`) node.append(ch === BLOT ? el("span", "blot", "M") : ch);
+  node.insertAdjacentHTML("beforeend", ANCHOR);
+}
+
+// Each wrong answer runs more ink over the scrawl.
+export function updateScrawl(stage, text) {
+  fillScrawl(stage.querySelector('[data-pin="scrawl"]'), text);
 }
 
 // Decoy scraps: a printed label with a handwritten note.
 function evidencePaper(item) {
   const paper = el("div", `paper evidence evidence-${item.kind}`);
-  if (item.kind === "prescription") paper.append(el("span", "rx", "℞"));
+  if (item.kind === "prescription") paper.append(el("span", "rx", "\u211e"));
   paper.append(el("div", "evidence-label", item.label), el("div", "evidence-note hand", item.note));
   return paper;
 }
 
-// The cracked cipher, typed up and pinned beside the evidence. Blots from missed tries stay as ink.
-export function pinDecodedNote(stage, text) {
-  const board = stage.querySelector(".board");
-  if (board.querySelector('[data-pin="decoded"]')) return;
-  const paper = el("div", "paper decoded");
+// The blank card where the player writes the decoded message. Once cracked, it holds the message.
+function blankCardPaper() {
+  const paper = el("div", "paper blank-card");
+  paper.setAttribute("role", "button");
+  paper.setAttribute("aria-label", "Blank card: write a decoded message");
+  paper.tabIndex = 0;
+  return paper;
+}
+
+export function fillBlankCard(stage, text) {
+  const item = stage.querySelector('[data-pin="blank-card"]');
+  const paper = item.querySelector(".blank-card");
+  if (paper.classList.contains("filled")) return;
   const body = el("p", "decoded-text");
   for (const ch of text) body.append(ch === BLOT ? el("span", "blot", "M") : ch);
+  paper.classList.add("filled");
+  paper.setAttribute("aria-label", "Decoded message");
   paper.append(el("div", "card-label", "Decoded"), body);
-  const item = pinItem("decoded", "decoded", LAYOUT.decoded, null, paper);
   item.classList.add("just-pinned");
-  board.append(item);
 }
 
 function clueSlot(index, slot) {
@@ -216,7 +229,7 @@ function rail(caseData, caseNumber) {
   return bar;
 }
 
-export function renderBoard(caseData, { caseNumber }) {
+export function renderBoard(caseData, { caseNumber, scrawlText }) {
   const stage = el("div", "stage");
   const board = el("section", "board");
   board.setAttribute("aria-label", `Murder board: ${caseData.title}`);
@@ -232,10 +245,11 @@ export function renderBoard(caseData, { caseNumber }) {
   caseData.statements.forEach((s, i) =>
     board.append(pinItem(`statement:${s.id}`, "statement", LAYOUT.statements[i], s.pos, statementPaper(s))),
   );
-  board.append(pinItem("photo", "photo", LAYOUT.photo, caseData.photo.pos, photoPaper(caseData)));
+  board.append(pinItem("photo", "photo", LAYOUT.photo, caseData.photo.pos, photoPaper(caseData, scrawlText)));
   (caseData.evidence || []).forEach((e, i) =>
     board.append(pinItem(`evidence:${e.id}`, "evidence", LAYOUT.evidence[i], e.pos, evidencePaper(e))),
   );
+  board.append(pinItem("blank-card", "blank-card", LAYOUT.blankCard, null, blankCardPaper()));
   caseData.clues.forEach((_, i) => board.append(clueSlot(i, LAYOUT.clues[i])));
 
   board.append(el("div", "lamp"));

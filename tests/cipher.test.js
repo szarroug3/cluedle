@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { encode, decode, attempt, blotted, isLocked, BLOT, MAX_TRIES } from "../src/game/cipher.js";
+import { encode, decode, attempt, blotted, isLocked, matchesMessage, BLOT, MAX_TRIES } from "../src/game/cipher.js";
 
 const cipher = { plaintext: "THE HOLLOWAY BOY WENT DOWN, at sea.", shift: 9, keepWords: ["HOLLOWAY"] };
 const fresh = { found: false, wrongTries: 0, cracked: false };
@@ -15,38 +15,53 @@ test("encode and decode round-trip, keeping case, spaces, and punctuation", () =
   for (let shift = 1; shift <= 25; shift++) assert.equal(decode(encode(cipher.plaintext, shift), shift), cipher.plaintext);
 });
 
-test("the right shift cracks it on the first try", () => {
-  const { correct, state } = attempt(fresh, cipher, 9);
+const right = "The Holloway boy went down, at sea.";
+const wrong = "pearl necklace, L.V.";
+
+test("writing the message cracks it, ignoring case, spacing, and punctuation", () => {
+  const { correct, state } = attempt(fresh, cipher, "the hollowayboy WENT DOWN at sea", "case");
   assert.equal(correct, true);
-  assert.deepEqual(state, { found: true, wrongTries: 0, cracked: true });
+  assert.deepEqual(state, { found: false, wrongTries: 0, cracked: true });
 });
 
-test("a wrong shift costs one try and never changes the input state", () => {
-  const { correct, state } = attempt(fresh, cipher, 12);
+test("a typo or two is forgiven, but a different message is not", () => {
+  assert.equal(matchesMessage("THE HOLOWAY BOY WENT DOWM AT SEA", cipher.plaintext), true);
+  assert.equal(matchesMessage("THE HOLLOWAY BOY WENT HOME FOR TEA", cipher.plaintext), false);
+  assert.equal(matchesMessage("", cipher.plaintext), false);
+});
+
+test("blotted letters can be guessed or left out", () => {
+  const readable = blotted(cipher.plaintext, 2, "case", cipher.keepWords);
+  const visibleOnly = [...readable].filter((ch) => ch !== BLOT).join("");
+  assert.equal(matchesMessage(visibleOnly, readable), true);
+  assert.equal(matchesMessage(cipher.plaintext, readable), true);
+});
+
+test("a wrong answer costs one try and never changes the input state", () => {
+  const { correct, state } = attempt(fresh, cipher, wrong, "case");
   assert.equal(correct, false);
   assert.equal(state.wrongTries, 1);
   assert.equal(fresh.wrongTries, 0);
 });
 
-test("a right try after misses still cracks it and keeps the miss count", () => {
-  let state = attempt(fresh, cipher, 1).state;
-  state = attempt(state, cipher, 2).state;
-  const result = attempt(state, cipher, 9);
+test("a right answer after misses still cracks it and keeps the miss count", () => {
+  let state = attempt(fresh, cipher, wrong, "case").state;
+  state = attempt(state, cipher, wrong, "case").state;
+  const result = attempt(state, cipher, right, "case");
   assert.equal(result.correct, true);
   assert.equal(result.state.wrongTries, 2);
 });
 
-test("three misses lock the cipher, and a locked or cracked cipher rejects more tries", () => {
+test("three misses lock the cipher, and a locked or cracked cipher rejects more answers", () => {
   let state = fresh;
-  for (let i = 0; i < MAX_TRIES; i++) state = attempt(state, cipher, 1).state;
+  for (let i = 0; i < MAX_TRIES; i++) state = attempt(state, cipher, wrong, "case").state;
   assert.equal(isLocked(state), true);
-  const late = attempt(state, cipher, 9);
+  const late = attempt(state, cipher, right, "case");
   assert.equal(late.rejected, true);
-  assert.equal(late.correct, false);
   assert.equal(late.state.cracked, false);
 
-  const cracked = attempt(fresh, cipher, 9).state;
-  assert.equal(attempt(cracked, cipher, 9).rejected, true);
+  const cracked = attempt(fresh, cipher, right, "case").state;
+  assert.equal(attempt(cracked, cipher, right, "case").rejected, true);
 });
 
 test("no blots before any miss", () => {
