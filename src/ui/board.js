@@ -1,5 +1,5 @@
 // The murder board: lays out every pin from the case data on a fixed 1600×1000 stage.
-import { encode } from "../game/cipher.js";
+import { encode, BLOT } from "../game/cipher.js";
 
 export const STAGE_WIDTH = 1600;
 export const STAGE_HEIGHT = 1000;
@@ -44,6 +44,7 @@ const LAYOUT = {
     { x: 36, y: 714, r: 0.6 },
     { x: 260, y: 718, r: -1.3 },
   ],
+  decoded: { x: 770, y: 704, r: -2 },
 };
 
 const PORTRAIT = `
@@ -160,6 +161,19 @@ function evidencePaper(item) {
   if (item.kind === "prescription") paper.append(el("span", "rx", "℞"));
   paper.append(el("div", "evidence-label", item.label), el("div", "evidence-note hand", item.note));
   return paper;
+}
+
+// The cracked cipher, typed up and pinned beside the evidence. Blots from missed tries stay as ink.
+export function pinDecodedNote(stage, text) {
+  const board = stage.querySelector(".board");
+  if (board.querySelector('[data-pin="decoded"]')) return;
+  const paper = el("div", "paper decoded");
+  const body = el("p", "decoded-text");
+  for (const ch of text) body.append(ch === BLOT ? el("span", "blot", "M") : ch);
+  paper.append(el("div", "card-label", "Decoded"), body);
+  const item = pinItem("decoded", "decoded", LAYOUT.decoded, null, paper);
+  item.classList.add("just-pinned");
+  board.append(item);
 }
 
 function clueSlot(index, slot) {

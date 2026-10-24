@@ -19,7 +19,7 @@ Build mode: fast
   Learner check: Run `npm start`, open the address it prints, and look at the board. Does it feel like a 1940s detective's corkboard? Read the case 1 story and suspects too — what would you change in the look or the writing?
   Commit: `Lay out case 1 on the noir murder board`
 
-- [ ] **2. Find the hidden scrawl and crack the cipher**
+- [x] **2. Find the hidden scrawl and crack the cipher**
   Becomes usable: Clicking the odd scrawl on the board brings the decoder card forward. Turning the wheel changes only the shift number. **Decode** with the right key from the story plays the unscramble reveal and pins the message to the board as a clue; each wrong try blots out more of the message for good, and after three misses Decode is gone.
   Why now: This is the unique kernel — finding the puzzle to solve the puzzle. It goes right after the look so the "oh, that's cool" moment is proven before the more ordinary guessing loop is built around it.
   PRD ref: `prd.md > The Core Journey` (step 5), `prd.md > Finding and Cracking the Cipher`
@@ -81,7 +81,7 @@ Build mode: fast
 
 ## Hands-on Checkpoints
 
-- [ ] Early usable behavior explored — after slice 1, the look test: the learner approves or adjusts the board's noir look before any rules are wired up
+- [x] Early usable behavior explored — after slice 1, the look test: the learner approves or adjusts the board's noir look before any rules are wired up (feedback: scrawl and key too easy → decoys and buried key; 4 suspects brute-forceable → 6 of each; approved)
 - [ ] Kernel feel explored — after slice 2: the learner tries to find and crack the cipher cold, to tune how hidden the scrawl is
 - [ ] Final kick-the-tires exploration and feedback completed
 
@@ -103,6 +103,7 @@ Activity mode: [live app and editor, explicit static fallback, focused alternati
 
 ## Revisions
 
+- Decoy scraps open a close-up card when clicked, sharing the scrawl's zoom cursor, and the wheel starts at a blank position with Decode disabled until it's turned — otherwise the scrawl would be the only clickable scrap (giving it away), and an accidental Decode at the start would waste a try.
 - Raised each case to 6 suspects, 6 motives, and 6 statements (still exactly one liar), and re-laid out the board to fit them — the learner spotted that with 4 of each and per-half feedback, working through the cards in order always wins within 5 guesses. Updated `scope.md`, `prd.md`, `spec.md`, and the case checks.
 - Look test: added decoy evidence scraps in the same pencil hand as the scrawl, and buried the cipher key (a passing "Pier Nine", tied to an anchor doodle on the scrawl) next to a decoy number (a watch stopped at twelve) — the learner found the scrawl and its key too easy to spot when the scrawl was the only handwriting and the story named the key outright.
 - Added a `photo` pin to the case data, with the scrawl pencilled in its margin, and a handwriting font (Reenie Beanie) for the scrawl — the spec's data model named a photo as a hiding place but had no field for it, and the scrawl needed to look different from the typed papers to read as an odd thing to notice.

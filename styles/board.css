@@ -289,6 +289,23 @@
   color: var(--ink);
 }
 
+/* Things worth a closer look. The scrawl and the decoys share one cursor, so none stands out. */
+.scrawl,
+.pin-evidence { cursor: zoom-in; }
+
+/* The cracked cipher, pinned to the board. */
+.decoded { width: 270px; padding: 10px 14px 12px; }
+.decoded .card-label { color: var(--purple); }
+.decoded-text {
+  margin: 6px 0 0;
+  font-family: var(--font-type);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.decoded .blot { font-size: 11px; }
+.just-pinned { animation: pin-up 0.45s cubic-bezier(0.2, 0.8, 0.3, 1.2); }
+@keyframes pin-up { from { transform: translateY(-30px) rotate(-12deg) scale(1.15); opacity: 0; } }
+
 /* Empty spots where clues will be pinned. */
 .clue-slot {
   position: absolute;
