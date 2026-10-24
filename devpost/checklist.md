@@ -88,6 +88,7 @@ Build mode: fast
 ## Final Review
 
 - [ ] Polish: redraw the ink blots, the tries-left drops, and the guesses-left shells (learner found them ugly at the cipher checkpoint)
+- [ ] Blank card: hovering a letter in either strip highlights that whole row across both strips, to make matching letters easier
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

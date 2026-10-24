@@ -166,6 +166,17 @@ function letterStrips(onLetter) {
   };
 
   const panel = el("div", "strips");
+
+  // Hovering a letter lights up its whole row on both strips, so pairs are easy to read across.
+  const lightRow = (row) =>
+    columns.forEach((column) =>
+      [...column.children].forEach((key, i) => key.classList.toggle("row-hover", i === row)),
+    );
+  panel.addEventListener("pointerover", (event) => {
+    const key = event.target.closest(".strip-letter");
+    if (key) lightRow([...key.parentElement.children].indexOf(key));
+  });
+  panel.addEventListener("pointerleave", () => lightRow(-1));
   const [leftUp, leftDown] = arrows(0);
   const [rightUp, rightDown] = arrows(1);
   const middle = el("div", "strip-middle");

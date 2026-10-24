@@ -133,7 +133,8 @@
   color: var(--ink);
   cursor: pointer;
 }
-.strip-letter:hover { background: var(--purple); color: var(--paper); }
+.strip-letter:hover,
+.strip-letter.row-hover { background: var(--purple); color: var(--paper); }
 .strip-arrow {
   width: 40px;
   height: 26px;
