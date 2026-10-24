@@ -102,6 +102,7 @@ Build mode: fast
 - [ ] Tries-left drops on the blank card redrawn as magnifying glasses over a fingerprint (learner's reference); spent ones fade
 - [x] Red string physics: strings drop, bounce, and settle when tied, and sway when something nearby is clicked or the pointer brushes them (learner reviewed and liked it)
 - [x] Drag from one card to another to tie a string; the string being drawn has the same physics and carries on into the tied string (learner reviewed)
+- [ ] Case 1: an earlier link from the decoded "Holloway boy" to Mae — a sailor's photo signed "D.H., 1931" on her card, and the clipping now says the Albatross was lost in '31 (learner found only clue 4 tied them together)
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

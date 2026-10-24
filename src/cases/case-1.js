@@ -9,13 +9,13 @@ export default {
     headline: "Orchid King Found Dead Among His Flowers",
     dateline: "RIVERSIDE HEIGHTS, Oct. 23, 1946",
     body:
-      "Cornelius Vane, 61, who built a shipping fortune from one leaky tug at Pier Nine and spent much of it on prize " +
+      "Cornelius Vane, 61, who built a shipping fortune from one leaky tug at Pier Nine, lost the freighter Albatross " +
+      "in \u201931, and spent much of it on prize " +
       "orchids, was found dead in his glasshouse Tuesday night. His housekeeper raised the alarm shortly after ten.\n" +
       "Police say Vane lay among his beloved blooms with a cold cup of tea at his elbow. His wristwatch, smashed in " +
       "the fall, had stopped at twelve sharp.\n" +
       "Dr. Arthur Penrose, the family physician, called it “a heart that simply stopped.” Detectives are not so sure. " +
-      "Vane leaves a young wife, the former nightclub singer Lillian Vane, and a nephew, Edward “Teddy” Vane. " +
-      "The family declined to comment.",
+      "Vane leaves a young wife, the former nightclub singer Lillian Vane, and a nephew, Edward “Teddy” Vane.",
   },
 
   // Every witness is a suspect, so each statement lives on its suspect's card. Exactly one lies.
@@ -54,7 +54,7 @@ export default {
       id: "mae",
       name: "Mae Hollis",
       role: "The housekeeper",
-      description: "Quiet, careful, never late with the tea. Came to the house four years ago with fine references.",
+      description: "Quiet, careful, never late with the tea. Keeps a sailor’s photo by her bed, signed “D.H., 1931.”",
       statement: {
         text: "I never set foot in the glasshouse. Mr. Vane didn’t allow the help near his orchids.",
         isLie: true,
