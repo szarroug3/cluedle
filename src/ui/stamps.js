@@ -246,6 +246,15 @@ export function createStamps(stage, { names, guessNumber, onAccuse, suspects, on
         card.querySelector(".paper").append(mark);
       }
     },
+    // Redraw a spent LIAR stamp (used when restoring progress).
+    drawLiar(suspectId, correct) {
+      const card = board.querySelector(`[data-pin="suspect:${suspectId}"]`);
+      const mark = el("div", `stamp-mark liar-mark ${correct ? "right" : "wrong"}`, "LIAR");
+      placeMark(mark, 2);
+      card.querySelector(".paper").append(mark);
+      liarUsed = true;
+      refresh();
+    },
     end() {
       ended = true;
       board.querySelectorAll(".stamp-mark.pending").forEach((mark) => mark.remove());

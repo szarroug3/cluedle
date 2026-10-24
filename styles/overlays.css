@@ -373,3 +373,111 @@
   font-size: 13px;
   resize: none;
 }
+
+/* ---- The case file cover ---- */
+
+.cover {
+  position: absolute;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(ellipse at 50% 40%, rgba(42, 34, 54, 0.92), rgba(10, 9, 16, 0.97));
+  transition: opacity 0.35s;
+}
+.cover.opening { opacity: 0; }
+.folder {
+  position: relative;
+  width: 720px;
+  padding: 70px 70px 56px;
+  border-radius: 6px 6px 8px 8px;
+  background-image: var(--noise), linear-gradient(165deg, #6c6378, #4a4255);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.8), inset 0 0 0 2px rgba(255, 255, 255, 0.06);
+  text-align: center;
+  transform: rotate(-1deg);
+}
+.folder-tab {
+  position: absolute;
+  top: -30px;
+  left: 60px;
+  padding: 7px 26px 9px;
+  border-radius: 8px 8px 0 0;
+  background: #6c6378;
+  font-family: var(--font-type);
+  font-size: 14px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+.folder-label { padding: 22px 30px 26px; transform: rotate(1.5deg); }
+.folder-number {
+  margin-top: 8px;
+  font-family: var(--font-type);
+  font-size: 20px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+.folder-title {
+  margin: 8px 0 6px;
+  font-family: var(--font-news);
+  font-weight: 900;
+  font-size: 50px;
+  line-height: 1.05;
+}
+.folder-date { font-family: var(--font-type); font-size: 16px; color: var(--ink-soft); }
+.folder-line {
+  margin: 30px 0 22px;
+  font-family: var(--font-type);
+  font-size: 18px;
+  color: var(--paper);
+}
+.open-file {
+  padding: 14px 34px;
+  border: 3px solid var(--red);
+  border-radius: 3px;
+  background: var(--red);
+  color: var(--paper);
+  font-family: var(--font-type);
+  font-size: 20px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.open-file:hover { background: var(--red-dark); }
+
+/* ---- How to play ---- */
+
+.how-to {
+  width: 700px;
+  padding: 28px 40px 32px;
+  transform: rotate(0.5deg);
+}
+.how-to-title {
+  margin: 4px 0 16px;
+  font-family: var(--font-news);
+  font-weight: 900;
+  font-size: 32px;
+}
+.how-to-steps {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 10px 18px;
+  margin: 0 0 24px;
+}
+.how-to-steps dt {
+  font-family: var(--font-type);
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+.how-to-steps dd { margin: 0; font-size: 15px; line-height: 1.5; }
+
+/* Countdown on the ending. */
+.countdown {
+  margin-top: 16px;
+  font-family: var(--font-type);
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}

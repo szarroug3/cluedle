@@ -25,7 +25,13 @@ async function copyShare(text, where, button) {
   }
 }
 
-export function showEnding(stage, caseData, status, { rank, share }) {
+function formatCountdown(ms) {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${pad(Math.floor(total / 3600))}:${pad(Math.floor((total % 3600) / 60))}:${pad(total % 60)}`;
+}
+
+export function showEnding(stage, caseData, status, { rank, share, msUntilNext }) {
   const closed = status === "closed";
   const ending = closed ? caseData.endings.closed : caseData.endings.cold;
   const { suspectId, motiveId, weaponId } = caseData.solution;
@@ -65,5 +71,15 @@ export function showEnding(stage, caseData, status, { rank, share }) {
   shareSpot.append(copy);
   footer.append(shareSpot);
   card.append(footer);
-  openOverlay(stage, card);
+
+  const countdown = el("div", "countdown");
+  const tick = () => {
+    if (!countdown.isConnected && timer) return clearInterval(timer);
+    countdown.textContent = `Next case in ${formatCountdown(msUntilNext())}`;
+  };
+  let timer = null;
+  tick();
+  timer = setInterval(tick, 1000);
+  card.append(countdown);
+  openOverlay(stage, card, () => clearInterval(timer));
 }

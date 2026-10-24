@@ -59,7 +59,7 @@ Build mode: fast
   Learner check: Tie a few strings between suspects, statements, and clues the way you'd work a case, and remove one. Does it feel like a detective's board, and does it get in the way of anything?
   Commit: `Add red string between pins`
 
-- [ ] **6. A daily case that remembers your progress**
+- [x] **6. A daily case that remembers your progress**
   Becomes usable: The page opens on today's closed case file, then the how-to-play on a first visit, then the board. Reloading mid-case keeps every stamp, guess, cipher try, the LIAR shot, and string. Reloading after the case ends shows the finished board, the ending, and a countdown to the next case. `?case=N` and `?fresh` work for demos.
   Why now: Persistence makes the cipher and LIAR limits real (a reload can no longer reset them) and turns the game into a daily one. It sits after the play surface is complete so it saves a progress shape that's already settled.
   PRD ref: `prd.md > The Core Journey` (steps 1, 2, 11), `prd.md > Daily Case`, `prd.md > Case File and How to Play`, `prd.md > States and Boundaries`
