@@ -1,6 +1,7 @@
-// Red string between pins, for the player's own thinking. Click the spool, then pin A, then pin B,
-// to tie a string; the spool stays in hand for the next one until it's clicked again or another tool
-// is picked up. Click a string to take it down. The rules never read it.
+// Red string between pins, for the player's own thinking. Drag from one card to another to tie a
+// string, or click the spool, then pin A, then pin B; the spool stays in hand for the next one until
+// it's clicked again or another tool is picked up. Click a string to take it down. The rules never
+// read it.
 //
 // Each string is a short chain of points under gravity (Verlet integration): a new string drops and
 // settles, and strings sway when something nearby is clicked or the pointer brushes them. The
@@ -33,6 +34,7 @@ export function createString(stage, { strings, onChange }) {
   let threading = false;
   let first = null;
   let ropes = []; // one per string: { a, b, points: [{ x, y, px, py }], rest, group, hit, line }
+  let drawing = null; // the string following the pointer while the player drags, if any
   let running = false;
 
   // Where a pin's head sits, in the board's own (unscaled) coordinates.
@@ -48,25 +50,34 @@ export function createString(stage, { strings, onChange }) {
     return toBoard(box.left + box.width / 2, box.top + box.height / 2);
   }
 
-  // A rope starts as a straight line (or already hanging, when restoring) between its pins.
-  function makeRope([a, b], index, hanging) {
-    const from = headOf(a);
-    const to = headOf(b);
-    if (!from || !to) return null;
+  // A rope between two points: straight, already hanging (when restoring), or carrying on from the
+  // points of the string the player was drawing, so it doesn't jump when tied.
+  function ropeBetween(from, to, { hanging = false, from: carried = null, className = "string-line" } = {}) {
     const length = Math.hypot(to.x - from.x, to.y - from.y);
     const points = [];
     for (let i = 0; i <= SEGMENTS; i++) {
       const t = i / SEGMENTS;
       const sag = hanging ? Math.sin(Math.PI * t) * length * 0.11 : 0;
-      const x = from.x + (to.x - from.x) * t;
-      const y = from.y + (to.y - from.y) * t + sag;
-      points.push({ x, y, px: x, py: y });
+      const x = carried ? carried[i].x : from.x + (to.x - from.x) * t;
+      const y = carried ? carried[i].y : from.y + (to.y - from.y) * t + sag;
+      points.push({ x, y, px: carried ? carried[i].px : x, py: carried ? carried[i].py : y });
     }
-    const group = svg("g", { class: "string", "data-index": index });
+    points[0] = { ...points[0], x: from.x, y: from.y };
+    points[SEGMENTS] = { ...points[SEGMENTS], x: to.x, y: to.y };
+    const group = svg("g", { class: "string" });
     const hit = svg("path", { class: "string-hit" });
-    const line = svg("path", { class: "string-line" });
+    const line = svg("path", { class: className });
     group.append(hit, line);
-    return { a, b, points, rest: (length * SLACK) / SEGMENTS, group, hit, line };
+    return { points, rest: (length * SLACK) / SEGMENTS, group, hit, line };
+  }
+
+  function makeRope([a, b], index, hanging, carried = null) {
+    const from = headOf(a);
+    const to = headOf(b);
+    if (!from || !to) return null;
+    const rope = ropeBetween(from, to, { hanging, from: carried });
+    rope.group.dataset.index = String(index);
+    return Object.assign(rope, { a, b });
   }
 
   function rebuild({ hanging }) {
@@ -129,11 +140,12 @@ export function createString(stage, { strings, onChange }) {
 
   function loop() {
     let moving = 0;
-    for (const rope of ropes) {
+    for (const rope of drawing ? [...ropes, drawing] : ropes) {
       moving = Math.max(moving, step(rope));
       render(rope);
     }
-    if (moving > REST_SPEED) requestAnimationFrame(loop);
+    // Keep going while the player is drawing, even if the string has come to rest.
+    if (moving > REST_SPEED || drawing) requestAnimationFrame(loop);
     else running = false;
   }
 
@@ -168,29 +180,85 @@ export function createString(stage, { strings, onChange }) {
     spool.classList.toggle("active", on);
   }
 
+  // Tie a new string between two pins, unless it's the same pin or the pair is already tied.
+  function addString(a, b, carried = null) {
+    const exists = strings.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
+    if (a === b || exists) return;
+    strings.push([a, b]);
+    onChange(strings);
+    const rope = makeRope([a, b], strings.length - 1, false, carried);
+    if (!rope) return;
+    ropes.push(rope);
+    layer.append(rope.group);
+    render(rope);
+    wake();
+  }
+
   function tie(item) {
     if (!first) {
       first = item;
       item.classList.add("string-first");
       return;
     }
-    const a = first.dataset.pin;
-    const b = item.dataset.pin;
-    const exists = strings.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
-    if (a !== b && !exists) {
-      strings.push([a, b]);
-      onChange(strings);
-      const rope = makeRope([a, b], strings.length - 1, false);
-      if (rope) {
-        ropes.push(rope);
-        layer.append(rope.group);
-        render(rope);
-        wake();
-      }
-    }
+    addString(first.dataset.pin, item.dataset.pin);
     first.classList.remove("string-first");
     first = null;
   }
+
+  // Dragging from a card draws a string that follows the pointer; letting go on another card ties
+  // it. A press that never really moves stays an ordinary click.
+  const DRAG_START = 8;
+  let drag = null;
+
+  board.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0 || stage.classList.contains("holding")) return;
+    const item = event.target.closest(".pin-item");
+    if (!item || event.target.closest(".string")) return;
+    drag = { item, x: event.clientX, y: event.clientY, drawing: false };
+  });
+
+  window.addEventListener("pointermove", (event) => {
+    if (!drag) return;
+    const from = headOf(drag.item.dataset.pin);
+    const to = toBoard(event.clientX, event.clientY);
+    if (!drag.drawing) {
+      if (Math.hypot(event.clientX - drag.x, event.clientY - drag.y) < DRAG_START) return;
+      drag.drawing = true;
+      drag.item.classList.add("string-first");
+      stage.classList.add("drawing-string");
+      drawing = ropeBetween(from, to, { className: "string-line string-preview" });
+      layer.append(drawing.group);
+      wake();
+    }
+    // The free end rides on the pointer; the string lengthens to keep a little slack.
+    const end = drawing.points[SEGMENTS];
+    end.x = end.px = to.x;
+    end.y = end.py = to.y;
+    drawing.rest = (Math.hypot(to.x - from.x, to.y - from.y) * SLACK) / SEGMENTS;
+    const over = document.elementFromPoint(event.clientX, event.clientY)?.closest(".pin-item");
+    board.querySelector(".string-target")?.classList.remove("string-target");
+    if (over && over !== drag.item) over.classList.add("string-target");
+  });
+
+  window.addEventListener("pointerup", (event) => {
+    if (!drag) return;
+    const { item, drawing: wasDrawing } = drag;
+    drag = null;
+    if (!wasDrawing) return;
+    const over = document.elementFromPoint(event.clientX, event.clientY)?.closest(".pin-item");
+    item.classList.remove("string-first");
+    board.querySelector(".string-target")?.classList.remove("string-target");
+    stage.classList.remove("drawing-string");
+    const carried = drawing.points;
+    drawing.group.remove();
+    drawing = null;
+    if (over && board.contains(over)) addString(item.dataset.pin, over.dataset.pin, carried);
+    // The drag ends in a click; don't let it open the card underneath. If no click comes (the pointer
+    // was let go off the board), the guard lapses straight away.
+    const swallow = (e) => e.stopPropagation();
+    stage.addEventListener("click", swallow, { capture: true, once: true });
+    setTimeout(() => stage.removeEventListener("click", swallow, { capture: true }), 0);
+  });
 
   spool.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {

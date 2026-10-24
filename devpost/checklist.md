@@ -101,6 +101,7 @@ Build mode: fast
 - [ ] Cases 4–10 drafted for the showcase; the learner solves each cold to judge it (solutions kept from the learner)
 - [ ] Tries-left drops on the blank card redrawn as magnifying glasses over a fingerprint (learner's reference); spent ones fade
 - [x] Red string physics: strings drop, bounce, and settle when tied, and sway when something nearby is clicked or the pointer brushes them (learner reviewed and liked it)
+- [x] Drag from one card to another to tie a string; the string being drawn has the same physics and carries on into the tied string (learner reviewed)
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

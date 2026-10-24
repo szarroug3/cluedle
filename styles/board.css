@@ -549,10 +549,18 @@
   filter: drop-shadow(1px 3px 2px rgba(0, 0, 0, 0.55));
 }
 .string:hover .string-line { stroke: var(--red-dark); stroke-dasharray: 6 4; }
-.stage.threading .string { pointer-events: none; }
+.stage.threading .string,
+.stage.drawing-string .string { pointer-events: none; }
 
 .spool { cursor: pointer; transition: transform 0.15s; }
 .spool:hover { transform: translateY(-3px); }
 .spool.active { box-shadow: 0 0 0 3px var(--paper), 0 0 18px 4px rgba(179, 38, 58, 0.7); }
 .stage.threading .pin-item { cursor: crosshair; }
 .pin-item.string-first > .pushpin { box-shadow: 0 0 0 4px var(--paper), 0 0 12px 4px var(--red); }
+
+/* Drawing a string by dragging: a dashed thread follows the pointer, and the card under it lights up. */
+.string-line.string-preview { stroke-dasharray: 7 5; }
+.stage.drawing-string,
+.stage.drawing-string .pin-item { cursor: crosshair; }
+.pin-item.string-target > .pushpin { box-shadow: 0 0 0 4px var(--paper), 0 0 12px 4px var(--red); }
+.pin-item { user-select: none; -webkit-user-select: none; }
