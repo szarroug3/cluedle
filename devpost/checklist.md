@@ -93,6 +93,7 @@ Build mode: fast
 - [ ] Red string stays on after tying, until the spool is clicked again or another tool is picked up
 - [ ] Once the case ends, the accusation button reopens the ending and its share card
 - [ ] CONFIDENTIAL tab on the case file is easy to read
+- [ ] After the case ends, the slip keeps showing the final accusation (who, why, how), including after a reload
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

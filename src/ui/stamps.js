@@ -39,7 +39,7 @@ function placeMark(mark, number) {
   mark.style.setProperty("--stamp-rot", `${-12 + ((number - 1) % 5) * 6}deg`);
 }
 
-export function createStamps(stage, { names, guessNumber, onAccuse, suspects, onFlagLiar, onReopen }) {
+export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, suspects, onFlagLiar, onReopen }) {
   ensureInkFilter();
   const board = stage.querySelector(".board");
   const trays = { guilty: stage.querySelector(".stamp-guilty"), liar: stage.querySelector(".stamp-liar") };
@@ -74,7 +74,10 @@ export function createStamps(stage, { names, guessNumber, onAccuse, suspects, on
   stage.querySelector(".case-tag").before(slip);
 
   function refresh() {
-    for (const kind of KINDS) lines[kind].textContent = pending[kind] ? names[kind](pending[kind]) : "—";
+    // Once the case is over, the slip keeps showing the final accusation.
+    const final = ended ? lastGuess() : null;
+    const shown = final ? { suspect: final.suspectId, motive: final.motiveId, weapon: final.weaponId } : pending;
+    for (const kind of KINDS) lines[kind].textContent = shown[kind] ? names[kind](shown[kind]) : "—";
     // Once the case is over, the slip's button brings the ending (and its share card) back.
     accuseButton.textContent = ended ? "Reopen the ending" : "Make the accusation";
     accuseButton.disabled = !ended && KINDS.some((kind) => !pending[kind]);
