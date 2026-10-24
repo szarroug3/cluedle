@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cluedle Spec</title>
+<style>
+  :root {
+    --night: #13111c;
+    --night-2: #1d1a2b;
+    --paper: #efe9dd;
+    --paper-2: #e3dccd;
+    --ink: #1f1b24;
+    --muted: #5e566a;
+    --red: #b3263a;
+    --red-ink: #8f1d2e;
+    --purple: #6b3fa0;
+    --blue: #2f5aa8;
+    --line: #cfc5b3;
+    --glow: rgba(150, 120, 220, .18);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    color: var(--paper);
+    background:
+      radial-gradient(1200px 600px at 50% -10%, var(--glow), transparent 60%),
+      repeating-linear-gradient(100deg, rgba(255,255,255,.015) 0 2px, transparent 2px 7px),
+      var(--night);
+    font: 16px/1.55 Georgia, "Times New Roman", serif;
+  }
+  main { max-width: 960px; margin: 0 auto; padding: 32px 16px 72px; }
+  .mono { font-family: "Courier New", Courier, ui-monospace, monospace; }
+  .sheet {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 24px;
+    margin: 0 0 28px;
+    box-shadow: 0 14px 30px rgba(0,0,0,.45);
+    background-image: linear-gradient(transparent 0 0);
+  }
+  header.sheet { text-align: center; position: relative; overflow: hidden; }
+  .kicker { font: 700 12px/1 "Courier New", monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--red); }
+  h1 { font-size: clamp(40px, 8vw, 66px); margin: 8px 0 6px; letter-spacing: .02em; }
+  h2 { font-size: 23px; margin: 0 0 12px; }
+  h2 small { display: block; font: 700 11px/1 "Courier New", monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  h3 { font-size: 18px; margin: 18px 0 6px; }
+  p { margin: 0 0 10px; }
+  .lede { font-style: italic; color: var(--muted); font-size: 18px; }
+  .stamp {
+    display: inline-block; margin-top: 12px; padding: 6px 12px;
+    border: 3px solid var(--red); color: var(--red);
+    font: 700 13px/1 "Courier New", monospace; letter-spacing: .14em; text-transform: uppercase;
+    transform: rotate(-4deg); opacity: .9;
+  }
+  .grow { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: center; }
+  .grow .from { color: var(--muted); font-style: italic; }
+  .grow .arrow { color: var(--red); font-size: 22px; }
+  @media (max-width: 640px) { .grow { grid-template-columns: 1fr; } .grow .arrow { transform: rotate(90deg); justify-self: start; } }
+  svg { width: 100%; height: auto; display: block; }
+  .stepper input { position: absolute; opacity: 0; pointer-events: none; }
+  .steps { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 10px; }
+  .steps label {
+    font: 700 12px/1 "Courier New", monospace; padding: 8px 9px; cursor: pointer;
+    border: 1px solid var(--line); background: #fff; color: var(--ink);
+  }
+  .step-text p { display: none; color: var(--ink); margin: 0; min-height: 3.2em; }
+  details { border-top: 1px dashed var(--line); padding: 10px 0; }
+  details:first-of-type { border-top: 0; }
+  summary { cursor: pointer; font-weight: bold; list-style: none; display: flex; gap: 10px; align-items: baseline; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "▸"; color: var(--red); transition: transform .15s; display: inline-block; }
+  details[open] > summary::before { transform: rotate(90deg); }
+  summary .src { font: 400 12px/1 "Courier New", monospace; color: var(--muted); margin-left: auto; }
+  ul { margin: 8px 0 0; padding-left: 22px; }
+  li { margin: 4px 0; }
+  ul.checks { list-style: none; padding-left: 4px; }
+  ul.checks li::before { content: "☐ "; color: var(--blue); }
+  .tag { font: 700 11px/1 "Courier New", monospace; letter-spacing: .1em; text-transform: uppercase; padding: 4px 6px; color: #fff; border-radius: 2px; }
+  .tag.now { background: var(--blue); }
+  .tag.later { background: var(--purple); }
+  .tag.cut { background: var(--red); }
+  .options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 12px; }
+  @media (max-width: 760px) { .options { grid-template-columns: 1fr; } }
+  .opt { border: 1px solid var(--line); background: #fff; padding: 14px; position: relative; }
+  .opt .letter { position: absolute; top: -12px; left: 12px; background: var(--ink); color: var(--paper); font: 700 12px/1 "Courier New", monospace; padding: 5px 8px; }
+  .opt h3 { margin-top: 6px; }
+  .ladder { list-style: none; padding: 0; margin: 8px 0 0; }
+  .ladder li { padding: 6px 8px; border-left: 4px solid var(--purple); background: var(--paper-2); margin: 4px 0; }
+  .ladder li:nth-child(1) { border-color: #8d86a0; }
+  .ladder li:nth-child(2) { border-color: var(--blue); }
+  .ladder li:nth-child(3) { border-color: var(--purple); }
+  .ladder li:nth-child(4) { border-color: var(--red); }
+  .ladder li:nth-child(5) { border-color: var(--red-ink); font-weight: bold; }
+  .ladder li .note { float: right; font-family: "Courier New", monospace; }
+  .card-text {
+    white-space: pre; font: 15px/1.5 ui-monospace, "Courier New", monospace;
+    background: var(--night-2); color: var(--paper); padding: 12px; overflow-x: auto; margin-top: 8px;
+  }
+  .note { font-size: 14px; color: var(--muted); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+  .q { border-left: 4px solid var(--red); padding: 8px 12px; background: var(--paper-2); margin: 8px 0; }
+  .q b { color: var(--red-ink); }
+  footer { text-align: center; color: #9a91ad; font: 13px/1.4 "Courier New", monospace; }
+  #j0:checked ~ .steps label[for="j0"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j0:focus-visible ~ .steps label[for="j0"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j0:checked ~ .step-text .t0 { display: block; }
+  #j1:checked ~ .steps label[for="j1"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j1:focus-visible ~ .steps label[for="j1"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j1:checked ~ .step-text .t1 { display: block; }
+  #j2:checked ~ .steps label[for="j2"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j2:focus-visible ~ .steps label[for="j2"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j2:checked ~ .step-text .t2 { display: block; }
+  #j3:checked ~ .steps label[for="j3"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j3:focus-visible ~ .steps label[for="j3"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j3:checked ~ .step-text .t3 { display: block; }
+  #j4:checked ~ .steps label[for="j4"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j4:focus-visible ~ .steps label[for="j4"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j4:checked ~ .step-text .t4 { display: block; }
+  #j5:checked ~ .steps label[for="j5"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j5:focus-visible ~ .steps label[for="j5"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j5:checked ~ .step-text .t5 { display: block; }
+  #j6:checked ~ .steps label[for="j6"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j6:focus-visible ~ .steps label[for="j6"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j6:checked ~ .step-text .t6 { display: block; }
+  #j7:checked ~ .steps label[for="j7"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j7:focus-visible ~ .steps label[for="j7"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j7:checked ~ .step-text .t7 { display: block; }
+  #j8:checked ~ .steps label[for="j8"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j8:focus-visible ~ .steps label[for="j8"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j8:checked ~ .step-text .t8 { display: block; }
+  #j9:checked ~ .steps label[for="j9"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j9:focus-visible ~ .steps label[for="j9"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j9:checked ~ .step-text .t9 { display: block; }
+  #j10:checked ~ .steps label[for="j10"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j10:focus-visible ~ .steps label[for="j10"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j10:checked ~ .step-text .t10 { display: block; }
+  code { font: 14px "Courier New", monospace; background: var(--paper-2); padding: 1px 4px; }
+  .files { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .files span { font: 12px "Courier New", monospace; border: 1px solid var(--purple); color: var(--purple); padding: 3px 6px; }
+  pre.tree { font: 13.5px/1.45 "Courier New", monospace; background: var(--night-2); color: var(--paper); padding: 14px; overflow-x: auto; margin: 8px 0 0; }
+  pre.tree .c { color: #9a91ad; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font: 700 12px "Courier New", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  td.yes { color: var(--blue); font-weight: bold; }
+  .layer { font: 700 11px "Courier New", monospace; letter-spacing: .12em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<main>
+
+  <header class="sheet">
+    <div class="kicker">Case file · Technical spec</div>
+    <h1>Cluedle</h1>
+    <p class="lede">One page of plain HTML, CSS, and JavaScript. Cases are data, rules are tested, the board is the screen, and progress lives in the browser.</p>
+    <span class="stamp">Approved</span>
+  </header>
+
+  <section class="sheet">
+    <h2><small>How it fits together</small>The pieces</h2>
+    <svg viewBox="0 0 900 300" role="img" aria-labelledby="arch-t">
+      <title id="arch-t">Architecture: case data feeds the rules and the board; the board sends player actions to the rules; the app shell saves progress to localStorage after each rule call and reads it back on load.</title>
+      <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b3263a"/></marker></defs>
+      <g font-family="Georgia, serif" font-size="14" fill="#1f1b24" text-anchor="middle">
+        <rect x="20" y="40" width="200" height="90" fill="#fff" stroke="#6b3fa0"/>
+        <text x="120" y="68" font-weight="bold">Case data</text><text x="120" y="90" font-size="12">src/cases/case-1..3.js</text><text x="120" y="110" font-size="12" fill="#5e566a">story, suspects, liar, clues, cipher</text>
+        <rect x="350" y="20" width="200" height="110" fill="#dfe6f5" stroke="#2f5aa8"/>
+        <text x="450" y="48" font-weight="bold">Game rules</text><text x="450" y="70" font-size="12">src/game/*.js · no DOM</text><text x="450" y="92" font-size="12" fill="#5e566a">daily · rules · cipher · rank</text><text x="450" y="110" font-size="12" fill="#5e566a">share · progress</text>
+        <rect x="350" y="180" width="200" height="100" fill="#fff" stroke="#cfc5b3"/>
+        <text x="450" y="208" font-weight="bold">The board (screens)</text><text x="450" y="230" font-size="12">src/ui/*.js + styles/</text><text x="450" y="250" font-size="12" fill="#5e566a">stamps · string · decoder · ending</text>
+        <rect x="680" y="40" width="200" height="90" fill="#f2dde1" stroke="#b3263a"/>
+        <text x="780" y="68" font-weight="bold">Saved progress</text><text x="780" y="90" font-size="12">localStorage</text><text x="780" y="110" font-size="12" fill="#5e566a">cluedle:progress:&lt;date&gt;</text>
+        <rect x="680" y="180" width="200" height="100" fill="#fff" stroke="#cfc5b3" stroke-dasharray="5 4"/>
+        <text x="780" y="210" font-weight="bold">Tests</text><text x="780" y="232" font-size="12">tests/*.test.js</text><text x="780" y="252" font-size="12" fill="#5e566a">node --test, every rule</text>
+      </g>
+      <g fill="none" stroke="#b3263a" stroke-width="2.3" marker-end="url(#a)">
+        <path d="M220,85 L348,75"/>
+        <path d="M220,110 C280,150 300,200 348,220"/>
+        <path d="M420,178 L420,132"/>
+        <path d="M480,132 L480,178"/>
+        <path d="M550,70 L678,80"/>
+        <path d="M678,100 L552,100"/>
+      </g>
+      <g fill="none" stroke="#6b3fa0" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#a)"><path d="M680,215 C620,180 600,150 552,125"/></g>
+      <g font-family="'Courier New', monospace" font-size="11" fill="#5e566a">
+        <text x="270" y="70">reads</text><text x="250" y="170">lays out</text>
+        <text x="360" y="160">actions</text><text x="488" y="160">results</text>
+        <text x="595" y="68">save</text><text x="595" y="116">load</text><text x="600" y="196">checks</text>
+      </g>
+    </svg>
+    <p class="note">The app shell, <code>src/main.js</code>, is the wiring between these: it hands board actions to the rules, then saves progress right after every rule call.</p>
+  </section>
+
+  <section class="sheet">
+    <h2><small>The core journey through the system</small>Who does what, in order</h2>
+    <div class="stepper">
+      <input type="radio" name="j" id="j0" checked><input type="radio" name="j" id="j1"><input type="radio" name="j" id="j2"><input type="radio" name="j" id="j3"><input type="radio" name="j" id="j4"><input type="radio" name="j" id="j5"><input type="radio" name="j" id="j6"><input type="radio" name="j" id="j7"><input type="radio" name="j" id="j8"><input type="radio" name="j" id="j9"><input type="radio" name="j" id="j10">
+      <div class="steps"><label for="j0">1 · Open</label><label for="j1">2 · Case file</label><label for="j2">3 · How to play</label><label for="j3">4 · Board</label><label for="j4">5 · String</label><label for="j5">6 · Decode</label><label for="j6">7 · Accuse</label><label for="j7">8 · LIAR</label><label for="j8">9 · Ending</label><label for="j9">10 · Share</label><label for="j10">11 · Return</label></div>
+      <div class="step-text">
+        <p class="t0"><code>main.js</code> asks <code>daily.js</code> for today's date and case, and <code>progress.js</code> for today's saved progress.<span class="files"><span>main.js</span><span>daily.js</span><span>progress.js</span></span></p>
+        <p class="t1"><code>caseFile.js</code> shows the cover. <b>Open the file</b> moves on.<span class="files"><span>caseFile.js</span></span></p>
+        <p class="t2">If <code>cluedle:seenHowTo</code> isn't set, <code>howToPlay.js</code> shows the overlay and sets it on close.<span class="files"><span>howToPlay.js</span></span></p>
+        <p class="t3"><code>board.js</code> lays out the pins from the case data and redraws saved stamps, clues, strings, and cipher state.<span class="files"><span>board.js</span><span>case-N.js</span></span></p>
+        <p class="t4"><code>string.js</code> ties or removes a string between two pin ids and saves it. Rules never read it.<span class="files"><span>string.js</span></span></p>
+        <p class="t5">Clicking the scrawl opens <code>decoder.js</code>. <b>Decode</b> asks <code>cipher.js</code>: right reveals the message with blots for earlier misses; wrong adds a blot stage.<span class="files"><span>decoder.js</span><span>cipher.js</span></span></p>
+        <p class="t6"><code>stamps.js</code> collects a GUILTY suspect and motive. <code>rules.js</code> checks both halves, uses a guess, unlocks a clue or ends the case. Stamps recolor blue or red.<span class="files"><span>stamps.js</span><span>rules.js</span></span></p>
+        <p class="t7"><code>stamps.js</code> collects a LIAR statement and a picked truth. <code>rules.js</code> records the one shot.<span class="files"><span>stamps.js</span><span>rules.js</span></span></p>
+        <p class="t8">On closed or cold, <code>rank.js</code> scores a solved run and <code>ending.js</code> shows the ending.<span class="files"><span>rank.js</span><span>ending.js</span></span></p>
+        <p class="t9"><code>share.js</code> builds the case-file text; <code>ending.js</code> copies it or shows it to copy by hand.<span class="files"><span>share.js</span><span>ending.js</span></span></p>
+        <p class="t10">Same day, progress says closed or cold, so <code>main.js</code> shows the finished board, ending, and countdown from <code>daily.js</code>.<span class="files"><span>main.js</span><span>daily.js</span></span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <h2><small>Stack</small>Small on purpose</h2>
+    <ul>
+      <li><b>HTML, CSS, JavaScript ES modules</b>: no framework, no build. Tradeoff accepted: run <code>npx serve .</code> instead of double-clicking.</li>
+      <li><b>SVG</b> for string and the decoder wheel; <b>pointer events</b> for mouse and touch.</li>
+      <li><b>localStorage</b> for progress; <b>Clipboard API</b> for the share card.</li>
+      <li><b>node --test</b> for the rules: nothing to install.</li>
+      <li><b>Google Fonts</b>: Special Elite (typewriter), Playfair Display (headlines), with Courier New and Georgia fallbacks.</li>
+    </ul>
+    <h3>Run it</h3>
+    <pre class="tree">npx serve .          <span class="c"># then open the address it prints</span>
+npm test             <span class="c"># rules and case checks</span>
+?case=2&amp;fresh        <span class="c"># demo aid: load case 2, ignore saved progress</span></pre>
+    <p class="note" style="margin-top:8px">Optional playable link: GitHub Pages serves these files as is. Settled in 6-ship.</p>
+  </section>
+
+  <section class="sheet">
+    <h2><small>Components</small>Where each PRD behavior lives</h2>
+    <details open><summary>Game rules · <code>rules.js</code> <span class="src">prd › Accusing, Clues, LIAR, Ending</span></summary>
+      <ul><li><code>accuse(state, suspectId, motiveId)</code> → both halves right or wrong, uses a guess, unlocks the next clue or ends the case on a solve or the 5th miss.</li><li><code>flagLiar(state, statementId, truthIndex)</code> → once per case, never touches guesses.</li><li>Rejects any action after the case ends.</li></ul></details>
+    <details><summary>Cipher · <code>cipher.js</code> <span class="src">prd › Finding and Cracking the Cipher</span></summary>
+      <ul><li>Letter shift over A–Z. The case stores plaintext and shift; the scrambled text is generated, so it can't drift.</li><li>Three tries, then locked. The wheel only changes a number; it never decodes.</li><li>Blots: 0% → ~30% → ~60% of letters, chosen by a seeded shuffle of the case id so blots only add up. <code>keepWords</code> never blot.</li></ul></details>
+    <details><summary>Daily case · <code>daily.js</code> <span class="src">prd › Daily Case</span></summary>
+      <ul><li>Local date → case number (days since 2026-10-24, plus one) → case (number − 1, mod 3).</li><li>Countdown to local midnight. <code>?case=N</code> overrides for demos.</li></ul></details>
+    <details><summary>Rank · <code>rank.js</code> <span class="src">prd › Detective Rank</span></summary>
+      <ul><li>Guesses left 0–4, cipher 3/2/1/0, liar 3 → 0–10 points.</li><li>Amateur Sleuth 0–1 · Private Eye 2–3 · Hard-Boiled Investigator 4–5 · Seasoned Detective 6–7 · Basically Sherlock 8–10.</li><li>One table at the top of the file, easy to tune.</li></ul></details>
+    <details><summary>Share card · <code>share.js</code> <span class="src">prd › Share Card</span></summary>
+      <ul><li>Case-file text: CLOSED in N/5 or GONE COLD, 🔓/🔒, 🎭, rank, the case's noir line.</li><li>No names, no orange, yellow, or green emoji. Tested.</li></ul></details>
+    <details><summary>Progress · <code>progress.js</code> <span class="src">prd › States and Boundaries</span></summary>
+      <ul><li><code>cluedle:progress:&lt;date&gt;</code> saved after every rule call; old days deleted.</li><li>Blocked storage never breaks play.</li></ul></details>
+    <details><summary>Screens · <code>src/ui/</code> <span class="src">prd › Screens and Layout</span></summary>
+      <ul><li><b>caseFile.js</b> cover · <b>howToPlay.js</b> overlay · <b>board.js</b> pins with stable ids · <b>stamps.js</b> pick up, stamp, confirm, recolor · <b>string.js</b> SVG curves between pins · <b>decoder.js</b> wheel, Decode, unscramble animation · <b>ending.js</b> ending, rank, copy, countdown.</li></ul></details>
+  </section>
+
+  <section class="sheet">
+    <h2><small>Data model</small>Two shapes</h2>
+    <div class="two">
+      <div><p class="layer" style="color:var(--purple)">Case · authored, read-only</p>
+<pre class="tree">id, title, shareLine
+clipping   { headline, dateline, body }
+suspects   [{ id, name, role, description }]
+motives    [{ id, text }]
+statements [{ id, witness, text, isLie,
+              truthOptions, truthIndex }]
+clues      [4 plain clues, unlock order]
+cipher     { hiddenOn, plaintext,
+             shift, keepWords }
+solution   { suspectId, motiveId }
+endings    { closed, cold }</pre></div>
+      <div><p class="layer" style="color:var(--red)">Progress · per day, localStorage</p>
+<pre class="tree">caseId, dateKey
+status   playing | closed | cold
+guesses  [{ suspectId, motiveId,
+            suspectRight, motiveRight }]
+liar     null | { statementId,
+                  truthIndex, correct }
+cipher   { found, wrongTries, cracked }
+strings  [[pinA, pinB]]
+
+<span class="c"># derived, never stored:</span>
+<span class="c"># unlocked clues, rank, share text</span></pre></div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <h2><small>File structure</small>Where everything lives</h2>
+<pre class="tree">cluedle/
+├── index.html            <span class="c"># the one page; loads src/main.js</span>
+├── styles/               <span class="c"># base · board · stamps · overlays</span>
+├── src/
+│   ├── main.js           <span class="c"># app shell: rules ↔ screens, saves progress</span>
+│   ├── cases/            <span class="c"># index.js + case-1..3.js (Claude drafts, you edit)</span>
+│   ├── game/             <span class="c"># daily · rules · cipher · rank · share · progress — no DOM, tested</span>
+│   └── ui/               <span class="c"># caseFile · howToPlay · board · stamps · string · decoder · ending</span>
+├── tests/                <span class="c"># one test file per rule module + cases.test.js</span>
+├── package.json          <span class="c"># start + test scripts, no dependencies</span>
+├── README.md
+└── devpost/              <span class="c"># scope, prd, spec, checklist</span></pre>
+  </section>
+
+  <section class="sheet">
+    <h2><small>Look and feel, buildable</small>Noir under one lamp</h2>
+    <ul>
+      <li>A corkboard under a desk lamp: a warm pool of light in the center, falling off into dark edges.</li>
+      <li>CSS variables: night <code>#13111c</code>, paper <code>#efe9dd</code>, desaturated violet-brown cork, red <code>#b3263a</code>, blue <code>#2f5aa8</code>, purple <code>#6b3fa0</code>. No orange, yellow, or green, including focus rings and emoji.</li>
+      <li>Special Elite for statements and the case file; Playfair Display for headlines; a plain serif for the story.</li>
+      <li>Stamps with uneven ink and a quick thump; terse hard-boiled copy.</li>
+    </ul>
+  </section>
+
+  <section class="sheet">
+    <h2><small>Your uncertainty · checked 2026-10-24</small>Cluedle vs. Murdle</h2>
+    <table>
+      <tr><th></th><th>Murdle</th><th>Cluedle</th></tr>
+      <tr><td>Coded note</td><td>Given in the clue list</td><td class="yes">Hidden on the board; you have to find it, and the key is in the story</td></tr>
+      <tr><td>Liars</td><td>The guilty party always lies</td><td>A witness lies; you stamp it and name the truth</td></tr>
+      <tr><td>Loop</td><td>All evidence up front, deduce once</td><td class="yes">Wordle-style: half-right feedback, each miss pays out a clue</td></tr>
+      <tr><td>Mistakes</td><td>—</td><td class="yes">Cipher misses blot the message for good</td></tr>
+      <tr><td>Surface</td><td>Text and a logic grid</td><td class="yes">A murder board: stamps, pins, red string</td></tr>
+      <tr><td>Result</td><td>Solved or not</td><td class="yes">Five ranks, a case-file share card, and what failing cost</td></tr>
+    </table>
+    <p class="note" style="margin-top:10px">Lead the demo with the bold rows. The first build step is a static look test of case 1, so you can judge the noir look in the browser before any rules are wired up.</p>
+  </section>
+
+  <section class="sheet">
+    <h2><small>Simplified, on purpose</small>What we're not building yet</h2>
+    <ul>
+      <li><b>One cipher and exactly one liar per case</b>: keeps scoring fair and simple.</li>
+      <li><b>Static string curves</b>, no physics.</li>
+      <li><b>Three cases rotating by date</b>; more cases are just more files.</li>
+      <li><b>CSS textures</b>, no image assets.</li>
+      <li><b>No browser-automation suite</b>: rules are tested; screens are checked by playing each build step.</li>
+    </ul>
+    <h3>Still open, fine for the build</h3>
+    <ul><li>How hidden the scrawl should be, tuned while playtesting.</li><li>Rank point values and bands, tuned while playtesting.</li></ul>
+  </section>
+
+  <footer>Companion to devpost/spec.md · the Markdown file is the official version</footer>
+</main>
+</body>
+</html>
