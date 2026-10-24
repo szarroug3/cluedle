@@ -36,7 +36,7 @@ The "oh, that's cool" beat: noticing the hidden clue, then watching it unscrambl
 - A detective rank (e.g. Amateur up to Seasoned Detective) based on what's already in the core: guesses used, cipher found and cracked, liar caught. Exact ranks and rules are set in the PRD.
 - The murder-board look: corkboard, pinned suspect cards, newspaper-clipping story, and clues pinned as they unlock.
 - Red string the player draws between pins to track their own thinking.
-- An emoji share card copied to the clipboard, showing guess rows, the detective rank, and a 🔓 when a cipher was cracked. The card's exact style is to be chosen from options in the PRD.
+- An emoji share card copied to the clipboard, showing guess rows, the detective rank, and whether the cipher was cracked and the liar caught. The card's exact style is to be chosen from options in the PRD.
 - No AI at runtime; everything is hand-written and rule-based.
 
 ## Later

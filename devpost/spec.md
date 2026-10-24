@@ -105,7 +105,7 @@ PRD ref: `prd.md > Finding and Cracking the Cipher`.
 PRD ref: `prd.md > Detective Rank`.
 
 ### Share Card (`src/game/share.js`)
-- `shareText(case, progress, rank)` → the case-file card text from `prd.md > Share Card`: case number, CLOSED in N/5 or GONE COLD, cipher 🔓/🔒, liar 🎭 when caught, the rank (closed only), and the case's noir line.
+- `shareText(caseNumber, case, progress, rank)` → the case-file card text from `prd.md > Share Card`: case number, CLOSED in N/5 or GONE COLD, one 🔵/⚫ row per guess (right parts first), cipher ✔️/✖️, liar ✔️/✖️, the rank (closed only), and the case's noir line.
 - Never includes suspect or motive names. Uses only red, purple, blue, and neutral emoji.
 PRD ref: `prd.md > Share Card`.
 

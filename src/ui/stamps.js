@@ -1,5 +1,7 @@
-// The GUILTY stamp: pick it up from the tray, stamp a suspect, a motive, and a weapon, then make
-// the accusation from the slip on the rail. Past stamps stay on the cards, numbered by guess.
+// The stamps. GUILTY: pick it up from the tray, stamp a suspect, a motive, and a weapon, then make
+// the accusation from the slip on the rail; past stamps stay on the cards, numbered by guess.
+// LIAR: one shot, stamped on a suspect's card, then the player says what really happened.
+import { openOverlay } from "./decoder.js";
 
 const KINDS = ["suspect", "motive", "weapon"];
 const KIND_LABEL = { suspect: "Who", motive: "Why", weapon: "How" };
@@ -37,20 +39,24 @@ function placeMark(mark, number) {
   mark.style.setProperty("--stamp-rot", `${-12 + ((number - 1) % 5) * 6}deg`);
 }
 
-export function createStamps(stage, { names, guessNumber, onAccuse }) {
+export function createStamps(stage, { names, guessNumber, onAccuse, suspects, onFlagLiar }) {
   ensureInkFilter();
   const board = stage.querySelector(".board");
-  const tray = stage.querySelector(".stamp-guilty");
-  tray.setAttribute("role", "button");
-  tray.setAttribute("aria-label", "Pick up the GUILTY stamp");
-  tray.tabIndex = 0;
+  const trays = { guilty: stage.querySelector(".stamp-guilty"), liar: stage.querySelector(".stamp-liar") };
+  for (const [kind, tray] of Object.entries(trays)) {
+    tray.setAttribute("role", "button");
+    tray.setAttribute("aria-label", `Pick up the ${kind.toUpperCase()} stamp`);
+    tray.tabIndex = 0;
+  }
 
-  let held = false;
+  let held = null; // "guilty", "liar", or nothing
   let ended = false;
+  let liarUsed = false;
   const pending = { suspect: null, motive: null, weapon: null };
 
   const ghost = el("div", "held-stamp");
-  ghost.append(el("span", "stamp-face", "GUILTY"));
+  const ghostFace = el("span", "stamp-face");
+  ghost.append(ghostFace);
   ghost.hidden = true;
   stage.append(ghost);
 
@@ -70,19 +76,23 @@ export function createStamps(stage, { names, guessNumber, onAccuse }) {
   function refresh() {
     for (const kind of KINDS) lines[kind].textContent = pending[kind] ? names[kind](pending[kind]) : "—";
     accuseButton.disabled = ended || KINDS.some((kind) => !pending[kind]);
-    tray.classList.toggle("lifted", held);
-    stage.classList.toggle("holding", held);
+    trays.guilty.classList.toggle("lifted", held === "guilty");
+    trays.liar.classList.toggle("lifted", held === "liar");
+    trays.liar.classList.toggle("used", liarUsed);
+    stage.classList.toggle("holding", Boolean(held));
     ghost.hidden = !held;
+    ghost.classList.toggle("liar", held === "liar");
+    ghostFace.textContent = held === "liar" ? "LIAR" : "GUILTY";
   }
 
-  function pickUp() {
-    if (ended) return;
-    held = !held;
+  function pickUp(kind) {
+    if (ended || (kind === "liar" && liarUsed)) return;
+    held = held === kind ? null : kind;
     refresh();
   }
 
   function putDown() {
-    held = false;
+    held = null;
     refresh();
   }
 
@@ -117,6 +127,72 @@ export function createStamps(stage, { names, guessNumber, onAccuse }) {
     putDown();
   });
 
+  // LIAR: stamp the card, confirm the one shot, then pick what really happened. Backing out
+  // before confirming costs nothing; leaving after confirming uses the shot.
+  function stampLiar(card) {
+    const { id } = pinOf(card);
+    const suspect = suspects.find((s) => s.id === id);
+    putDown();
+    const mark = el("div", "stamp-mark liar-mark pending", "LIAR");
+    placeMark(mark, 2);
+    card.querySelector(".paper").append(mark);
+
+    let committed = false;
+    let settled = false;
+    function finish(truthIndex) {
+      if (settled) return;
+      settled = true;
+      liarUsed = true;
+      const result = onFlagLiar(id, truthIndex);
+      mark.classList.remove("pending");
+      mark.classList.add(result?.correct ? "right" : "wrong");
+      refresh();
+      return result;
+    }
+
+    const slip = el("div", "paper liar-slip");
+    slip.setAttribute("role", "dialog");
+    slip.setAttribute("aria-label", `Call ${suspect.name} a liar`);
+    const body = el("div", "liar-body");
+    const confirm = el("button", "liar-button", "Stamp it");
+    confirm.type = "button";
+    body.append(
+      el("p", "statement-quote", `\u201c${suspect.statement.text}\u201d`),
+      el("p", "liar-warning", "You get one shot at this. Make it count."),
+      confirm,
+    );
+    slip.append(el("div", "card-label", "Liar?"), el("h2", "statement-name", suspect.name), body);
+
+    const close = () => slip.closest(".overlay")?.querySelector(".overlay-close").click();
+    confirm.addEventListener("click", () => {
+      committed = true;
+      if (!suspect.statement.isLie) {
+        finish(null);
+        body.replaceChildren(el("p", "liar-verdict", "Telling the truth, as far as anyone can tell. The shot\u2019s spent."));
+        return;
+      }
+      const options = el("div", "liar-options");
+      suspect.statement.truthOptions.forEach((text, index) => {
+        const option = el("button", "liar-option", text);
+        option.type = "button";
+        option.addEventListener("click", () => {
+          const result = finish(index);
+          body.replaceChildren(
+            el("p", "liar-verdict", result?.correct ? "Caught in the lie." : "Wrong call. Whatever happened, it wasn\u2019t that."),
+          );
+          setTimeout(close, 1400);
+        });
+        options.append(option);
+      });
+      body.replaceChildren(el("p", "liar-question", "So what really happened?"), options);
+    });
+
+    openOverlay(stage, slip, () => {
+      if (committed) finish(null);
+      else mark.remove();
+    });
+  }
+
   stage.addEventListener("pointermove", (event) => {
     if (!held) return;
     const box = stage.getBoundingClientRect();
@@ -124,12 +200,14 @@ export function createStamps(stage, { names, guessNumber, onAccuse }) {
     ghost.style.left = `${(event.clientX - box.left) / scale}px`;
     ghost.style.top = `${(event.clientY - box.top) / scale}px`;
   });
-  tray.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      pickUp();
-    }
-  });
+  for (const [kind, tray] of Object.entries(trays)) {
+    tray.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        pickUp(kind);
+      }
+    });
+  }
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && held) putDown();
   });
@@ -140,10 +218,19 @@ export function createStamps(stage, { names, guessNumber, onAccuse }) {
     // Handles a click on the board if it belongs to the stamp; returns whether it did.
     handleClick(event) {
       if (event.target.closest(".stamp-guilty")) {
-        pickUp();
+        pickUp("guilty");
+        return true;
+      }
+      if (event.target.closest(".stamp-liar")) {
+        pickUp("liar");
         return true;
       }
       if (!held) return false;
+      if (held === "liar") {
+        const card = event.target.closest(".pin-suspect");
+        if (card) stampLiar(card);
+        return true;
+      }
       const card = event.target.closest(".pin-suspect, .pin-motive, .pin-weapon");
       if (card) stamp(card);
       return true;

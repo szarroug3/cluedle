@@ -123,12 +123,12 @@ Source: `scope.md > The POC Boundary` (cheap version).
 - **Case-file style**, for example:
 
   ```
-  🗂️ CLUEDLE · CASE #3
+  CLUEDLE · CASE #3
   ━━ CLOSED in 3/5 ━━
   🔵⚫⚫
   🔵🔵⚫
   🔵🔵🔵
-  Cipher 🔓  Liar 🎭
+  Cipher ✔️  Liar ✔️
   Rank: Seasoned Detective
   "The ink never lies."
   ```

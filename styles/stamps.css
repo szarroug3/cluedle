@@ -121,3 +121,13 @@
   font-size: 11px;
   color: var(--paper);
 }
+
+/* LIAR stamp: purple in hand and while pending; blue if caught, red if not. */
+.stamp-liar { cursor: pointer; transition: transform 0.15s; }
+.stamp-liar:hover { transform: translateY(-3px); }
+.stamp-liar.lifted { opacity: 0.25; }
+.stamp-liar.used { opacity: 0.3; cursor: not-allowed; transform: none; }
+.held-stamp.liar .stamp-face { border-color: var(--purple); color: var(--purple); }
+.stamp-mark.liar-mark { color: var(--purple); top: auto; bottom: 34%; }
+.stamp-mark.liar-mark.right { color: var(--blue); }
+.stamp-mark.liar-mark.wrong { color: var(--red); opacity: 0.8; }

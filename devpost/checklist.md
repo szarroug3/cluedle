@@ -39,7 +39,7 @@ Build mode: fast
   Learner check: Play case 1 through: guess wrong at least once on purpose, watch a clue pin up, then solve it. Then reload and lose it on purpose. Do the stamps feel tactile, and do the endings land?
   Commit: `Add GUILTY stamp accusations, clue unlocks, and endings`
 
-- [ ] **4. Catch the liar, earn a rank, and copy the share card**
+- [x] **4. Catch the liar, earn a rank, and copy the share card**
   Becomes usable: The LIAR stamp can be put on a suspect's card, followed by a slip of truth options; it's free, one shot, and turns blue or red. A solved case shows the detective rank from the points table, and **Copy share card** puts the case-file card on the clipboard, or shows it to copy by hand if the clipboard is blocked.
   Why now: These finish the ending — the payoff and the thing players share — and they depend on the guess, cipher, and liar results the earlier slices produce.
   PRD ref: `prd.md > The Core Journey` (steps 8, 10), `prd.md > Catching the Liar With the LIAR Stamp`, `prd.md > Detective Rank`, `prd.md > Share Card`
@@ -104,6 +104,7 @@ Activity mode: [live app and editor, explicit static fallback, focused alternati
 
 ## Revisions
 
+- Share card uses ✔️/✖️ for the cipher and liar and drops the 🗂️ header, instead of 🗂️, 🔓, and 🎭 — those render gold or orange on most platforms, which the palette rules out. LIAR is confirmed before it's spent, and the truth options appear only after stamping the real liar — truthful statements have no options to pick from.
 - Swapped the blank card's two alphabet wheels for two side-by-side A–Z strips that slide up and down, with clicked letters writing into the answer — the learner found strips easier to line up and wanted to enter letters without the keyboard. Updated `prd.md` and `spec.md`.
 - Added a third part to every accusation, the weapon (6 weapon cards), and changed feedback to how many of the three parts are right, not which; moved each statement onto its suspect's card (every witness is a suspect) and the LIAR stamp onto the card — the learner wanted the case cracked by reasoning rather than by working through the cards in order. Updated `scope.md`, `prd.md`, `spec.md`, and slices 3 and 4.
 - Replaced the decoder wheel with decoding by hand: every scrap opens the same close-up, and the player writes the decoded message on a blank card pinned where the decoded note used to land, with two sliding letter strips as a helper; a wrong answer runs ink over the scrawl. At the cipher checkpoint the learner found the scrawl by clicking each scrap, because only it opened a decoder. Updated `prd.md` and `spec.md`.

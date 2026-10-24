@@ -6,16 +6,20 @@ import { openCloseLook, openBlankCard, openStatement } from "./ui/decoder.js";
 import { createStamps } from "./ui/stamps.js";
 import { showEnding } from "./ui/ending.js";
 import { attempt, blotted, encode } from "./game/cipher.js";
-import { accuse } from "./game/rules.js";
+import { accuse, flagLiar } from "./game/rules.js";
+import { rankFor } from "./game/rank.js";
+import { shareText } from "./game/share.js";
 
 document.getElementById("needs-server")?.remove();
 
+const CASE_NUMBER = 1;
 const caseData = cases[0];
 const { cipher } = caseData;
 const progress = {
   caseId: caseData.id,
   status: "playing",
   guesses: [],
+  liar: null,
   cipher: { found: false, wrongTries: 0, cracked: false },
 };
 
@@ -24,7 +28,7 @@ const readable = () => blotted(cipher.plaintext, progress.cipher.wrongTries, cas
 const scrawlText = () => encode(readable(), cipher.shift);
 
 const app = document.getElementById("app");
-const stage = renderBoard(caseData, { caseNumber: 1, scrawlText: scrawlText() });
+const stage = renderBoard(caseData, { caseNumber: CASE_NUMBER, scrawlText: scrawlText() });
 app.append(stage);
 
 function openCard() {
@@ -44,6 +48,11 @@ function openCard() {
   });
 }
 
+function showCaseEnding() {
+  const rank = rankFor(progress);
+  showEnding(stage, caseData, progress.status, { rank, share: shareText(CASE_NUMBER, caseData, progress, rank) });
+}
+
 const byId = (list, key) => (id) => list.find((item) => item.id === id)[key];
 const stamps = createStamps(stage, {
   names: {
@@ -52,6 +61,13 @@ const stamps = createStamps(stage, {
     weapon: byId(caseData.weapons, "name"),
   },
   guessNumber: () => progress.guesses.length + 1,
+  suspects: caseData.suspects,
+  onFlagLiar(suspectId, truthIndex) {
+    const step = flagLiar(progress, caseData.suspects, suspectId, truthIndex);
+    if (step.rejected) return step;
+    Object.assign(progress, step.state);
+    return step;
+  },
   onAccuse(guess) {
     const step = accuse(progress, caseData.solution, guess);
     if (step.rejected) return step;
@@ -59,7 +75,7 @@ const stamps = createStamps(stage, {
     const { rightCount, status, unlockedClueIndex } = step.result;
     markGuessSpent(stage, progress.guesses.length - 1, rightCount);
     if (unlockedClueIndex != null) pinClue(stage, unlockedClueIndex, caseData.clues[unlockedClueIndex]);
-    if (status !== "playing") setTimeout(() => showEnding(stage, caseData, status), 700);
+    if (status !== "playing") setTimeout(showCaseEnding, 700);
     return step;
   },
 });
