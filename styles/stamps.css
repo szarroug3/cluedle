@@ -112,15 +112,6 @@
   cursor: not-allowed;
 }
 
-/* Spent guesses on the rail show how many parts were right. */
-.shell.spent {
-  display: grid;
-  place-items: center;
-  background: radial-gradient(circle, #0f0d14 0 55%, #3a3641 70%);
-  font-family: var(--font-type);
-  font-size: 11px;
-  color: var(--paper);
-}
 
 /* LIAR stamp: purple in hand and while pending; blue if caught, red if not. */
 .stamp-liar { cursor: pointer; transition: transform 0.15s; }

@@ -61,7 +61,13 @@
 .clipping {
   width: 548px;
   padding: 18px 24px 26px;
-  background-image: var(--noise), linear-gradient(175deg, var(--newsprint), #d6d0c6);
+  color: #29272d;
+  background-image:
+    var(--news-grain),
+    var(--news-mottle),
+    radial-gradient(rgba(31, 27, 38, 0.07) 0.6px, transparent 0.9px),
+    linear-gradient(175deg, #d9d7d3, #c5c2bd);
+  background-size: 160px 160px, 400px 400px, 3px 3px, auto;
   clip-path: polygon(
     0 1%, 8% 0, 17% 1.2%, 29% 0.2%, 41% 1%, 55% 0, 68% 1.1%, 80% 0.3%, 92% 1%, 100% 0,
     99.4% 30%, 100% 62%, 99.5% 100%, 88% 99%, 75% 100%, 63% 98.8%, 50% 99.8%, 37% 98.9%,
@@ -490,16 +496,23 @@
 .spool::after { bottom: -4px; }
 
 /* Guesses left: five cartridge bases. */
-.shells { display: flex; gap: 10px; padding: 8px 0; }
-.shell {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, #2a2730 0 4px, transparent 5px),
-    radial-gradient(circle at 38% 32%, #d3cfda, #77727f 55%, #3a3641);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6), inset 0 0 0 2px rgba(0, 0, 0, 0.25);
+.guess-row { display: flex; gap: 6px; }
+.guess { display: flex; flex-direction: column; align-items: center; width: 34px; }
+.detective { width: 34px; height: 34px; }
+.detective-hat,
+.detective-face { fill: var(--paper); }
+.detective-shadow { fill: #3a3342; }
+.detective-band { fill: var(--red); }
+.guess-count {
+  min-height: 13px;
+  font-family: var(--font-type);
+  font-size: 11px;
+  line-height: 13px;
+  color: var(--paper);
 }
+/* A spent guess fades to a faint outline, its count of right parts underneath. */
+.guess.spent .detective { opacity: 0.28; }
+.guess.spent .detective-band { fill: var(--paper); }
 
 .case-tag { margin-left: auto; text-align: right; }
 .case-number {
@@ -507,7 +520,7 @@
   font-size: 13px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--red);
+  color: #ec8d9c;
 }
 .case-title {
   font-family: var(--font-news);

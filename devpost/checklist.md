@@ -94,6 +94,10 @@ Build mode: fast
 - [ ] Once the case ends, the accusation button reopens the ending and its share card
 - [ ] CONFIDENTIAL tab on the case file is easy to read
 - [ ] After the case ends, the slip keeps showing the final accusation (who, why, how), including after a reload
+- [ ] Newspaper clipping looks grainier and greyer, more like newsprint
+- [ ] Ink blots look like irregular splats, not uniform ovals
+- [ ] CASE number on the rail is easy to read
+- [ ] Guess icons on the rail redesigned as fedora detectives (learner's reference); spent ones fade with their count
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

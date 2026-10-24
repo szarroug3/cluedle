@@ -50,14 +50,24 @@ export function openOverlay(stage, card, onClose) {
   document.addEventListener("keydown", onKey);
 }
 
+// One ink splat in a letter's place. Four splat shapes and a tilt, picked by position, so the
+// same letter always looks the same and no two neighbours match.
+export function inkBlot(position) {
+  const blot = el("span", `blot blot-${position % 4}`, "M");
+  blot.style.setProperty("--blot-rot", `${(position * 67) % 360}deg`);
+  return blot;
+}
+
 // Text as spans grouped into words, with BLOT characters drawn as ink.
 export function renderInked(container, text) {
   container.replaceChildren();
   const spans = [];
+  let position = 0;
   for (const word of text.split(" ")) {
     const group = el("span", "word");
     for (const ch of word) {
-      const span = el("span", ch === BLOT ? "blot" : "ch", ch === BLOT ? "M" : ch);
+      const span = ch === BLOT ? inkBlot(position) : el("span", "ch", ch);
+      position += 1;
       group.append(span);
       spans.push(span);
     }

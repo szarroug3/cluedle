@@ -1,6 +1,6 @@
 // The murder board: lays out every pin from the case data on a fixed 1600×1000 stage.
 import { BLOT } from "../game/cipher.js";
-import { DOODLES } from "./decoder.js";
+import { DOODLES, inkBlot } from "./decoder.js";
 
 export const STAGE_WIDTH = 1600;
 export const STAGE_HEIGHT = 1000;
@@ -94,6 +94,16 @@ const PHOTO_SCENES = {
     </svg>`,
 };
 
+// One guess on the rail: a detective in a fedora, face half in shadow.
+const DETECTIVE = `
+  <svg class="detective" viewBox="0 0 40 40" aria-hidden="true">
+    <path class="detective-face" d="M11 22 Q11 34 20 37 Q29 34 29 22 Z"/>
+    <path class="detective-shadow" d="M11 22 Q11 34 20 37 L20 30 L23 26 L20 22 Z"/>
+    <path class="detective-hat" d="M13 18 Q12 8 16 6 Q20 8.5 24 6 Q28 8 27 18 Z"/>
+    <ellipse class="detective-hat" cx="20" cy="19" rx="17" ry="4.2"/>
+    <path class="detective-band" d="M13.4 15.2 Q20 17 26.6 15.2 L26.8 17.6 Q20 19.4 13.2 17.6 Z"/>
+  </svg>`;
+
 function el(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -178,7 +188,7 @@ function scrawl(text, doodle) {
 
 function fillScrawl(node, text) {
   node.replaceChildren();
-  for (const ch of `${text.slice(0, 22).trim()}\u2026`) node.append(ch === BLOT ? el("span", "blot", "M") : ch);
+  [...`${text.slice(0, 22).trim()}\u2026`].forEach((ch, i) => node.append(ch === BLOT ? inkBlot(i) : ch));
   node.insertAdjacentHTML("beforeend", DOODLES[node.dataset.doodle]);
 }
 
@@ -210,7 +220,7 @@ export function fillBlankCard(stage, text) {
   const paper = item.querySelector(".blank-card");
   if (paper.classList.contains("filled")) return;
   const body = el("p", "decoded-text");
-  for (const ch of text) body.append(ch === BLOT ? el("span", "blot", "M") : ch);
+  [...text].forEach((ch, i) => body.append(ch === BLOT ? inkBlot(i) : ch));
   paper.classList.add("filled");
   paper.setAttribute("aria-label", "Decoded message");
   paper.append(el("div", "card-label", "Decoded"), body);
@@ -230,10 +240,10 @@ export function pinClue(stage, index, text, { animate = true } = {}) {
 
 // A spent guess on the rail shows how many of its three parts were right.
 export function markGuessSpent(stage, index, rightCount) {
-  const shell = stage.querySelectorAll(".shell")[index];
-  shell.classList.add("spent");
-  shell.textContent = `${rightCount}/3`;
-  shell.title = `Guess ${index + 1}: ${rightCount} of 3 right`;
+  const guess = stage.querySelectorAll(".guess")[index];
+  guess.classList.add("spent");
+  guess.querySelector(".guess-count").textContent = `${rightCount}/3`;
+  guess.title = `Guess ${index + 1}: ${rightCount} of 3 right`;
 }
 
 function clueSlot(index, slot) {
@@ -265,9 +275,14 @@ function rail(caseData, caseNumber) {
   spool.append(el("div", "spool"), el("div", "rail-label", "String"));
 
   const guesses = el("div", "rail-group");
-  const shells = el("div", "shells");
-  for (let i = 0; i < 5; i++) shells.append(el("span", "shell"));
-  guesses.append(shells, el("div", "rail-label", "Guesses left"));
+  const detectives = el("div", "guess-row");
+  for (let i = 0; i < 5; i++) {
+    const guess = el("div", "guess");
+    guess.innerHTML = DETECTIVE;
+    guess.append(el("span", "guess-count"));
+    detectives.append(guess);
+  }
+  guesses.append(detectives, el("div", "rail-label", "Guesses left"));
 
   const tag = el("div", "case-tag");
   tag.append(el("div", "case-number", `Case #${caseNumber}`), el("div", "case-title", caseData.title));
