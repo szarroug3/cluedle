@@ -166,8 +166,9 @@ PRD ref: `prd.md > Case Ending`, `prd.md > Share Card`, `prd.md > States and Bou
   statements: [{ id, witness, text, isLie,                // at least one isLie
                  truthOptions: [string], truthIndex }],   // only on the lie
   clues:      [string],          // plain clues, in unlock order (4: one per possible miss)
+  photo:      { caption },       // a pinned photograph; scenery, and a place to hide the scrawl
   cipher: {
-    hiddenOn: "photo-back",      // which pin hides the scrawl, plus how it's drawn
+    hiddenOn: "photo",           // which pin hides the scrawl
     plaintext: "...",
     shift: 7,                    // 1–25; its key is hidden in the clipping
     keepWords: ["..."]           // never blotted

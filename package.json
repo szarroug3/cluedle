@@ -1,0 +1,11 @@
+{
+  "name": "cluedle",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Wordle for armchair detectives: a daily noir mystery worked on a murder board.",
+  "type": "module",
+  "scripts": {
+    "start": "npx serve .",
+    "test": "node --test"
+  }
+}

@@ -5,11 +5,11 @@ status: approved
 
 # Build Checklist
 
-Build mode: [learn or fast — record once chosen; carry forward on resume]
+Build mode: fast
 
 ## Slices
 
-- [ ] **1. Case 1 laid out on a noir murder board**
+- [x] **1. Case 1 laid out on a noir murder board**
   Becomes usable: Running `npm start` and opening the page shows case 1 pinned on a corkboard under a desk lamp: the newspaper clipping, suspect cards, motive cards, witness statements, empty clue slots, the hidden scrawl, and the stamp tray, spool, guesses left, and **?** at the edges. Nothing is clickable yet.
   Why now: The spec's first open question is the look, and it's hard to judge noir from words. Settling it before any rules are wired means later slices land on a board you already like. It also bootstraps the project and writes the first real case, which every later slice needs.
   PRD ref: `prd.md > Screens and Layout`, `prd.md > Look and Feel`, `prd.md > Daily Case`
@@ -102,3 +102,5 @@ Reflection: [offered/answered/declined/already covered — personal answer belon
 Activity mode: [live app and editor, explicit static fallback, focused alternative, prior practice, or recap]
 
 ## Revisions
+
+- Added a `photo` pin to the case data, with the scrawl pencilled in its margin, and a handwriting font (Reenie Beanie) for the scrawl — the spec's data model named a photo as a hiding place but had no field for it, and the scrawl needed to look different from the typed papers to read as an odd thing to notice.
