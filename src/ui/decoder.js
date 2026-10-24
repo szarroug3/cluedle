@@ -50,11 +50,14 @@ export function openOverlay(stage, card, onClose) {
   document.addEventListener("keydown", onKey);
 }
 
-// One ink splat in a letter's place. Six splat shapes and a tilt, picked by position, so the
-// same letter always looks the same and no two neighbours match.
+// One ink splat in a letter's place. Its shape, tilt, size, and height above or below the line
+// are picked by position, so the same letter always looks the same and no two neighbours match.
 export function inkBlot(position) {
   const blot = el("span", `blot blot-${position % 6}`, "M");
+  const spread = (salt) => (((position + 1) * salt) % 97) / 96; // 0..1, scattered
   blot.style.setProperty("--blot-rot", `${(position * 67) % 360}deg`);
+  blot.style.setProperty("--blot-scale", (0.7 + spread(53) * 0.65).toFixed(2));
+  blot.style.setProperty("--blot-y", `${((spread(29) - 0.5) * 0.5).toFixed(2)}em`);
   return blot;
 }
 
