@@ -100,6 +100,7 @@ Build mode: fast
 - [ ] Guess icons on the rail redesigned as fedora detectives (learner's reference); spent ones fade with their count
 - [ ] Cases 4–10 drafted for the showcase; the learner solves each cold to judge it (solutions kept from the learner)
 - [ ] Tries-left drops on the blank card redrawn as magnifying glasses over a fingerprint (learner's reference); spent ones fade
+- [x] Red string physics: strings drop, bounce, and settle when tied, and sway when something nearby is clicked or the pointer brushes them (learner reviewed and liked it)
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
@@ -116,6 +117,7 @@ Activity mode: [live app and editor, explicit static fallback, focused alternati
 
 ## Revisions
 
+- Brought red-string physics forward from `scope.md > Later` at the learner's request during the final review. String points for the rank stay deferred; the learner is undecided.
 - Grew from three cases to ten during the final review, for the showcase. Claude drafts cases 4–10, each with its own setting, twist, photo scene, and doodle; the learner plays them cold to judge them. Updated `scope.md`, `prd.md`, `spec.md`, and the README.
 - Made the photo scene, the scrawl's doodle, and the scrawl's hiding place part of each case's data (`photo.scene`, `cipher.doodle`, `cipher.hiddenOn` as `photo` or `evidence:<id>`) — case 1 had them drawn in, and cases 2 and 3 hide their codes on a ticket stub and a luggage tag with star and train doodles.
 - Share card uses ✔️/✖️ for the cipher and liar and drops the 🗂️ header, instead of 🗂️, 🔓, and 🎭 — those render gold or orange on most platforms, which the palette rules out. LIAR is confirmed before it's spent, and the truth options appear only after stamping the real liar — truthful statements have no options to pick from.

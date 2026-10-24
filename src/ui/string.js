@@ -1,8 +1,18 @@
 // Red string between pins, for the player's own thinking. Click the spool, then pin A, then pin B,
 // to tie a string; the spool stays in hand for the next one until it's clicked again or another tool
 // is picked up. Click a string to take it down. The rules never read it.
+//
+// Each string is a short chain of points under gravity (Verlet integration): a new string drops and
+// settles, and strings sway when something nearby is clicked or the pointer brushes them. The
+// simulation only runs while something is moving.
 
 const SVG_NS = "http://www.w3.org/2000/svg";
+const SEGMENTS = 14;
+const SLACK = 1.035; // string is 3.5% longer than the straight line between its pins, so it sags
+const GRAVITY = 0.35;
+const DAMPING = 0.965;
+const ITERATIONS = 8;
+const REST_SPEED = 0.02; // below this, everything is still and the loop stops
 
 function svg(tag, attrs = {}) {
   const node = document.createElementNS(SVG_NS, tag);
@@ -22,34 +32,132 @@ export function createString(stage, { strings, onChange }) {
 
   let threading = false;
   let first = null;
+  let ropes = []; // one per string: { a, b, points: [{ x, y, px, py }], rest, group, hit, line }
+  let running = false;
 
   // Where a pin's head sits, in the board's own (unscaled) coordinates.
-  function headOf(pinId) {
-    const item = board.querySelector(`[data-pin="${pinId}"]`);
-    const head = item?.querySelector(":scope > .pushpin");
-    if (!head) return null;
+  function toBoard(clientX, clientY) {
     const origin = layer.getBoundingClientRect();
     const scale = origin.width / layer.clientWidth || 1;
+    return { x: (clientX - origin.left) / scale, y: (clientY - origin.top) / scale };
+  }
+  function headOf(pinId) {
+    const head = board.querySelector(`[data-pin="${pinId}"]`)?.querySelector(":scope > .pushpin");
+    if (!head) return null;
     const box = head.getBoundingClientRect();
-    return {
-      x: (box.left + box.width / 2 - origin.left) / scale,
-      y: (box.top + box.height / 2 - origin.top) / scale,
-    };
+    return toBoard(box.left + box.width / 2, box.top + box.height / 2);
   }
 
-  // A slightly sagging curve, as string hangs between two pins.
-  function draw() {
+  // A rope starts as a straight line (or already hanging, when restoring) between its pins.
+  function makeRope([a, b], index, hanging) {
+    const from = headOf(a);
+    const to = headOf(b);
+    if (!from || !to) return null;
+    const length = Math.hypot(to.x - from.x, to.y - from.y);
+    const points = [];
+    for (let i = 0; i <= SEGMENTS; i++) {
+      const t = i / SEGMENTS;
+      const sag = hanging ? Math.sin(Math.PI * t) * length * 0.11 : 0;
+      const x = from.x + (to.x - from.x) * t;
+      const y = from.y + (to.y - from.y) * t + sag;
+      points.push({ x, y, px: x, py: y });
+    }
+    const group = svg("g", { class: "string", "data-index": index });
+    const hit = svg("path", { class: "string-hit" });
+    const line = svg("path", { class: "string-line" });
+    group.append(hit, line);
+    return { a, b, points, rest: (length * SLACK) / SEGMENTS, group, hit, line };
+  }
+
+  function rebuild({ hanging }) {
     layer.replaceChildren();
-    strings.forEach(([a, b], index) => {
-      const from = headOf(a);
-      const to = headOf(b);
-      if (!from || !to) return;
-      const sag = Math.hypot(to.x - from.x, to.y - from.y) * 0.1;
-      const d = `M${from.x} ${from.y} Q${(from.x + to.x) / 2} ${(from.y + to.y) / 2 + sag} ${to.x} ${to.y}`;
-      const group = svg("g", { class: "string", "data-index": index });
-      group.append(svg("path", { d, class: "string-hit" }), svg("path", { d, class: "string-line" }));
-      layer.append(group);
-    });
+    ropes = strings.map((pair, i) => makeRope(pair, i, hanging)).filter(Boolean);
+    for (const rope of ropes) layer.append(rope.group);
+    for (const rope of ropes) render(rope);
+  }
+
+  function render(rope) {
+    const p = rope.points;
+    let d = `M${p[0].x.toFixed(1)} ${p[0].y.toFixed(1)}`;
+    for (let i = 1; i < p.length - 1; i++) {
+      const mx = (p[i].x + p[i + 1].x) / 2;
+      const my = (p[i].y + p[i + 1].y) / 2;
+      d += ` Q${p[i].x.toFixed(1)} ${p[i].y.toFixed(1)} ${mx.toFixed(1)} ${my.toFixed(1)}`;
+    }
+    d += ` L${p[p.length - 1].x.toFixed(1)} ${p[p.length - 1].y.toFixed(1)}`;
+    rope.hit.setAttribute("d", d);
+    rope.line.setAttribute("d", d);
+  }
+
+  // One step of the simulation. Returns how far the fastest point moved, once settled by the
+  // constraints, so a string hanging still reads as still even though gravity keeps pulling.
+  function step(rope) {
+    const p = rope.points;
+    const last = p.length - 1;
+    for (let i = 1; i < last; i++) {
+      const pt = p[i];
+      const vx = (pt.x - pt.px) * DAMPING;
+      const vy = (pt.y - pt.py) * DAMPING;
+      pt.px = pt.x;
+      pt.py = pt.y;
+      pt.x += vx;
+      pt.y += vy + GRAVITY;
+    }
+    // Keep neighbours at the rest length; the end points stay on their pins.
+    for (let k = 0; k < ITERATIONS; k++) {
+      for (let i = 0; i < last; i++) {
+        const a = p[i];
+        const b = p[i + 1];
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const dist = Math.hypot(dx, dy) || 0.001;
+        const push = (dist - rope.rest) / dist / 2;
+        if (i > 0) {
+          a.x += dx * push;
+          a.y += dy * push;
+        }
+        if (i + 1 < last) {
+          b.x -= dx * push;
+          b.y -= dy * push;
+        }
+      }
+    }
+    let fastest = 0;
+    for (let i = 1; i < last; i++) fastest = Math.max(fastest, Math.abs(p[i].x - p[i].px) + Math.abs(p[i].y - p[i].py));
+    return fastest;
+  }
+
+  function loop() {
+    let moving = 0;
+    for (const rope of ropes) {
+      moving = Math.max(moving, step(rope));
+      render(rope);
+    }
+    if (moving > REST_SPEED) requestAnimationFrame(loop);
+    else running = false;
+  }
+
+  function wake() {
+    if (running) return;
+    running = true;
+    requestAnimationFrame(loop);
+  }
+
+  // Push the middle of every string within reach of a point, strongest nearest.
+  function nudge(at, strength, reach) {
+    let touched = false;
+    for (const rope of ropes) {
+      for (let i = 1; i < rope.points.length - 1; i++) {
+        const pt = rope.points[i];
+        const dist = Math.hypot(pt.x - at.x, pt.y - at.y);
+        if (dist > reach) continue;
+        const force = strength * (1 - dist / reach);
+        pt.px -= (Math.random() - 0.5) * force;
+        pt.py -= force * 0.5;
+        touched = true;
+      }
+    }
+    if (touched) wake();
   }
 
   function setThreading(on) {
@@ -72,10 +180,16 @@ export function createString(stage, { strings, onChange }) {
     if (a !== b && !exists) {
       strings.push([a, b]);
       onChange(strings);
+      const rope = makeRope([a, b], strings.length - 1, false);
+      if (rope) {
+        ropes.push(rope);
+        layer.append(rope.group);
+        render(rope);
+        wake();
+      }
     }
     first.classList.remove("string-first");
     first = null;
-    draw();
   }
 
   spool.addEventListener("keydown", (event) => {
@@ -88,7 +202,22 @@ export function createString(stage, { strings, onChange }) {
     if (event.key === "Escape" && threading) setThreading(false);
   });
 
-  draw();
+  // The pointer brushing a string sets it swaying a little.
+  let lastBrush = 0;
+  board.addEventListener("pointermove", (event) => {
+    const now = performance.now();
+    if (now - lastBrush < 60 || ropes.length === 0) return;
+    lastBrush = now;
+    nudge(toBoard(event.clientX, event.clientY), 1.2, 24);
+  });
+
+  // A click on the board (a stamp landing, a card opening) shakes the strings around it.
+  stage.addEventListener("click", (event) => {
+    if (!board.contains(event.target) || ropes.length === 0) return;
+    nudge(toBoard(event.clientX, event.clientY), 6, 160);
+  });
+
+  rebuild({ hanging: true });
 
   return {
     // Handles a click if it belongs to the string; returns whether it did.
@@ -106,12 +235,13 @@ export function createString(stage, { strings, onChange }) {
       if (string) {
         strings.splice(Number(string.dataset.index), 1);
         onChange(strings);
-        draw();
+        rebuild({ hanging: true });
         return true;
       }
       return false;
     },
-    redraw: draw,
+    // Re-hang every string from its pins, e.g. after restoring progress.
+    redraw: () => rebuild({ hanging: true }),
     // Put the spool down, e.g. when another tool is picked up.
     stop() {
       if (threading) setThreading(false);
