@@ -1,6 +1,6 @@
 // The murder board: lays out every pin from the case data on a fixed 1600×1000 stage.
 import { BLOT } from "../game/cipher.js";
-import { ANCHOR } from "./decoder.js";
+import { DOODLES } from "./decoder.js";
 
 export const STAGE_WIDTH = 1600;
 export const STAGE_HEIGHT = 1000;
@@ -54,22 +54,45 @@ const PORTRAIT = `
     <path d="M38 118 C40 80 136 80 138 118 Z" fill="#16131b"/>
   </svg>`;
 
-const GLASSHOUSE = `
-  <svg viewBox="0 0 200 140" aria-hidden="true">
-    <defs>
-      <linearGradient id="photo-sky" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#9a96a3"/>
-        <stop offset="1" stop-color="#55515e"/>
-      </linearGradient>
-    </defs>
-    <rect width="200" height="140" fill="url(#photo-sky)"/>
-    <rect y="112" width="200" height="28" fill="#2a2730"/>
-    <path d="M30 114 V72 Q100 20 170 72 V114 Z" fill="#c9c5d0" fill-opacity="0.35" stroke="#1e1b24" stroke-width="2"/>
-    <path d="M50 114V60 M70 114V50 M90 114V45 M110 114V45 M130 114V50 M150 114V60 M30 92H170"
-          stroke="#1e1b24" stroke-width="1.2" fill="none"/>
-    <path d="M92 114 V96 H108 V114" fill="#1e1b24"/>
-    <circle cx="20" cy="104" r="9" fill="#2a2730"/><circle cx="182" cy="100" r="12" fill="#2a2730"/>
-  </svg>`;
+// The pinned photograph's scene, per case. Drawn in greys; the photo filter makes it black and white.
+const PHOTO_SCENES = {
+  glasshouse: `
+    <svg viewBox="0 0 200 140" aria-hidden="true">
+      <rect width="200" height="140" fill="#77737f"/>
+      <rect width="200" height="70" fill="#9a96a3"/>
+      <rect y="112" width="200" height="28" fill="#2a2730"/>
+      <path d="M30 114 V72 Q100 20 170 72 V114 Z" fill="#c9c5d0" fill-opacity="0.35" stroke="#1e1b24" stroke-width="2"/>
+      <path d="M50 114V60 M70 114V50 M90 114V45 M110 114V45 M130 114V50 M150 114V60 M30 92H170"
+            stroke="#1e1b24" stroke-width="1.2" fill="none"/>
+      <path d="M92 114 V96 H108 V114" fill="#1e1b24"/>
+      <circle cx="20" cy="104" r="9" fill="#2a2730"/><circle cx="182" cy="100" r="12" fill="#2a2730"/>
+    </svg>`,
+  theater: `
+    <svg viewBox="0 0 200 140" aria-hidden="true">
+      <rect width="200" height="140" fill="#2a2730"/>
+      <path d="M100 0 L60 112 H140 Z" fill="#c9c5d0" fill-opacity="0.25"/>
+      <rect y="112" width="200" height="28" fill="#4c4855"/>
+      <path d="M0 0 H62 Q50 60 58 112 H0 Z M200 0 H138 Q150 60 142 112 H200 Z" fill="#55515e"/>
+      <path d="M12 0 Q8 60 14 112 M28 0 Q22 60 30 112 M44 0 Q38 60 44 112 M188 0 Q192 60 186 112 M172 0 Q178 60 170 112 M156 0 Q162 60 156 112"
+            stroke="#2a2730" stroke-width="2" fill="none"/>
+      <rect width="200" height="12" fill="#3b3742"/>
+      <circle cx="100" cy="100" r="7" fill="#1e1b24"/><path d="M93 112 Q100 94 107 112 Z" fill="#1e1b24"/>
+    </svg>`,
+  train: `
+    <svg viewBox="0 0 200 140" aria-hidden="true">
+      <rect width="200" height="140" fill="#8e8a97"/>
+      <path d="M0 40 H200 V0 H0 Z" fill="#6e6a77"/>
+      <path d="M10 20 V60 M60 20 V60 M110 20 V60 M160 20 V60 M0 20 H200" stroke="#4c4855" stroke-width="3"/>
+      <rect y="112" width="200" height="28" fill="#3b3742"/>
+      <path d="M0 116 H200 M0 124 H200" stroke="#1e1b24" stroke-width="2"/>
+      <path d="M30 108 V70 H120 V60 H140 V70 H175 Q190 70 190 90 V108 Z" fill="#1e1b24"/>
+      <path d="M128 60 V48 Q130 40 138 46 V60" fill="#1e1b24"/>
+      <circle cx="140" cy="34" r="10" fill="#c9c5d0" fill-opacity="0.5"/><circle cx="158" cy="22" r="14" fill="#c9c5d0" fill-opacity="0.35"/>
+      <rect x="44" y="78" width="14" height="12" fill="#c9c5d0" fill-opacity="0.6"/><rect x="68" y="78" width="14" height="12" fill="#c9c5d0" fill-opacity="0.6"/>
+      <circle cx="55" cy="110" r="8" fill="#2a2730" stroke="#77737f"/><circle cx="95" cy="110" r="8" fill="#2a2730" stroke="#77737f"/>
+      <circle cx="160" cy="108" r="10" fill="#2a2730" stroke="#77737f"/>
+    </svg>`,
+};
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -137,17 +160,18 @@ function weaponPaper(weapon) {
 function photoPaper(caseData, scrawlText) {
   const paper = el("figure", "paper photo");
   const image = el("div", "photo-image");
-  image.innerHTML = GLASSHOUSE;
+  image.innerHTML = PHOTO_SCENES[caseData.photo.scene];
   paper.append(image, el("figcaption", "photo-caption", caseData.photo.caption));
-  if (caseData.cipher.hiddenOn === "photo") paper.append(scrawl(scrawlText));
+  if (caseData.cipher.hiddenOn === "photo") paper.append(scrawl(scrawlText, caseData.cipher.doodle));
   return paper;
 }
 
 // The hidden encrypted clue: pencil like the other scraps, only the start of the message,
-// signed with the little anchor that points to the key. Nothing announces it.
-function scrawl(text) {
+// signed with the case's doodle that points to the key. Nothing announces it.
+function scrawl(text, doodle) {
   const node = el("div", "scrawl hand");
   node.dataset.pin = "scrawl";
+  node.dataset.doodle = doodle;
   fillScrawl(node, text);
   return node;
 }
@@ -155,7 +179,7 @@ function scrawl(text) {
 function fillScrawl(node, text) {
   node.replaceChildren();
   for (const ch of `${text.slice(0, 22).trim()}\u2026`) node.append(ch === BLOT ? el("span", "blot", "M") : ch);
-  node.insertAdjacentHTML("beforeend", ANCHOR);
+  node.insertAdjacentHTML("beforeend", DOODLES[node.dataset.doodle]);
 }
 
 // Each wrong answer runs more ink over the scrawl.
@@ -163,11 +187,12 @@ export function updateScrawl(stage, text) {
   fillScrawl(stage.querySelector('[data-pin="scrawl"]'), text);
 }
 
-// Decoy scraps: a printed label with a handwritten note.
-function evidencePaper(item) {
+// Scraps of evidence: a printed label with a handwritten note. The case may hide the scrawl on one.
+function evidencePaper(item, caseData, scrawlText) {
   const paper = el("div", `paper evidence evidence-${item.kind}`);
   if (item.kind === "prescription") paper.append(el("span", "rx", "\u211e"));
   paper.append(el("div", "evidence-label", item.label), el("div", "evidence-note hand", item.note));
+  if (caseData.cipher.hiddenOn === `evidence:${item.id}`) paper.append(scrawl(scrawlText, caseData.cipher.doodle));
   return paper;
 }
 
@@ -269,7 +294,7 @@ export function renderBoard(caseData, { caseNumber, scrawlText }) {
   );
   board.append(pinItem("photo", "photo", LAYOUT.photo, caseData.photo.pos, photoPaper(caseData, scrawlText)));
   (caseData.evidence || []).forEach((e, i) =>
-    board.append(pinItem(`evidence:${e.id}`, "evidence", LAYOUT.evidence[i], e.pos, evidencePaper(e))),
+    board.append(pinItem(`evidence:${e.id}`, "evidence", LAYOUT.evidence[i], e.pos, evidencePaper(e, caseData, scrawlText))),
   );
   board.append(pinItem("blank-card", "blank-card", LAYOUT.blankCard, null, blankCardPaper()));
   caseData.clues.forEach((_, i) => board.append(clueSlot(i, LAYOUT.clues[i])));

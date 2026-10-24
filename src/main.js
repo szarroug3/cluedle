@@ -131,7 +131,8 @@ stage.addEventListener("click", (event) => {
   if (event.target.closest('[data-pin="scrawl"]')) {
     progress.cipher = { ...progress.cipher, found: true };
     save();
-    openCloseLook(stage, { kind: "scrawl", label: caseData.photo.caption, note: scrawlText(), anchor: true });
+    const where = cipher.hiddenOn === "photo" ? caseData.photo.caption : caseData.evidence.find((e) => `evidence:${e.id}` === cipher.hiddenOn).label;
+    openCloseLook(stage, { kind: "scrawl", label: where, note: scrawlText(), doodle: cipher.doodle });
     return;
   }
   const scrap = event.target.closest(".pin-evidence");

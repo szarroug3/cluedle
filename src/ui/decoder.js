@@ -5,11 +5,20 @@ import { isLocked, BLOT, MAX_TRIES } from "../game/cipher.js";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-export const ANCHOR = `
-  <svg class="anchor" viewBox="0 0 20 24" aria-hidden="true">
+// The little pencil doodle signing each case's scrawl; it points toward where the key is hidden.
+export const DOODLES = {
+  anchor: `<svg class="doodle" viewBox="0 0 20 24" aria-hidden="true">
     <circle cx="10" cy="4" r="2.6"/>
     <path d="M10 6.5V21 M5 10.5H15 M3 15c1 4.5 4 6 7 6s6-1.5 7-6 M3 15l-1.5 1.8 M17 15l1.5 1.8"/>
-  </svg>`;
+  </svg>`,
+  star: `<svg class="doodle" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 2.5l2.8 6.2 6.7.6-5.1 4.4 1.6 6.6L12 16.8l-6 3.5 1.6-6.6-5.1-4.4 6.7-.6z"/>
+  </svg>`,
+  train: `<svg class="doodle" viewBox="0 0 28 22" aria-hidden="true">
+    <path d="M3 16V8h9v8 M12 11h9l3 5H3 M6 8V4h4v4 M17 11V7h3v4 M1 19h26"/>
+    <circle cx="7" cy="18" r="2"/><circle cx="19" cy="18" r="2"/>
+  </svg>`,
+};
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -58,13 +67,13 @@ export function renderInked(container, text) {
 }
 
 // Any scrap, the scrawl included, opens the same plain close-up.
-export function openCloseLook(stage, { kind, label, note, anchor }) {
+export function openCloseLook(stage, { kind, label, note, doodle }) {
   const card = el("div", `paper close-look evidence-${kind}`);
   card.setAttribute("role", "dialog");
   card.setAttribute("aria-label", label);
   const writing = el("div", "close-look-note hand");
   renderInked(writing, note);
-  if (anchor) writing.insertAdjacentHTML("beforeend", ANCHOR);
+  if (doodle) writing.insertAdjacentHTML("beforeend", DOODLES[doodle]);
   card.append(el("div", "evidence-label", label), writing);
   openOverlay(stage, card);
 }

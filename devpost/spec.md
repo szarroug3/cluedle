@@ -168,11 +168,12 @@ PRD ref: `prd.md > Case Ending`, `prd.md > Share Card`, `prd.md > States and Bou
   motives:    [{ id, text }],                             // 6
   weapons:    [{ id, name, detail }],                     // 6
   clues:      [string],          // plain clues, in unlock order (4: one per possible miss)
-  photo:      { caption },       // a pinned photograph; scenery, and a place to hide the scrawl
+  photo:      { caption, scene },  // a pinned photograph; scene is glasshouse, theater, or train
   evidence:   [{ id, kind, label, note }],  // decoy scraps (matchbook, ticket, prescription) in the same pencil hand as the scrawl;
                                             // every scrap opens the same close-up
   cipher: {
-    hiddenOn: "photo",           // which pin hides the scrawl
+    hiddenOn: "photo",           // which pin hides the scrawl: "photo" or "evidence:<id>"
+    doodle: "anchor",            // pencil doodle signing the scrawl, a hint toward the key: anchor, star, or train
     plaintext: "...",
     shift: 7,                    // 1–25; its key is hidden in the clipping, alongside decoy numbers
     keepWords: ["..."]           // never blotted

@@ -113,7 +113,7 @@ export default {
     "A letter in the housekeeper’s room, from her mother: “Dear Mae Holloway — fifteen years, and I still set a place for Danny.”",
   ],
 
-  photo: { caption: "The glasshouse, spring ’46" },
+  photo: { caption: "The glasshouse, spring ’46", scene: "glasshouse" },
 
   // Decoys: handwritten scraps that look like code from across the board but read plainly up close.
   evidence: [
@@ -127,6 +127,7 @@ export default {
     plaintext: "I SANK THE ALBATROSS FOR THE INSURANCE. THE HOLLOWAY BOY WENT DOWN WITH HER.",
     shift: 9,
     keepWords: ["ALBATROSS", "HOLLOWAY"],
+    doodle: "anchor",
   },
 
   solution: { suspectId: "mae", motiveId: "revenge", weaponId: "foxglove" },

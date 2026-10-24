@@ -69,7 +69,7 @@ Build mode: fast
   Learner check: Clear the site's data, open the page fresh, and go through the cover and how-to-play. Play partway, close the tab, reopen it — is everything where you left it? Finish the case and reopen once more.
   Commit: `Add daily case, case file cover, how-to-play, and saved progress`
 
-- [ ] **7. Cases 2 and 3, and a README**
+- [x] **7. Cases 2 and 3, and a README**
   Becomes usable: All three hand-written cases are playable with `?case=1`, `?case=2`, `?case=3`, each with its own story, liar, hidden cipher, clues, endings, and share line, and the README explains how to run and play.
   Why now: The case format is settled by the earlier slices, so writing two more now doesn't risk rewrites; it's content, not new code. It comes last so the learner's editing time goes into cases that already play end to end.
   PRD ref: `prd.md > Daily Case`, `prd.md > What We're Building`
@@ -104,6 +104,7 @@ Activity mode: [live app and editor, explicit static fallback, focused alternati
 
 ## Revisions
 
+- Made the photo scene, the scrawl's doodle, and the scrawl's hiding place part of each case's data (`photo.scene`, `cipher.doodle`, `cipher.hiddenOn` as `photo` or `evidence:<id>`) — case 1 had them drawn in, and cases 2 and 3 hide their codes on a ticket stub and a luggage tag with star and train doodles.
 - Share card uses ✔️/✖️ for the cipher and liar and drops the 🗂️ header, instead of 🗂️, 🔓, and 🎭 — those render gold or orange on most platforms, which the palette rules out. LIAR is confirmed before it's spent, and the truth options appear only after stamping the real liar — truthful statements have no options to pick from.
 - Swapped the blank card's two alphabet wheels for two side-by-side A–Z strips that slide up and down, with clicked letters writing into the answer — the learner found strips easier to line up and wanted to enter letters without the keyboard. Updated `prd.md` and `spec.md`.
 - Added a third part to every accusation, the weapon (6 weapon cards), and changed feedback to how many of the three parts are right, not which; moved each statement onto its suspect's card (every witness is a suspect) and the LIAR stamp onto the card — the learner wanted the case cracked by reasoning rather than by working through the cards in order. Updated `scope.md`, `prd.md`, `spec.md`, and slices 3 and 4.

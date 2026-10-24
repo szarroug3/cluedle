@@ -9,6 +9,10 @@ const NUMBER_WORDS = [
   "twenty-two", "twenty-three", "twenty-four", "twenty-five",
 ];
 
+test("every case has its own id", () => {
+  assert.equal(new Set(cases.map((c) => c.id)).size, cases.length);
+});
+
 for (const c of cases) {
   // Six of each, so working through the cards in order can't always win in five guesses.
   test(`${c.id}: has a title, story, and 6 suspects, motives, and weapons with unique ids`, () => {
@@ -44,6 +48,14 @@ for (const c of cases) {
     assert.ok(Number.isInteger(c.cipher.shift) && c.cipher.shift >= 1 && c.cipher.shift <= 25);
     assert.ok(c.cipher.hiddenOn);
     for (const word of c.cipher.keepWords) assert.ok(c.cipher.plaintext.includes(word), `missing keep word ${word}`);
+  });
+
+  test(`${c.id}: the scrawl is hidden on a real pin, with a known doodle and photo scene`, () => {
+    const spots = ["photo", ...c.evidence.map((e) => `evidence:${e.id}`)];
+    assert.ok(spots.includes(c.cipher.hiddenOn), `nowhere called ${c.cipher.hiddenOn}`);
+    assert.ok(["anchor", "star", "train"].includes(c.cipher.doodle));
+    assert.ok(["glasshouse", "theater", "train"].includes(c.photo.scene));
+    assert.equal(c.evidence.length, 3);
   });
 
   test(`${c.id}: the cipher key appears in the story, as a numeral or a word`, () => {
