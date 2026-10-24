@@ -77,6 +77,20 @@ export function openCloseLook(stage, { kind, label, note, anchor }) {
   openOverlay(stage, card);
 }
 
+// A suspect's statement, brought forward when their card is clicked.
+export function openStatement(stage, suspect) {
+  const card = el("div", "paper statement-open");
+  card.setAttribute("role", "dialog");
+  card.setAttribute("aria-label", `Statement of ${suspect.name}`);
+  card.append(
+    el("div", "card-label", "Statement of"),
+    el("h2", "statement-name", suspect.name),
+    el("div", "suspect-role", suspect.role),
+    el("p", "statement-quote", `“${suspect.statement.text}”`),
+  );
+  openOverlay(stage, card);
+}
+
 // Two alphabet rings; either can be dragged around the hub. The hub shows how far apart they sit.
 function buildWheel() {
   const wheel = svg("svg", { viewBox: "-130 -130 260 260", class: "wheel-svg", "aria-hidden": "true" });

@@ -14,7 +14,7 @@ A daily case you crack by reading closely, not by guessing your way through. You
 Armchair detectives: people who play a daily puzzle like Wordle and love a good mystery. They want a small, satisfying "I solved it" moment each day that they can share. Today they get that from word puzzles, or from mystery novels and shows that take hours instead of minutes.
 
 ## The Core Loop
-Open today's case and read the newspaper-clipping story on the corkboard, with suspect cards pinned up. A sharp-eyed player may spot an encrypted clue hidden on the board; finding the key in the story cracks it, at any time, without spending a guess. Guess who did it and why. Each guess says whether the suspect is right, the motive is right, both, or neither. Each wrong guess pins up a new plain clue. Solve it within five guesses or the case goes cold. Along the way, they can draw red string between pins to track their own thinking. Then they earn a detective rank based on how much they uncovered, and copy a share card to brag about it. Come back tomorrow for a new case.
+Open today's case and read the newspaper-clipping story on the corkboard, with suspect cards pinned up. A sharp-eyed player may spot an encrypted clue hidden on the board; finding the key in the story cracks it, at any time, without spending a guess. Guess who did it, why, and how. Each guess says how many of the three are right, but not which. Each wrong guess pins up a new plain clue. Solve it within five guesses or the case goes cold. Along the way, they can draw red string between pins to track their own thinking. Then they earn a detective rank based on how much they uncovered, and copy a share card to brag about it. Come back tomorrow for a new case.
 
 ## Inspiration & Identity
 - **Wordle** (https://www.nytimes.com/games/wordle): one puzzle a day, the same for everyone, and an emoji result card.
@@ -30,8 +30,8 @@ The "oh, that's cool" beat: noticing the hidden clue, then watching it unscrambl
 
 ## The POC Boundary
 - Three polished, hand-written cases (Claude drafts them, the learner edits), with the daily case chosen by date.
-- Each case has a story, 6 suspects, 6 motives, 6 witness statements (exactly one of which lies), plain clues that unlock on wrong guesses, and one or two encrypted clues hidden on the board whose key is hidden in the story.
-- Guessing who and why, with per-guess feedback (suspect / motive / both / neither), five guesses max, and "the case goes cold" on a loss.
+- Each case has a story, 6 suspects (each with a witness statement, exactly one of which lies), 6 motives, 6 weapons, plain clues that unlock on wrong guesses, and one or two encrypted clues hidden on the board whose key is hidden in the story.
+- Guessing who, why, and how, with per-guess feedback saying how many of the three are right (not which), five guesses max, and "the case goes cold" on a loss.
 - Finding and cracking an encrypted clue, at any time, reveals it without spending a guess. A player who never finds it can still solve the case.
 - A detective rank (e.g. Amateur up to Seasoned Detective) based on what's already in the core: guesses used, cipher found and cracked, liar caught. Exact ranks and rules are set in the PRD.
 - The murder-board look: corkboard, pinned suspect cards, newspaper-clipping story, and clues pinned as they unlock.

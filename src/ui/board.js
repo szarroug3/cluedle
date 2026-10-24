@@ -25,19 +25,19 @@ const LAYOUT = {
     { x: 678, y: 602, r: 1.4 },
     { x: 856, y: 596, r: -1 },
   ],
-  statements: [
-    { x: 1054, y: 20, r: 1.2 },
-    { x: 1302, y: 26, r: -1 },
-    { x: 1058, y: 188, r: -1.5 },
-    { x: 1306, y: 194, r: 0.8 },
-    { x: 1054, y: 356, r: 0.6 },
-    { x: 1302, y: 362, r: -1.4 },
+  weapons: [
+    { x: 1058, y: 24, r: 1.2 },
+    { x: 1306, y: 30, r: -1 },
+    { x: 1062, y: 150, r: -1.5 },
+    { x: 1310, y: 156, r: 0.8 },
+    { x: 1058, y: 276, r: 0.6 },
+    { x: 1306, y: 282, r: -1.4 },
   ],
-  photo: { x: 1066, y: 560, r: 3 },
+  photo: { x: 1066, y: 440, r: 3 },
   evidence: [
-    { x: 1336, y: 556, r: -4 },
+    { x: 1338, y: 430, r: -4 },
     { x: 512, y: 720, r: 1.5 },
-    { x: 1330, y: 700, r: 2.5 },
+    { x: 1332, y: 590, r: 2.5 },
   ],
   clues: [
     { x: 34, y: 580, r: -1 },
@@ -111,7 +111,8 @@ function suspectPaper(suspect, index) {
   heading.append(el("div", "card-label", `Suspect No. ${index + 1}`), el("h2", "suspect-name", suspect.name), el("div", "suspect-role", suspect.role));
   const top = el("div", "suspect-top");
   top.append(portrait, heading);
-  paper.append(top, el("p", "suspect-desc", suspect.description));
+  // A typed slip peeking out from under the card: their statement, read by clicking the card.
+  paper.append(top, el("p", "suspect-desc", suspect.description), el("div", "statement-tab", "Statement \u25b8"));
   return paper;
 }
 
@@ -121,12 +122,14 @@ function motivePaper(motive) {
   return paper;
 }
 
-function statementPaper(statement) {
-  const paper = el("div", "paper statement");
+// Weapon cards: an evidence tag on a loop of string.
+function weaponPaper(weapon) {
+  const paper = el("div", "paper weapon");
   paper.append(
-    el("div", "card-label", "Statement of"),
-    el("h3", "witness", statement.witness),
-    el("p", "statement-text", `“${statement.text}”`),
+    el("span", "tag-hole"),
+    el("div", "card-label", "Weapon"),
+    el("h3", "weapon-name", weapon.name),
+    el("div", "weapon-detail", weapon.detail),
   );
   return paper;
 }
@@ -242,8 +245,8 @@ export function renderBoard(caseData, { caseNumber, scrawlText }) {
   caseData.motives.forEach((m, i) =>
     board.append(pinItem(`motive:${m.id}`, "motive", LAYOUT.motives[i], m.pos, motivePaper(m))),
   );
-  caseData.statements.forEach((s, i) =>
-    board.append(pinItem(`statement:${s.id}`, "statement", LAYOUT.statements[i], s.pos, statementPaper(s))),
+  caseData.weapons.forEach((w, i) =>
+    board.append(pinItem(`weapon:${w.id}`, "weapon", LAYOUT.weapons[i], w.pos, weaponPaper(w))),
   );
   board.append(pinItem("photo", "photo", LAYOUT.photo, caseData.photo.pos, photoPaper(caseData, scrawlText)));
   (caseData.evidence || []).forEach((e, i) =>

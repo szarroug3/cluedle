@@ -5,7 +5,7 @@ status: approved
 
 # Cluedle — Product Requirements
 
-Wordle for armchair detectives: a daily 1940s-noir mystery, worked on a murder board, where you stamp who did it and why in five guesses or fewer. For people who play a daily puzzle and love a good mystery.
+Wordle for armchair detectives: a daily 1940s-noir mystery, worked on a murder board, where you stamp who did it, why, and how in five guesses or fewer. For people who play a daily puzzle and love a good mystery.
 Source: `scope.md > The Unique Kernel`, `scope.md > Who It's For`.
 
 ## The Core Journey
@@ -13,12 +13,12 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 
 1. **Case file.** The player opens Cluedle and sees today's case as a closed case file: case number, date, case title, and an **Open the file** action.
 2. **How to play (first visit only).** Before the first case opens, a short how-to-play explains the stamps, the five guesses, the hidden cipher, and the red string. It can be reopened later from the board.
-3. **The board.** Opening the file shows the murder board: the newspaper-clipping story, 6 suspect cards, 6 motive cards, 6 witness statements, a tray with the **GUILTY** and **LIAR** stamps, a red-string spool, and the five guesses remaining.
-4. **Read.** The player reads the story and the statements. They can draw red string between any pins to track their thinking.
+3. **The board.** Opening the file shows the murder board: the newspaper-clipping story, 6 suspect cards (each holding that person's statement), 6 motive cards, 6 weapon cards, a tray with the **GUILTY** and **LIAR** stamps, a red-string spool, and the five guesses remaining.
+4. **Read.** The player reads the story, and clicks a suspect card to read that person's statement. They can draw red string between any pins to track their thinking.
 5. **Find and crack the cipher (any time, optional).** Every scrap on the board can be brought forward to read up close, and one of them, a pencil scrawl, is encrypted. Nothing marks which. A sharp-eyed player works out which scrap is the code, finds its key in the story, and decodes it on paper. They write the message on the **blank card** pinned to the board, using its two alphabet wheels as a helper, and pin it. They get three tries; each wrong answer runs ink over more of the scrawl for good.
-6. **Accuse.** The player picks up the **GUILTY** stamp, stamps a suspect card, stamps a motive card, and confirms. Each stamp changes color to show whether that half was right.
+6. **Accuse.** The player picks up the **GUILTY** stamp, stamps a suspect card, a motive card, and a weapon card, and confirms. The guess shows how many of the three are right, but not which.
 7. **Miss → new clue.** A wrong accusation uses a guess and pins up a new plain clue.
-8. **Catch the liar (any time, optional).** The player stamps **LIAR** on a witness statement and picks what really happened from a few options. It's free, but they get one shot.
+8. **Catch the liar (any time, optional).** The player stamps **LIAR** on a suspect's card and picks what really happened from a few options. It's free, but they get one shot.
 9. **The case ends.** A right accusation within five guesses closes the case: **CASE CLOSED**, what really happened, who was saved, and the player's detective rank. Five misses: **GONE COLD**, what really happened, and what not catching the culprit cost.
 10. **Share.** The player copies a share card to the clipboard.
 11. **Come back.** Reopening later the same day shows their finished board, the ending, and a countdown to the next case.
@@ -27,7 +27,8 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 
 - **Case file cover** — the first thing seen each day. Case number, date, title, **Open the file**.
 - **How to play** — a short overlay shown once before the first case, and reopenable from the board.
-- **The murder board** — the one main surface. Everything in the case lives here as pinned items: newspaper-clipping story, suspect cards, motive cards, witness statements, unlocked clues, scraps of evidence (one of them the cipher scrawl), and the blank card. The stamp tray, red-string spool, and guesses remaining sit at the edge of the board.
+- **The murder board** — the one main surface. Everything in the case lives here as pinned items: newspaper-clipping story, suspect cards, motive cards, weapon cards, unlocked clues, scraps of evidence (one of them the cipher scrawl), and the blank card. The stamp tray, red-string spool, and guesses remaining sit at the edge of the board.
+- **Statement** — a suspect's statement brought forward over the board when their card is clicked.
 - **Close look** — any scrap brought forward over the board to read; every scrap looks the same here.
 - **Blank card** — brought forward over the board, with a space to write the decoded message, two spinnable alphabet wheels as a helper, **Pin it**, and the tries remaining. Closing it returns to the board.
 - **Case ending** — over the board: **CASE CLOSED** or **GONE COLD**, what happened, the consequences, the detective rank, and **Copy share card**. On a return visit, it also shows the countdown to the next case.
@@ -37,14 +38,15 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 - **1940s noir.** Typewriter and newspaper type, worn paper, a corkboard under a desk lamp, rubber-stamp ink.
 - **Colors:** reds, purples, and blues. **Avoid orange, yellow, and green** everywhere, including the share card's emoji.
 - **References:** detective murder boards from crime stories; Wordle's daily rhythm and share card (`scope.md > Inspiration & Identity`).
-- The board, not dropdowns and forms, is the interface: stamps, pins, string, and a decoder wheel.
+- The board, not dropdowns and forms, is the interface: stamps, pins, string, and the blank card.
 
 ## Features and Behavior
 
 ### Daily Case
 - One case per day, the same for every player, chosen by date from three hand-written cases.
-- Each case has: a story, 6 suspects, 6 motives, 6 witness statements (exactly one of which lies), plain clues that unlock on wrong guesses, one or two hidden cipher clues whose key is in the story, the true solution, and both endings (closed and gone cold).
-- Six suspects and six motives so guessing can't brute-force the case: with per-half feedback, N options per side take up to N guesses, so five guesses can only be lost with six or more.
+- Each case has: a story, 6 suspects (each with a witness statement, exactly one of which lies), 6 motives, 6 weapons, plain clues that unlock on wrong guesses, one hidden cipher clue whose key is in the story, the true solution (who, why, and how), and both endings (closed and gone cold).
+- Every witness is a suspect, so each statement lives on its suspect's card.
+- Six of each, three parts to every accusation, and feedback that says only how many parts are right, so working through the cards in order can't brute-force the case; it takes reasoning from the clues.
 - [ ] Two different dates show different cases; the same date always shows the same case.
 
 ### Case File and How to Play
@@ -53,19 +55,20 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 - [ ] The how-to-play can be reopened from the board.
 
 ### Accusing With the GUILTY Stamp
-- The player stamps one suspect card and one motive card, then confirms. The accusation uses one of five guesses.
-- After confirming, each stamp turns a color showing whether that half was right: **blue for right, red for wrong**, for the suspect and the motive separately.
-- Past accusations stay on the board as stamp marks, so the board is a record of every guess.
-- [ ] Stamping a suspect and a motive and confirming uses exactly one guess.
-- [ ] The suspect stamp and motive stamp each show right or wrong by color, independently.
-- [ ] Earlier stamps stay visible on the cards after later guesses.
+- The player stamps one suspect card, one motive card, and one weapon card, then confirms. The accusation uses one of five guesses.
+- After confirming, the guess shows **how many of the three are right** (0, 1, 2, or 3), never which ones. A full match turns all three stamps blue and closes the case.
+- Past accusations stay on the board as numbered stamps (#1, #2, …), and each spent guess on the rail shows its count, so the board is a record of every guess.
+- [ ] Stamping a suspect, a motive, and a weapon and confirming uses exactly one guess.
+- [ ] A guess shows how many of its three parts are right, and nothing shows which.
+- [ ] Earlier stamps stay visible on the cards, numbered, after later guesses.
 
 ### Clues Unlocking
 - Each wrong accusation pins up the case's next plain clue.
 - [ ] After each wrong guess, one new clue appears on the board.
 
 ### Catching the Liar With the LIAR Stamp
-- The player stamps **LIAR** on a witness statement, then picks what really happened from a few options.
+- Clicking a suspect's card brings their statement forward to read.
+- The player stamps **LIAR** on a suspect's card, then picks what really happened from a few options about that suspect's statement.
 - It doesn't use a guess, but the player gets one shot per case.
 - Right or wrong is shown by the LIAR stamp's color: blue for right, red for wrong.
 - [ ] Stamping LIAR and picking a truth doesn't change the guesses remaining.
@@ -95,8 +98,8 @@ Source: `scope.md > The Unique Kernel`.
 
 ### Case Ending
 - **Solved:** **CASE CLOSED**, the story of what really happened, who was saved, and the detective rank.
-- **Gone cold:** **GONE COLD**, the culprit, their motive, what really happened, and the consequences. Example from the learner: "it was Martha, and she did it to get revenge on her father's murderer. She was killing all of his family members one by one, and not catching her cost 7 innocent people their lives."
-- [ ] The fifth wrong guess shows the gone-cold ending with the true culprit and motive.
+- **Gone cold:** **GONE COLD**, the culprit, their motive and weapon, what really happened, and the consequences. Example from the learner: "it was Martha, and she did it to get revenge on her father's murderer. She was killing all of his family members one by one, and not catching her cost 7 innocent people their lives."
+- [ ] The fifth wrong guess shows the gone-cold ending with the true culprit, motive, and weapon.
 - [ ] A right guess shows the case-closed ending with the rank.
 
 ### Detective Rank
@@ -115,13 +118,16 @@ Source: `scope.md > The POC Boundary` (cheap version).
 - [ ] Solving on the fifth guess without the cipher or the liar earns Amateur Sleuth.
 
 ### Share Card
-- **Copy share card** copies a text result to the clipboard: case number, the guess history as emoji, cipher and liar results, and the rank. No spoilers: it never names the culprit or motive.
+- **Copy share card** copies a text result to the clipboard: case number, the guess history as emoji (one row per guess: a 🔵 for each right part and a ⚫ for each wrong one, in that order, so it never says which), cipher and liar results, and the rank. No spoilers: it never names the culprit, motive, or weapon.
 - Uses only red, purple, blue, and neutral emoji.
 - **Case-file style**, for example:
 
   ```
   🗂️ CLUEDLE · CASE #3
   ━━ CLOSED in 3/5 ━━
+  🔵⚫⚫
+  🔵🔵⚫
+  🔵🔵🔵
   Cipher 🔓  Liar 🎭
   Rank: Seasoned Detective
   "The ink never lies."
@@ -129,7 +135,7 @@ Source: `scope.md > The POC Boundary` (cheap version).
 
   A gone-cold card reads `GONE COLD` in place of `CLOSED in 3/5` and shows no rank. Each case has its own closing noir line.
 - [ ] Pasting after **Copy share card** gives the card text.
-- [ ] The card contains no orange, yellow, or green emoji, and no suspect or motive names.
+- [ ] The card contains no orange, yellow, or green emoji, and no suspect, motive, or weapon names.
 
 ## States and Boundaries
 
@@ -143,13 +149,14 @@ Source: `scope.md > The POC Boundary` (cheap version).
 
 - **Case file cover, then a short how-to-play** — sets the noir mood and teaches the stamps before the board.
 - **Rubber stamps for accusing** — tactile, detective-like, and past guesses stay on the board as a record.
-- **Stamp color shows feedback** — right or wrong per half, read straight off the board.
+- **Feedback says how many, not which** — each guess tells the player how many of its three parts are right, so the case is cracked by reasoning from clues, not by working through the cards in order.
+- **Statements live on suspect cards, and LIAR stamps the card** — every witness is a suspect, which frees the board for weapon cards.
 - **LIAR stamp, one shot, free** — mirrors the GUILTY stamp; catching the liar is something the player does, so it can count toward the rank.
 - **Decode it yourself, then write it on a blank card, with three tries that blot out more each miss** — finding the code is real work (no scrap gives itself away by opening a decoder), the wheels help without solving it, and the reveal still lands on a right answer.
 - **Gone-cold ending tells what not catching them cost** — gives losing weight.
 - **Return visit shows the finished board and a countdown** — the board is the record of how you solved it.
 - **1940s noir in reds, purples, and blues; no orange, yellow, or green** — the learner's palette, applied to the share card too.
-- **Blue stamp for right, red for wrong** — read at a glance, in the learner's palette.
+- **Blue for a full match and a caught liar, red otherwise** — read at a glance, in the learner's palette.
 - **Case-file share card** — feels like a stamped dossier, with a noir line per case.
 - **Five ranks earned from hidden points** — the learner's ladder, with "Basically Sherlock" at the top; points rather than a checklist so five ranks fit, tunable later.
 - **Progress kept all day** — reloading can't reset cipher tries or the LIAR shot.

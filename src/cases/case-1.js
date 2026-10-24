@@ -18,42 +18,73 @@ export default {
       "The family declined to comment.",
   },
 
+  // Every witness is a suspect, so each statement lives on its suspect's card. Exactly one lies.
   suspects: [
     {
       id: "lillian",
       name: "Lillian Vane",
       role: "The widow",
       description: "Sang at the Blue Lantern until Cornelius married her. Thirty years younger. The will leaves her the house.",
+      statement: {
+        text: "Mae brings the tea round at nine, every night. I took mine in the parlor. Cornelius took his among the orchids.",
+        isLie: false,
+      },
     },
     {
       id: "teddy",
       name: "Teddy Vane",
       role: "The nephew",
       description: "Charming, broke, and in debt to the wrong people. His uncle stopped covering his markers in spring.",
+      statement: {
+        text: "I was at the Blue Lantern all night. Ask Sid. And I’ve never been near the kitchen garden; only Mae and the gardener have keys.",
+        isLie: false,
+      },
     },
     {
       id: "penrose",
       name: "Dr. Arthur Penrose",
       role: "The physician",
       description: "Family doctor for twenty years. Signs the death certificates. Lingers in the parlor with Mrs. Vane.",
+      statement: {
+        text: "I examined Cornelius on Monday. Heart like a bull’s. I told him he’d outlive the lot of us.",
+        isLie: false,
+      },
     },
     {
       id: "mae",
       name: "Mae Hollis",
       role: "The housekeeper",
       description: "Quiet, careful, never late with the tea. Came to the house four years ago with fine references.",
+      statement: {
+        text: "I never set foot in the glasshouse. Mr. Vane didn’t allow the help near his orchids.",
+        isLie: true,
+        truthOptions: [
+          "She carried his tea into the glasshouse herself",
+          "She was at evening church until ten",
+          "She left the tea tray at the glasshouse door",
+        ],
+        truthIndex: 0,
+      },
     },
     {
       id: "sid",
       name: "Sid Barlow",
       role: "The chauffeur",
-      description: "Drove for Vane eleven years. Hears every secret said in the back seat, and is owed three months\u2019 wages.",
+      description: "Drove for Vane eleven years. Hears every secret said in the back seat, and is owed three months’ wages.",
+      statement: {
+        text: "Drove Mr. Teddy to the Blue Lantern at eight, fetched him at half past midnight. He never left the card room.",
+        isLie: false,
+      },
     },
     {
       id: "krall",
       name: "Victor Krall",
       role: "The partner",
-      description: "Vane\u2019s partner in the shipping line. Their last meeting ended with a slammed door heard down the street.",
+      description: "Vane’s partner in the shipping line. Their last meeting ended with a slammed door heard down the street.",
+      statement: {
+        text: "Haven’t seen Cornelius since Friday’s board meeting. Tuesday night I was at my club until one. Ask any waiter.",
+        isLie: false,
+      },
     },
   ],
 
@@ -66,54 +97,18 @@ export default {
     { id: "business", text: "To seize the shipping line" },
   ],
 
-  statements: [
-    {
-      id: "sid-statement",
-      witness: "Sid Barlow, chauffeur",
-      text: "Drove Mr. Teddy to the Blue Lantern at eight, fetched him at half past midnight. He never left the card room.",
-      isLie: false,
-    },
-    {
-      id: "lillian-statement",
-      witness: "Lillian Vane, the widow",
-      text: "Mae brings the tea round at nine, every night. I took mine in the parlor. Cornelius took his among the orchids.",
-      isLie: false,
-    },
-    {
-      id: "penrose-statement",
-      witness: "Dr. Arthur Penrose",
-      text: "I examined Cornelius on Monday. Heart like a bull\u2019s. I told him he\u2019d outlive the lot of us.",
-      isLie: false,
-    },
-    {
-      id: "mae-statement",
-      witness: "Mae Hollis, housekeeper",
-      text: "I never set foot in the glasshouse. Mr. Vane didn\u2019t allow the help near his orchids.",
-      isLie: true,
-      truthOptions: [
-        "She carried his tea into the glasshouse herself",
-        "She was at evening church until ten",
-        "She left the tea tray at the glasshouse door",
-      ],
-      truthIndex: 0,
-    },
-    {
-      id: "krall-statement",
-      witness: "Victor Krall, partner",
-      text: "Haven\u2019t seen Cornelius since Friday\u2019s board meeting. Tuesday night I was at my club until one. Ask any waiter.",
-      isLie: false,
-    },
-    {
-      id: "pruitt-statement",
-      witness: "Ned Pruitt, gardener",
-      text: "I lock the kitchen garden gate at six, same as always. Only the household keeps a key.",
-      isLie: false,
-    },
+  weapons: [
+    { id: "foxglove", name: "Foxglove leaves", detail: "Kitchen garden" },
+    { id: "digitalis", name: "Digitalis tablets", detail: "Doctor’s bag" },
+    { id: "powders", name: "Sleeping powders", detail: "Bedside drawer" },
+    { id: "rat-poison", name: "Rat poison", detail: "Potting shed" },
+    { id: "cushion", name: "A velvet cushion", detail: "Parlor sofa" },
+    { id: "watering-can", name: "A brass watering can", detail: "Glasshouse" },
   ],
 
   clues: [
-    "Coroner’s report: foxglove, steeped in the tea. Enough to stop a strong heart cold.",
-    "The only foxglove on the grounds grows in the kitchen garden, by the servants’ door.",
+    "Coroner’s report: no wound, no struggle. Heart poison, a big dose, taken by mouth within the hour.",
+    "Leaf fragments in the teacup: foxglove. The only foxglove on the grounds grows in the kitchen garden, by the servants’ door.",
     "Shipping records, 1931: the Vane freighter ALBATROSS went down with all hands. Vane collected double the insurance.",
     "A letter in the housekeeper’s room, from her mother: “Dear Mae Holloway — fifteen years, and I still set a place for Danny.”",
   ],
@@ -134,7 +129,7 @@ export default {
     keepWords: ["ALBATROSS", "HOLLOWAY"],
   },
 
-  solution: { suspectId: "mae", motiveId: "revenge" },
+  solution: { suspectId: "mae", motiveId: "revenge", weaponId: "foxglove" },
 
   endings: {
     closed: {

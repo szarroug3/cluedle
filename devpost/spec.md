@@ -8,7 +8,7 @@ status: approved
 ## How This Works, In Plain Language
 Cluedle is a single web page made of plain HTML, CSS, and JavaScript, with no framework and no build step.
 
-- **The cases are data files.** Each of the three cases is a JavaScript file that describes the story, suspects, motives, witness statements (which one lies), clues in unlock order, the hidden cipher, the solution, and both endings. The game never generates anything; it only reads these files.
+- **The cases are data files.** Each of the three cases is a JavaScript file that describes the story, suspects and their statements (which one lies), motives, weapons, clues in unlock order, the hidden cipher, the solution, and both endings. The game never generates anything; it only reads these files.
 - **The rules are a separate, tested layer.** Small JavaScript modules decide today's case, check an accusation, handle the LIAR shot, run the cipher and its blotting, count points for the rank, and write the share card. They don't touch the screen, so automated tests can check every rule by itself.
 - **The board is the screen layer.** Other modules draw the case file, the how-to-play, the murder board, the stamps, the red string, the decoder card, and the ending, and pass the player's actions to the rules.
 - **Progress lives in the browser.** After every action, the game saves the player's progress for today in `localStorage`, a small notebook the browser keeps for one site. Reopening the page reads it back, so a reload never resets cipher tries or the LIAR shot.
@@ -24,8 +24,8 @@ PRD ref: `prd.md > The Core Journey`.
 4. **The board.** `board.js` lays out the case's pins from the case file data and redraws anything already in the progress: past stamps, unlocked clues, strings, cipher state.
 5. **Red string.** `string.js` adds or removes a string between two pins and saves it. Rules never read it.
 6. **Cipher.** Clicking any scrap, the scrawl included, opens the same close-up from `decoder.js`. Clicking the blank card opens it with its two wheels. **Pin it** calls `cipher.js` with the written answer. Right → the real message flips in, with blots for earlier misses, and stays on the blank card. Wrong → one more blot stage on the scrawl. The result is saved.
-7. **Accuse.** `stamps.js` collects a GUILTY stamp on a suspect and a motive. Confirm calls `rules.js`, which checks both halves, records the guess, and says whether a clue unlocks or the case has ended. The stamps recolor blue or red, a new clue pins up, and progress is saved.
-8. **LIAR.** `stamps.js` collects a LIAR stamp on a statement, then the player picks a truth. `rules.js` records the one shot, and the stamp recolors.
+7. **Accuse.** `stamps.js` collects a GUILTY stamp on a suspect, a motive, and a weapon. Confirm calls `rules.js`, which counts how many parts are right, records the guess, and says whether a clue unlocks or the case has ended. The stamps are numbered, the spent guess on the rail shows its count, a new clue pins up, and progress is saved.
+8. **LIAR.** `stamps.js` collects a LIAR stamp on a suspect card, then the player picks a truth about that suspect's statement. `rules.js` records the one shot, and the stamp recolors.
 9. **Ending.** When `rules.js` says closed or cold, `rank.js` scores the run (closed only), and `ending.js` shows the ending and rank.
 10. **Share.** `share.js` builds the card text; `ending.js` copies it to the clipboard, or shows it to copy by hand.
 11. **Return.** On a later visit the same day, progress says closed or cold, so `main.js` shows the finished board with the ending and a countdown from `daily.js`.
@@ -84,8 +84,8 @@ PRD ref: `prd.md > Daily Case`.
 PRD ref: `prd.md > Daily Case`, `prd.md > States and Boundaries`.
 
 ### Game Rules (`src/game/rules.js`)
-- `accuse(state, suspectId, motiveId)` → `{ suspectRight, motiveRight, solved, unlockedClueIndex, status }`. It uses one guess, records it, unlocks the next clue on a miss, and ends the case on a solve or on the fifth miss.
-- `flagLiar(state, statementId, truthIndex)` → `{ correct }`. Allowed once per case, and only while playing. It never changes guesses.
+- `accuse(state, suspectId, motiveId, weaponId)` → `{ rightCount, solved, unlockedClueIndex, status }`. Only the count of right parts is returned, never which. It uses one guess, records it, unlocks the next clue on a miss, and ends the case on a solve or on the fifth miss.
+- `flagLiar(state, suspectId, truthIndex)` → `{ correct }`. Allowed once per case, and only while playing. It never changes guesses.
 - Rejects actions after the case has ended.
 PRD ref: `prd.md > Accusing With the GUILTY Stamp`, `prd.md > Clues Unlocking`, `prd.md > Catching the Liar With the LIAR Stamp`, `prd.md > Case Ending`.
 
@@ -127,15 +127,15 @@ A short overlay covering the stamps, the five guesses, "something on this board 
 PRD ref: `prd.md > Case File and How to Play`.
 
 ### Murder Board (`src/ui/board.js`)
-- Lays out pins from the case data: the newspaper clipping, suspect cards, motive cards, witness statements, clue slots, and the hidden scrawl. The edges hold the stamp tray, the string spool, the guesses left (five bullet holes or matches), and **?**.
+- Lays out pins from the case data: the newspaper clipping, suspect cards (clicking one brings its statement forward), motive cards, weapon cards, clue slots, evidence scraps with the hidden scrawl, and the blank card. The edges hold the stamp tray, the string spool, the guesses left (five bullet holes or matches), and **?**.
 - Positions come from a fixed layout per pin type, with an optional `pos` per pin in the case data for hand-tuning.
 - Every pin has a stable id, which string, stamps, and progress use.
 PRD ref: `prd.md > Screens and Layout`.
 
 ### Stamps (`src/ui/stamps.js`)
 - Click **GUILTY** or **LIAR** in the tray to pick it up (the cursor becomes the stamp). Click a valid card to stamp it. Stamps can be moved before confirming.
-- GUILTY needs one suspect and one motive, then **Make the accusation**. LIAR needs one statement, then a small slip of truth options.
-- After the rule call, stamps recolor blue or red and stay on the cards. Older GUILTY stamps sit slightly offset, so every guess stays visible.
+- GUILTY needs one suspect, one motive, and one weapon, then **Make the accusation**. LIAR needs one suspect card, then a small slip of truth options.
+- After the rule call, GUILTY stamps stay on the cards numbered by guess (#1, #2, …), slightly offset so every guess stays visible; they turn blue only on a full match. The spent guess on the rail shows how many parts were right. A LIAR stamp turns blue or red.
 PRD ref: `prd.md > Accusing With the GUILTY Stamp`, `prd.md > Catching the Liar With the LIAR Stamp`.
 
 ### Red String (`src/ui/string.js`)
@@ -162,10 +162,11 @@ PRD ref: `prd.md > Case Ending`, `prd.md > Share Card`, `prd.md > States and Bou
   id: "orchid-house",            // stable id, also the blot seed
   title: "The Orchid House",
   clipping: { headline, dateline, body },   // the story; contains the cipher key somewhere
-  suspects:   [{ id, name, role, description }],          // 6
+  suspects:   [{ id, name, role, description,             // 6; every witness is a suspect
+                 statement: { text, isLie,                // exactly one isLie
+                              truthOptions: [string], truthIndex } }],  // options only on the lie
   motives:    [{ id, text }],                             // 6
-  statements: [{ id, witness, text, isLie,                // at least one isLie
-                 truthOptions: [string], truthIndex }],   // only on the lie
+  weapons:    [{ id, name, detail }],                     // 6
   clues:      [string],          // plain clues, in unlock order (4: one per possible miss)
   photo:      { caption },       // a pinned photograph; scenery, and a place to hide the scrawl
   evidence:   [{ id, kind, label, note }],  // decoy scraps (matchbook, ticket, prescription) in the same pencil hand as the scrawl;
@@ -176,7 +177,7 @@ PRD ref: `prd.md > Case Ending`, `prd.md > Share Card`, `prd.md > States and Bou
     shift: 7,                    // 1–25; its key is hidden in the clipping, alongside decoy numbers
     keepWords: ["..."]           // never blotted
   },
-  solution: { suspectId, motiveId },
+  solution: { suspectId, motiveId, weaponId },
   endings: {
     closed: { headline, text, saved },
     cold:   { headline, text, cost }
@@ -191,8 +192,8 @@ One cipher per case for the proof of concept (see `## What Was Simplified and Wh
 {
   caseId, dateKey,
   status: "playing" | "closed" | "cold",
-  guesses: [{ suspectId, motiveId, suspectRight, motiveRight }],
-  liar: null | { statementId, truthIndex, correct },
+  guesses: [{ suspectId, motiveId, weaponId, rightCount }],   // how many of the three are right
+  liar: null | { suspectId, truthIndex, correct },
   cipher: { found: false, wrongTries: 0, cracked: false },
   strings: [["pinA", "pinB"]]
 }
@@ -246,7 +247,7 @@ cluedle/
 └── devpost/                # planning docs (scope, prd, spec, checklist)
 ```
 
-`tests/cases.test.js` checks each case: there are 6 suspects, 6 motives, and 6 statements, the solution ids exist, exactly one statement lies and has truth options, there are four clues, the cipher shift is 1–25, the keep words appear in the plaintext, and the share line has no suspect or motive names.
+`tests/cases.test.js` checks each case: there are 6 suspects (each with a statement), 6 motives, and 6 weapons, the solution ids exist, exactly one statement lies and has truth options, there are four clues, the cipher shift is 1–25, the keep words appear in the plaintext, and the share line has no suspect, motive, or weapon names.
 
 ## External Services and Dependencies
 - **Google Fonts** (Special Elite, Playfair Display), loaded with a `<link>` in `index.html`. No key or cost. If it fails to load, the fallback fonts take over. [Special Elite](https://fonts.google.com/specimen/Special+Elite), [Playfair Display](https://fonts.google.com/specimen/Playfair+Display).
@@ -263,6 +264,7 @@ cluedle/
 
 ## What Was Simplified and Why
 - **One cipher per case** instead of "one or two." The rank, the share card, and the decoder all assume a single cipher, which keeps scoring simple. Supporting two would mean a list of cipher states and per-cipher points.
+- **Every witness is a suspect**, so each statement lives on its suspect's card and the LIAR stamp goes on the card.
 - **Exactly one lying statement per case** instead of "at least one." The LIAR stamp is one shot and catching the liar is worth one fixed bonus, so a single liar keeps that fair and easy to score.
 - **Static curves for red string** instead of physics, as agreed in `scope.md > Later`.
 - **Rotation by date, modulo three cases**, instead of a calendar of unique cases. With three cases, the cycle repeats every three days; adding cases four through seven only means adding files.
@@ -279,7 +281,7 @@ cluedle/
 
 ### What the learner was unsure about, and how it gets checked
 1. **The final look.** It's hard to judge noir from words. **Investigation:** the first build step is a static look test, case 1 laid out on the board with styling and no game logic. The learner reviews it in the browser and adjusts the look before any rules are wired up. Evidence: a screenshot the learner approves.
-2. **Distinctiveness, given Murdle** (https://murdle.com). Checked on 2026-10-24. Murdle is a daily logic-grid puzzle: all the evidence is given up front, it includes a coded note and statements where the guilty party lies, and you deduce who, how, where, and why in one go. So encrypted notes and liars alone aren't what sets Cluedle apart. What Murdle doesn't have, and Cluedle does: a Wordle-style loop where each wrong guess pays out new evidence and half-right feedback; a cipher you have to *find* on the board, whose key is in the story, and that blots out with each miss; a tactile murder board with stamps and string instead of a text grid; detective ranks; and an ending that says what failing cost. The demo should lead with those moments.
+2. **Distinctiveness, given Murdle** (https://murdle.com). Checked on 2026-10-24. Murdle is a daily logic-grid puzzle: all the evidence is given up front, it includes a coded note and statements where the guilty party lies, and you deduce who, how, where, and why in one go. So encrypted notes and liars alone aren't what sets Cluedle apart. What Murdle doesn't have, and Cluedle does: a Wordle-style loop where each wrong guess pays out new evidence and a count of how many parts were right; a cipher you have to *find* on the board, whose key is in the story, and that blots out with each miss; a tactile murder board with stamps and string instead of a text grid; detective ranks; and an ending that says what failing cost. The demo should lead with those moments.
 
 ### Open issues
 - **How hidden the cipher scrawl should be** — tuned while writing and playtesting cases (from `prd.md > Open Questions`).

@@ -2,7 +2,7 @@
 // Progress is in memory for now; saving it comes in a later slice.
 import { cases } from "./cases/index.js";
 import { renderBoard, updateScrawl, fillBlankCard, STAGE_WIDTH, STAGE_HEIGHT } from "./ui/board.js";
-import { openCloseLook, openBlankCard } from "./ui/decoder.js";
+import { openCloseLook, openBlankCard, openStatement } from "./ui/decoder.js";
 import { attempt, blotted, encode } from "./game/cipher.js";
 
 document.getElementById("needs-server")?.remove();
@@ -51,7 +51,15 @@ stage.addEventListener("click", (event) => {
     openCloseLook(stage, caseData.evidence.find((e) => e.id === id));
     return;
   }
-  if (event.target.closest('[data-pin="blank-card"]')) openCard();
+  if (event.target.closest('[data-pin="blank-card"]')) {
+    openCard();
+    return;
+  }
+  const suspectCard = event.target.closest(".pin-suspect");
+  if (suspectCard) {
+    const id = suspectCard.dataset.pin.replace("suspect:", "");
+    openStatement(stage, caseData.suspects.find((s) => s.id === id));
+  }
 });
 
 stage.addEventListener("keydown", (event) => {

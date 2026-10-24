@@ -201,3 +201,25 @@
 .close-look.evidence-matchbook .evidence-label { margin: 0 -64px 0 -36px; padding: 18px 36px; font-size: 26px; }
 .close-look-note { max-width: 700px; margin-top: 16px; font-size: 40px; line-height: 1.15; white-space: normal; color: var(--pencil); }
 .close-look-note .anchor { width: 22px; height: 28px; vertical-align: middle; }
+
+/* ---- A suspect's statement ---- */
+
+.statement-open {
+  width: 560px;
+  padding: 26px 36px 32px;
+  transform: rotate(0.8deg);
+}
+.statement-name {
+  margin: 4px 0 2px;
+  font-family: var(--font-news);
+  font-weight: 900;
+  font-size: 30px;
+}
+.statement-quote {
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(31, 27, 38, 0.4);
+  font-family: var(--font-type);
+  font-size: 22px;
+  line-height: 1.45;
+}

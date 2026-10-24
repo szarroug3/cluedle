@@ -11,22 +11,24 @@ const NUMBER_WORDS = [
 
 for (const c of cases) {
   // Six of each, so working through the cards in order can't always win in five guesses.
-  test(`${c.id}: has a title, story, and 6 suspects, motives, and statements with unique ids`, () => {
+  test(`${c.id}: has a title, story, and 6 suspects, motives, and weapons with unique ids`, () => {
     assert.ok(c.title);
     assert.ok(c.clipping.headline && c.clipping.body);
-    for (const list of [c.suspects, c.motives, c.statements]) {
+    for (const list of [c.suspects, c.motives, c.weapons]) {
       assert.equal(list.length, 6);
       assert.equal(new Set(list.map((x) => x.id)).size, list.length, "ids must be unique");
     }
   });
 
-  test(`${c.id}: the solution points at a real suspect and motive`, () => {
+  test(`${c.id}: the solution points at a real suspect, motive, and weapon`, () => {
     assert.ok(c.suspects.some((s) => s.id === c.solution.suspectId));
     assert.ok(c.motives.some((m) => m.id === c.solution.motiveId));
+    assert.ok(c.weapons.some((w) => w.id === c.solution.weaponId));
   });
 
-  test(`${c.id}: exactly one statement lies, with valid truth options`, () => {
-    const lies = c.statements.filter((s) => s.isLie);
+  test(`${c.id}: every suspect gives a statement, and exactly one lies, with valid truth options`, () => {
+    for (const s of c.suspects) assert.ok(s.statement?.text, `${s.id} has no statement`);
+    const lies = c.suspects.map((s) => s.statement).filter((s) => s.isLie);
     assert.equal(lies.length, 1);
     const [lie] = lies;
     assert.ok(Array.isArray(lie.truthOptions) && lie.truthOptions.length >= 2);
@@ -63,5 +65,6 @@ for (const c of cases) {
       }
     }
     for (const m of c.motives) assert.ok(!line.includes(m.text.toLowerCase()), `share line gives the motive`);
+    for (const w of c.weapons) assert.ok(!line.includes(w.name.toLowerCase()), `share line gives the weapon`);
   });
 }
