@@ -104,6 +104,7 @@ function letterStrips(onLetter) {
           const key = el("button", "strip-letter", letter);
           key.type = "button";
           key.dataset.letter = letter;
+          key.addEventListener("mousedown", (event) => event.preventDefault());
           return key;
         }),
       );
@@ -203,26 +204,32 @@ export function openBlankCard(stage, { state, readable, onSubmit, onClose }) {
   const status = el("p", "decoder-status");
   status.setAttribute("aria-live", "polite");
 
-  // Clicked letters go in at the cursor, the same as typing.
-  function write(text) {
+  // Clicked letters, Space, and ⌫ act at the cursor, the same as typing. The cursor is remembered
+  // because some browsers forget it once the box loses focus.
+  let caret = { start: 0, end: 0 };
+  const remember = () => (caret = { start: answer.selectionStart, end: answer.selectionEnd });
+  for (const type of ["input", "keyup", "mouseup", "select", "focus"]) answer.addEventListener(type, remember);
+
+  function edit(text, start, end) {
     if (answer.disabled || answer.hidden) return;
-    answer.setRangeText(text, answer.selectionStart, answer.selectionEnd, "end");
+    answer.setRangeText(text, start, end, "end");
+    answer.focus();
     answer.dispatchEvent(new Event("input"));
   }
+  const write = (text) => edit(text, caret.start, caret.end);
   const space = el("button", "key-button", "Space");
   const erase = el("button", "key-button", "\u232b");
   space.type = erase.type = "button";
   erase.setAttribute("aria-label", "Erase a letter");
   space.addEventListener("click", () => write(" "));
   erase.addEventListener("click", () => {
-    if (answer.disabled || answer.hidden) return;
-    const { selectionStart: start, selectionEnd: end } = answer;
-    if (start !== end) answer.setRangeText("", start, end, "end");
-    else if (start > 0) answer.setRangeText("", start - 1, start, "end");
-    answer.dispatchEvent(new Event("input"));
+    const { start, end } = caret;
+    if (start !== end) edit("", start, end);
+    else if (start > 0) edit("", start - 1, start);
   });
   const keys = el("div", "keys");
   keys.append(space, erase);
+  for (const button of [space, erase]) button.addEventListener("mousedown", (event) => event.preventDefault());
 
   const side = el("div", "decoder-side");
   side.append(el("div", "card-label", "Tries left"), tries, pinButton, status);
