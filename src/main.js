@@ -5,6 +5,7 @@ import { renderBoard, updateScrawl, fillBlankCard, pinClue, markGuessSpent, STAG
 import { openCloseLook, openBlankCard, openStatement } from "./ui/decoder.js";
 import { createStamps } from "./ui/stamps.js";
 import { showEnding } from "./ui/ending.js";
+import { createString } from "./ui/string.js";
 import { attempt, blotted, encode } from "./game/cipher.js";
 import { accuse, flagLiar } from "./game/rules.js";
 import { rankFor } from "./game/rank.js";
@@ -20,6 +21,7 @@ const progress = {
   status: "playing",
   guesses: [],
   liar: null,
+  strings: [],
   cipher: { found: false, wrongTries: 0, cracked: false },
 };
 
@@ -80,8 +82,11 @@ const stamps = createStamps(stage, {
   },
 });
 
+const string = createString(stage, { strings: progress.strings, onChange() {} });
+
 stage.addEventListener("click", (event) => {
   if (stamps.handleClick(event)) return;
+  if (string.handleClick(event)) return;
   if (event.target.closest('[data-pin="scrawl"]')) {
     progress.cipher = { ...progress.cipher, found: true };
     openCloseLook(stage, { kind: "scrawl", label: caseData.photo.caption, note: scrawlText(), anchor: true });

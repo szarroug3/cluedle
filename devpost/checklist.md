@@ -49,7 +49,7 @@ Build mode: fast
   Learner check: Play case 1 aiming for the best rank — crack the cipher, catch the liar, solve fast — then click **Copy share card** and paste it somewhere. Does the rank feel earned and the card look like something you'd post?
   Commit: `Add LIAR stamp, detective rank, and share card`
 
-- [ ] **5. Draw red string between pins**
+- [x] **5. Draw red string between pins**
   Becomes usable: Clicking the spool, then pin A, then pin B, ties a sagging red string between them; clicking a string removes it. String never affects guesses, rank, or outcome.
   Why now: It's the player's thinking tool, not part of the rules, so it comes after the full loop works. Its own slice keeps the SVG layer from tangling with stamping.
   PRD ref: `prd.md > The Core Journey` (step 4), `prd.md > Red String`
