@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cluedle Scope</title>
+<style>
+  :root {
+    --cork: #c8a273;
+    --cork-dark: #a9824f;
+    --paper: #fbf6ea;
+    --ink: #2b2420;
+    --muted: #6b5d52;
+    --red: #b3261e;
+    --pin: #d33a2c;
+    --green: #2f7d4a;
+    --line: #d9cdb6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    font: 16px/1.55 Georgia, "Times New Roman", serif;
+    background-color: var(--cork);
+    background-image:
+      radial-gradient(var(--cork-dark) 1px, transparent 1.4px),
+      radial-gradient(#d8b789 1px, transparent 1.4px);
+    background-size: 14px 14px, 23px 23px;
+    background-position: 0 0, 7px 9px;
+  }
+  main { max-width: 920px; margin: 0 auto; padding: 32px 16px 64px; }
+  .card {
+    position: relative;
+    background: var(--paper);
+    padding: 24px 24px 20px;
+    margin: 0 0 28px;
+    box-shadow: 0 2px 0 rgba(0,0,0,.08), 0 10px 24px rgba(60,35,10,.28);
+  }
+  .card::before {
+    content: "";
+    position: absolute; top: -9px; left: 50%;
+    width: 18px; height: 18px; margin-left: -9px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff8a7a, var(--pin) 55%, #7d1710);
+    box-shadow: 0 3px 4px rgba(0,0,0,.35);
+  }
+  .tilt-l { transform: rotate(-0.6deg); }
+  .tilt-r { transform: rotate(0.5deg); }
+  header.card { text-align: center; padding-top: 30px; }
+  .kicker { font: 600 12px/1 ui-monospace, Menlo, monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--red); }
+  h1 { font-size: clamp(40px, 8vw, 64px); margin: 8px 0 4px; letter-spacing: -.01em; }
+  h2 { font-size: 22px; margin: 0 0 10px; }
+  h2 small { font: 600 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 6px; }
+  p { margin: 0 0 10px; }
+  .lede { font-size: 19px; color: var(--muted); font-style: italic; }
+  .status { display: inline-block; margin-top: 12px; font: 600 12px/1 ui-monospace, Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; border: 2px solid var(--red); color: var(--red); padding: 6px 10px; transform: rotate(-3deg); }
+  .kernel { font-size: 20px; line-height: 1.5; }
+  .kernel strong { background: linear-gradient(transparent 60%, #f3d36b 60%); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
+  .grid .card { margin: 0; }
+  svg { width: 100%; height: auto; display: block; }
+  .steps { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 10px; }
+  .stepper input { position: absolute; opacity: 0; pointer-events: none; }
+  .steps label {
+    font: 600 13px/1 ui-monospace, Menlo, monospace;
+    padding: 8px 10px; border: 1px solid var(--line); background: #fff; color: var(--ink);
+    cursor: pointer; border-radius: 2px;
+  }
+  .step-text { min-height: 3.2em; color: var(--muted); }
+  .step-text p { display: none; }
+  #s0:checked ~ .steps label[for="s0"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #s0:focus-visible ~ .steps label[for="s0"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #s0:checked ~ .step-text .t0 { display: block; }
+  #s1:checked ~ .steps label[for="s1"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #s1:focus-visible ~ .steps label[for="s1"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #s1:checked ~ .step-text .t1 { display: block; }
+  #s2:checked ~ .steps label[for="s2"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #s2:focus-visible ~ .steps label[for="s2"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #s2:checked ~ .step-text .t2 { display: block; }
+  #s3:checked ~ .steps label[for="s3"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #s3:focus-visible ~ .steps label[for="s3"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #s3:checked ~ .step-text .t3 { display: block; }
+  #s4:checked ~ .steps label[for="s4"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #s4:focus-visible ~ .steps label[for="s4"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #s4:checked ~ .step-text .t4 { display: block; }
+  details { border-top: 1px dashed var(--line); padding: 10px 0; }
+  details:first-of-type { border-top: 0; }
+  summary { cursor: pointer; font-weight: bold; list-style: none; display: flex; align-items: center; gap: 10px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "▸"; color: var(--red); transition: transform .15s; }
+  details[open] summary::before { transform: rotate(90deg); }
+  .tag { font: 600 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .1em; text-transform: uppercase; padding: 4px 6px; border-radius: 2px; color: #fff; }
+  .tag.now { background: var(--green); }
+  .tag.later { background: #8a6d1f; }
+  .tag.cut { background: var(--red); }
+  ul { margin: 8px 0 0; padding-left: 22px; }
+  li { margin: 4px 0; }
+  .muted { color: var(--muted); }
+  a { color: var(--red); }
+  footer { text-align: center; color: #3e2c1b; font: 13px/1.4 ui-monospace, Menlo, monospace; }
+</style>
+</head>
+<body>
+<main>
+
+  <header class="card tilt-l">
+    <div class="kicker">Case file · Scope</div>
+    <h1>Cluedle</h1>
+    <p class="lede">Wordle for armchair detectives: a daily, hand-written mystery you solve by naming who did it and why, in five guesses or fewer.</p>
+    <span class="status">Approved</span>
+  </header>
+
+  <section class="card tilt-r">
+    <h2><small>The unique kernel</small>Read closely, don't guess your way through</h2>
+    <p class="kernel">A daily case you crack by <strong>reading closely</strong>. You have to <strong>find the puzzle to solve the puzzle</strong>: an encrypted clue is hidden somewhere on the board, and the <strong>key is hidden in the story</strong>. <strong>Some witnesses lie</strong>, so you also have to decide what to trust. All of it lives on a <strong>murder board</strong> that makes you feel like a detective working a case, not someone filling in a form.</p>
+  </section>
+
+  <section class="card">
+    <h2><small>How it fits together</small>Player → core loop → proof</h2>
+    <svg viewBox="0 0 860 300" role="img" aria-labelledby="dg-title">
+      <title id="dg-title">Diagram: an armchair detective opens today's case, loops through guessing and unlocking clues, and ends with a solved case and a share card.</title>
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#b3261e"/>
+        </marker>
+      </defs>
+      <g font-family="Georgia, serif" font-size="15" fill="#2b2420">
+        <!-- player -->
+        <rect x="10" y="110" width="140" height="80" fill="#fff" stroke="#d9cdb6"/>
+        <text x="80" y="143" text-anchor="middle" font-weight="bold">Armchair</text>
+        <text x="80" y="163" text-anchor="middle" font-weight="bold">detective</text>
+        <!-- loop nodes -->
+        <g id="n-read"><rect x="210" y="30" width="170" height="56" fill="#fff" stroke="#d9cdb6"/><text x="295" y="63" text-anchor="middle">Read the case</text></g>
+        <g id="n-guess"><rect x="440" y="30" width="170" height="56" fill="#fff" stroke="#d9cdb6"/><text x="525" y="63" text-anchor="middle">Guess who + why</text></g>
+        <g id="n-clue"><rect x="440" y="214" width="170" height="56" fill="#fff" stroke="#d9cdb6"/><text x="525" y="238" text-anchor="middle">Miss → new clue</text><text x="525" y="258" text-anchor="middle" font-size="13" fill="#6b5d52">some witnesses lie</text></g>
+        <g id="n-crack"><rect x="210" y="214" width="170" height="56" fill="#fff" stroke="#d9cdb6" stroke-dasharray="6 4"/><text x="295" y="238" text-anchor="middle">Find + crack cipher</text><text x="295" y="258" text-anchor="middle" font-size="13" fill="#6b5d52">hidden clue, key in story</text></g>
+        <!-- proof -->
+        <g id="n-proof"><rect x="680" y="100" width="170" height="100" fill="#fbf0d0" stroke="#8a6d1f"/><text x="765" y="132" text-anchor="middle" font-weight="bold">Case closed</text><text x="765" y="154" text-anchor="middle" font-size="14">detective rank</text><text x="765" y="176" text-anchor="middle" font-size="14">share card 🟩🟥 🔓</text></g>
+      </g>
+      <g fill="none" stroke="#b3261e" stroke-width="2.5" marker-end="url(#ah)">
+        <path d="M150,140 C180,120 185,70 208,62"/>
+        <path d="M380,58 L438,58"/>
+        <path d="M505,86 L505,212"/>
+        <path d="M545,214 L545,88"/>
+        <path d="M610,58 C650,60 660,110 678,130"/>
+      </g>
+      <g fill="none" stroke="#b3261e" stroke-width="2" stroke-dasharray="5 4" marker-start="url(#ah)" marker-end="url(#ah)">
+        <path d="M295,90 L295,212"/>
+      </g>
+      <g font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#6b5d52">
+        <text x="452" y="150">wrong</text>
+        <text x="553" y="150">guess again</text>
+        <text x="305" y="146">anytime,</text>
+        <text x="305" y="160">if you spot it</text>
+        <text x="630" y="52">right ✓</text>
+      </g>
+    </svg>
+    <div class="stepper">
+      <input type="radio" name="step" id="s0" checked>
+      <input type="radio" name="step" id="s1">
+      <input type="radio" name="step" id="s2">
+      <input type="radio" name="step" id="s3">
+      <input type="radio" name="step" id="s4">
+      <div class="steps" aria-label="Walk the core loop">
+        <label for="s0">1 · Read</label>
+        <label for="s1">2 · Find &amp; crack</label>
+        <label for="s2">3 · Guess</label>
+        <label for="s3">4 · New clue</label>
+        <label for="s4">5 · Close &amp; share</label>
+      </div>
+      <div class="step-text">
+        <p class="t0">Open today's case: a newspaper-clipping story on the corkboard, with 3–4 suspect cards pinned up.</p>
+        <p class="t1">An encrypted clue is hidden somewhere on the board. Spot it, find its key in the story, and it unscrambles, any time and without spending a guess. Skimmers may never notice it.</p>
+        <p class="t2">Name who did it and why. Feedback says right suspect, right motive, both, or neither.</p>
+        <p class="t3">A wrong guess pins up a new plain clue. Some are witness statements, and one witness is lying.</p>
+        <p class="t4">Name the right suspect and motive within five guesses to earn a detective rank, then copy the share card. Miss five times and the case goes cold.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="card tilt-l">
+      <h2><small>Who it's for</small>Armchair detectives</h2>
+      <p>People who play a daily puzzle like Wordle and love a good mystery. They want a small, satisfying "I solved it" moment each day that they can share. Today they get that from word puzzles, or from mystery novels and shows that take hours instead of minutes.</p>
+    </section>
+    <section class="card tilt-r">
+      <h2><small>Inspiration &amp; identity</small>Feels like working a case</h2>
+      <ul>
+        <li><a href="https://www.nytimes.com/games/wordle">Wordle</a>: one puzzle a day, the same for everyone, an emoji result card.</li>
+        <li>Detective murder boards: corkboard, pinned suspect cards, newspaper clippings, red string.</li>
+        <li>The board, not dropdowns and forms, is what makes it feel like a case.</li>
+      </ul>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:28px">
+    <h2><small>What "working" looks like</small>The finish line</h2>
+    <p>A static web app opened in a browser shows today's case on a murder board. In one sitting a player reads the story, spots the hidden encrypted clue and cracks it using a key in the story, takes a wrong guess and sees a new clue pinned up, catches a lying witness, solves the case, earns a detective rank, and copies the share card to the clipboard.</p>
+    <p><strong>The "oh, that's cool" beat:</strong> noticing the hidden clue, then watching it unscramble once you spot its key in the story.</p>
+    <p class="muted">Why it matters: an entry for Devpost "Build With AI: Basics." Judges watch a 1–3 minute demo, so "a small, polished, complete experience beats an ambitious half-built one."</p>
+  </section>
+
+  <section class="card tilt-r">
+    <h2><small>The boundary</small>Now, later, cut</h2>
+    <details open>
+      <summary><span class="tag now">Now</span> In the proof of concept</summary>
+      <ul>
+        <li>Three polished, hand-written cases (Claude drafts, you edit), with the daily case chosen by date.</li>
+        <li>Each case: a story, 3–4 suspects, a few motives, plain clues that unlock on wrong guesses, at least one lying witness, one or two encrypted clues hidden on the board with their key hidden in the story.</li>
+        <li>Guess who and why; feedback per guess (suspect / motive / both / neither); five guesses max, or the case goes cold.</li>
+        <li>Finding and cracking an encrypted clue, at any time, reveals it without spending a guess. A player who never finds it can still solve the case.</li>
+        <li>A detective rank (e.g. Amateur up to Seasoned Detective) based on guesses used, cipher found and cracked, and liar caught. Exact ranks set in the PRD.</li>
+        <li>Murder-board look: corkboard, pinned suspect cards, newspaper-clipping story, clues pinned as they unlock.</li>
+        <li>Red string the player draws between pins to track their own thinking.</li>
+        <li>Emoji share card copied to the clipboard, with the detective rank and a 🔓 for a cracked cipher. Style chosen from options in the PRD.</li>
+        <li>No AI at runtime; everything is hand-written and rule-based.</li>
+      </ul>
+    </details>
+    <details>
+      <summary><span class="tag later">Later</span> Worth doing, not now</summary>
+      <ul>
+        <li>Red-string physics: string that sags, sways, or reacts as clues are pinned.</li>
+        <li>Correct red-string links counting toward the detective rank (needs the game to know which links are "correct").</li>
+        <li>Cases four through seven.</li>
+      </ul>
+    </details>
+    <details>
+      <summary><span class="tag cut">Cut</span> Named, with a reason</summary>
+      <ul>
+        <li>Making the accusation by dragging red string. The string tracks evidence the way detectives in stories use it; it isn't the guess control.</li>
+      </ul>
+    </details>
+  </section>
+
+  <footer>Companion to devpost/scope.md · the Markdown file is the official version</footer>
+</main>
+</body>
+</html>
