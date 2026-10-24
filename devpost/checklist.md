@@ -106,15 +106,15 @@ Build mode: fast
 
 ## Code Tour and App Map
 
-- [ ] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
+- [x] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
 - [ ] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
-- [ ] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
+- [x] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
 
-Activity and evidence: [what actually happened; real document/test/code references; unfinished work if interrupted]
-Route and stops: [actual paths and symbols; guided stops completed, or reference-only route]
-Edit outcome: [tried/kept/reverted/declined/not applicable; verification if changed]
+Activity and evidence: Focused alternative tied to the learner's goal (working with AI so it makes fewer bad decisions). The seven case drafts each passed `check-case` but converged on the same cipher key (six of seven) and the surname Pell (three), caught only in a side-by-side review (see Revisions). The learner set the rule that keys may repeat once there are more cases than keys; Claude wrote `"cipher keys are spread out across the cases"` and the back-to-back-days check in `tests/cases.test.js` (commit 027f43b). The learner ran `npm test` (132 pass). Setting case 9 to key 7 stayed green because no other case uses 7; copying case 8's key 17 turned it red (3 failures), then it was restored.
+Route and stops: Reference-only route in the app map: `src/ui/stamps.js` (`accuseButton.addEventListener("click"`) → `src/main.js` (`onAccuse(guess)`, `save()`) → `src/game/rules.js` (`export function accuse`). Not toured interactively.
+Edit outcome: Kept — the key-spread test, written by Claude to the learner's rule; verified failing on a real duplicate and passing on the real cases.
 Reflection: [offered/answered/declined/already covered — personal answer belongs only in the ignored profile]
-Activity mode: [live app and editor, explicit static fallback, focused alternative, prior practice, or recap]
+Activity mode: Focused alternative, with the learner running the tests in their own terminal.
 
 ## Revisions
 
