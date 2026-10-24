@@ -8,7 +8,7 @@ status: approved
 ## How This Works, In Plain Language
 Cluedle is a single web page made of plain HTML, CSS, and JavaScript, with no framework and no build step.
 
-- **The cases are data files.** Each of the three cases is a JavaScript file that describes the story, suspects and their statements (which one lies), motives, weapons, clues in unlock order, the hidden cipher, the solution, and both endings. The game never generates anything; it only reads these files.
+- **The cases are data files.** Each of the ten cases is a JavaScript file that describes the story, suspects and their statements (which one lies), motives, weapons, clues in unlock order, the hidden cipher, the solution, and both endings. The game never generates anything; it only reads these files.
 - **The rules are a separate, tested layer.** Small JavaScript modules decide today's case, check an accusation, handle the LIAR shot, run the cipher and its blotting, count points for the rank, and write the share card. They don't touch the screen, so automated tests can check every rule by itself.
 - **The board is the screen layer.** Other modules draw the case file, the how-to-play, the murder board, the stamps, the red string, the decoder card, and the ending, and pass the player's actions to the rules.
 - **Progress lives in the browser.** After every action, the game saves the player's progress for today in `localStorage`, a small notebook the browser keeps for one site. Reopening the page reads it back, so a reload never resets cipher tries or the LIAR shot.
@@ -46,7 +46,7 @@ Nothing here needs an account, a key, or a paid plan.
 - **Start it:** from the project folder, run `npx serve .` (or `python3 -m http.server 8000`), then open the address it prints, for example `http://localhost:3000`.
 - **Run the tests:** `npm test` (runs `node --test`).
 - **Demo recording:** open the local address and record the board with a screen recorder. The video should show finding and cracking the cipher, a wrong guess pinning a clue, the LIAR stamp, solving the case, the rank, and pasting the share card.
-- **Showing a specific case:** adding `?case=2` to the address loads that case instead of today's, and `?fresh` ignores saved progress. This is a demo and testing aid, so all three cases can be recorded on any day.
+- **Showing a specific case:** adding `?case=2` to the address loads that case instead of today's, and `?fresh` ignores saved progress. This is a demo and testing aid, so all ten cases can be recorded on any day.
 - **Optional playable link (nice to have):** GitHub Pages serves the repository's static files as is, so the same files work there with no changes. Deploy steps belong to `6-ship`. GitHub commands should target github.com explicitly. [GitHub Pages docs](https://docs.github.com/en/pages).
 
 ## Look and Feel
@@ -73,12 +73,12 @@ From `prd.md > Look and Feel`.
 ## Components
 
 ### Case Data
-Each case is one module exporting a case object (see `## Data Model`). `src/cases/index.js` exports the ordered list of three. Claude drafts the cases and the learner edits them.
+Each case is one module exporting a case object (see `## Data Model`). `src/cases/index.js` exports the ordered list of ten. Claude drafts the cases and the learner edits them.
 PRD ref: `prd.md > Daily Case`.
 
 ### Daily Case Selection (`src/game/daily.js`)
 - `dateKey(now)` → the player's local date as `YYYY-MM-DD`.
-- `caseForDate(dateKey)` → the case number (days since launch day, 2026-10-24, plus one) and which case to play (case number minus one, modulo 3).
+- `caseForDate(dateKey)` → the case number (days since launch day, 2026-10-24, plus one) and which case to play (case number minus one, modulo the number of cases).
 - `msUntilNextCase(now)` → milliseconds to local midnight, for the countdown.
 - The `?case=N` query overrides the case for demos and testing.
 PRD ref: `prd.md > Daily Case`, `prd.md > States and Boundaries`.
@@ -268,7 +268,7 @@ cluedle/
 - **Every witness is a suspect**, so each statement lives on its suspect's card and the LIAR stamp goes on the card.
 - **Exactly one lying statement per case** instead of "at least one." The LIAR stamp is one shot and catching the liar is worth one fixed bonus, so a single liar keeps that fair and easy to score.
 - **Static curves for red string** instead of physics, as agreed in `scope.md > Later`.
-- **Rotation by date, modulo three cases**, instead of a calendar of unique cases. With three cases, the cycle repeats every three days; adding cases four through seven only means adding files.
+- **Rotation by date, modulo the ten cases**, instead of a calendar of unique cases. The cycle repeats every ten days; adding more cases only means adding files.
 - **Textures from CSS** instead of photographed images. It's fast to build and no assets to source; images can be added later.
 - **No end-to-end browser test suite.** The rules are tested automatically, and the screens are checked by playing in the browser at each build step. A browser-automation tool would add setup that doesn't help prove the idea.
 

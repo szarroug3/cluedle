@@ -26,7 +26,7 @@ Progress is saved in your browser for the day. A new case comes out at local mid
 
 ### Demo and testing aids
 
-- `?case=2` plays case 2 on any day (there are three cases).
+- `?case=2` plays case 2 on any day (there are ten cases).
 - `?fresh` ignores saved progress.
 
 They work together: `http://localhost:3000/?case=3&fresh`.
@@ -43,7 +43,7 @@ This runs the rules with Node's built-in test runner: the accusation and liar ru
 
 - `index.html`: the page.
 - `styles/`: the look (palette, board, stamps, cards).
-- `src/cases/`: the three hand-written cases, as data.
+- `src/cases/`: the ten hand-written cases, as data.
 - `src/game/`: the rules. Plain JavaScript with no DOM, and all tested.
 - `src/ui/`: the board and everything drawn on it.
 - `src/main.js`: connects the board to the rules and saves progress.

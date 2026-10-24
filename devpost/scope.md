@@ -29,7 +29,7 @@ A static web app opened in a browser shows today's case on a murder board. In on
 The "oh, that's cool" beat: noticing the hidden clue, then watching it unscramble once you spot its key in the story.
 
 ## The POC Boundary
-- Three polished, hand-written cases (Claude drafts them, the learner edits), with the daily case chosen by date.
+- Ten hand-written cases (Claude drafts them, the learner plays and edits them), with the daily case chosen by date. Grown from three during the final review, for the showcase.
 - Each case has a story, 6 suspects (each with a witness statement, exactly one of which lies), 6 motives, 6 weapons, plain clues that unlock on wrong guesses, and one or two encrypted clues hidden on the board whose key is hidden in the story.
 - Guessing who, why, and how, with per-guess feedback saying how many of the three are right (not which), five guesses max, and "the case goes cold" on a loss.
 - Finding and cracking an encrypted clue, at any time, reveals it without spending a guess. A player who never finds it can still solve the case.
@@ -42,7 +42,7 @@ The "oh, that's cool" beat: noticing the hidden clue, then watching it unscrambl
 ## Later
 - Red-string physics: string that sags, sways, or reacts as clues are pinned.
 - Correct red-string links counting toward the detective rank (needs the game to know which links are "correct").
-- Cases four through seven.
+- Cases beyond ten.
 
 ## Explicitly Cut
 - Making the accusation by dragging red string. The learner wants the string to track evidence the way detectives in stories use it, not to act as the guess control.

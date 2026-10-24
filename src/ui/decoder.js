@@ -5,6 +5,17 @@ import { isLocked, BLOT, MAX_TRIES } from "../game/cipher.js";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+// One try on the blank card: a magnifying glass over a fingerprint.
+const MAGNIFIER = `
+  <svg viewBox="0 0 30 30" aria-hidden="true">
+    <g class="try-print">
+      <path d="M8.5 15.5q0-5 3.5-5t3.5 4"/><path d="M7 13q1.5-5 5-5t5 4.5"/><path d="M10 16.5q0-3.5 2-3.5t2 3"/>
+      <path d="M8.5 18q1 1.5 2.5 1.5 M13.5 17.5q0 1.5 1.5 2.5"/>
+    </g>
+    <circle class="try-lens" cx="12" cy="13" r="8.5"/>
+    <path class="try-handle" d="M18.2 19.2L26.5 27.5"/>
+  </svg>`;
+
 // The little pencil doodle signing each case's scrawl; it points toward where the key is hidden.
 export const DOODLES = {
   anchor: `<svg class="doodle" viewBox="0 0 20 24" aria-hidden="true">
@@ -17,6 +28,27 @@ export const DOODLES = {
   train: `<svg class="doodle" viewBox="0 0 28 22" aria-hidden="true">
     <path d="M3 16V8h9v8 M12 11h9l3 5H3 M6 8V4h4v4 M17 11V7h3v4 M1 19h26"/>
     <circle cx="7" cy="18" r="2"/><circle cx="19" cy="18" r="2"/>
+  </svg>`,
+  moon: `<svg class="doodle" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M15 3a9 9 0 1 0 6 15A7.5 7.5 0 0 1 15 3z"/>
+  </svg>`,
+  key: `<svg class="doodle" viewBox="0 0 28 18" aria-hidden="true">
+    <circle cx="7" cy="9" r="5"/><path d="M12 9H26 M21 9v4 M25 9v3"/>
+  </svg>`,
+  clock: `<svg class="doodle" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 3"/>
+  </svg>`,
+  mask: `<svg class="doodle" viewBox="0 0 30 18" aria-hidden="true">
+    <path d="M2 5q13-4 26 0q0 9-6 10q-4 0-7-4q-3 4-7 4q-6-1-6-10z"/><path d="M7 8h5 M18 8h5"/>
+  </svg>`,
+  pen: `<svg class="doodle" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 20l3-8L17 2l5 5-10 10z M4 20l5-1 M7 12l5 5 M12 13l-3 3"/>
+  </svg>`,
+  bell: `<svg class="doodle" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M5 17q1-1 1-6a6 6 0 0 1 12 0q0 5 1 6z M3 17h18 M10 20a2 2 0 0 0 4 0 M12 3v2"/>
+  </svg>`,
+  snowflake: `<svg class="doodle" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 2v20 M3.3 7l17.4 10 M3.3 17l17.4-10 M9.5 4l2.5 2 2.5-2 M9.5 20l2.5-2 2.5 2"/>
   </svg>`,
 };
 
@@ -282,7 +314,11 @@ export function openBlankCard(stage, { state, readable, onSubmit, onClose }) {
   function refresh() {
     const locked = isLocked(current);
     tries.replaceChildren(
-      ...Array.from({ length: MAX_TRIES }, (_, i) => el("span", i < MAX_TRIES - current.wrongTries ? "drop" : "drop spent")),
+      ...Array.from({ length: MAX_TRIES }, (_, i) => {
+        const glass = el("span", i < MAX_TRIES - current.wrongTries ? "try" : "try spent");
+        glass.innerHTML = MAGNIFIER;
+        return glass;
+      }),
     );
     answer.disabled = locked;
     pinButton.disabled = locked || !/[a-z]/i.test(answer.value);

@@ -43,7 +43,7 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 ## Features and Behavior
 
 ### Daily Case
-- One case per day, the same for every player, chosen by date from three hand-written cases.
+- One case per day, the same for every player, chosen by date from ten hand-written cases.
 - Each case has: a story, 6 suspects (each with a witness statement, exactly one of which lies), 6 motives, 6 weapons, plain clues that unlock on wrong guesses, one hidden cipher clue whose key is in the story, the true solution (who, why, and how), and both endings (closed and gone cold).
 - Every witness is a suspect, so each statement lives on its suspect's card.
 - Six of each, three parts to every accusation, and feedback that says only how many parts are right, so working through the cards in order can't brute-force the case; it takes reasoning from the clues.
@@ -162,12 +162,12 @@ Source: `scope.md > The POC Boundary` (cheap version).
 - **Progress kept all day** — reloading can't reset cipher tries or the LIAR shot.
 
 ## What We're Building
-Everything under `## Features and Behavior` and `## States and Boundaries`, with three hand-written cases drafted by Claude and edited by the learner. Static web app opened in a browser; no AI at runtime.
+Everything under `## Features and Behavior` and `## States and Boundaries`, with ten hand-written cases drafted by Claude and played and edited by the learner. Static web app opened in a browser; no AI at runtime.
 
 ## Deferred From the POC
 - **Red-string physics** — string that sags and sways; polish once the core works (`scope.md > Later`).
 - **Correct red-string links counting toward the rank** — needs the game to know which links are "correct" (`scope.md > Later`).
-- **Cases four through seven** — content work after three polished cases (`scope.md > Later`).
+- **Cases beyond ten** — more content once the first ten are played and tuned (`scope.md > Later`).
 - **Streaks and stats across days** — implied by a daily game, not needed to prove the kernel.
 
 ## Possible Later Enhancements

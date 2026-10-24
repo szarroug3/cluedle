@@ -92,6 +92,86 @@ const PHOTO_SCENES = {
       <circle cx="55" cy="110" r="8" fill="#2a2730" stroke="#77737f"/><circle cx="95" cy="110" r="8" fill="#2a2730" stroke="#77737f"/>
       <circle cx="160" cy="108" r="10" fill="#2a2730" stroke="#77737f"/>
     </svg>`,
+  nightclub: `
+    <svg viewBox="0 0 200 140" aria-hidden="true">
+      <rect width="200" height="140" fill="#2a2730"/>
+      <circle cx="160" cy="26" r="14" fill="#c9c5d0" fill-opacity="0.55"/>
+      <path d="M0 96 H200 V140 H0 Z" fill="#3b3742"/>
+      <path d="M30 96 V60 Q60 44 90 60 V96 Z" fill="#55515e"/>
+      <path d="M36 70 H84 M36 80 H84" stroke="#2a2730" stroke-width="2"/>
+      <circle cx="120" cy="74" r="7" fill="#1e1b24"/><path d="M110 96 Q120 78 130 96 Z" fill="#1e1b24"/>
+      <path d="M134 70 l14 -10 l3 4 l-14 9 Z" fill="#9a96a3"/>
+      <ellipse cx="60" cy="112" rx="18" ry="4" fill="#1e1b24"/><rect x="58" y="112" width="4" height="18" fill="#1e1b24"/>
+      <ellipse cx="160" cy="114" rx="16" ry="4" fill="#1e1b24"/><rect x="158" y="114" width="4" height="16" fill="#1e1b24"/>
+    </svg>`,
+  harbor: `
+    <svg viewBox="0 0 200 140" aria-hidden="true">
+      <rect width="200" height="140" fill="#8e8a97"/>
+      <rect y="84" width="200" height="56" fill="#4c4855"/>
+      <path d="M0 96 Q25 92 50 96 T100 96 T150 96 T200 96 M0 112 Q25 108 50 112 T100 112 T150 112 T200 112" stroke="#6e6a77" stroke-width="2" fill="none"/>
+      <path d="M150 84 L156 30 H168 L174 84 Z" fill="#2a2730"/><rect x="154" y="22" width="16" height="10" fill="#c9c5d0" fill-opacity="0.7"/>
+      <path d="M151 20 H173 L162 12 Z" fill="#2a2730"/>
+      <path d="M20 90 H90 L84 100 H28 Z" fill="#1e1b24"/><path d="M52 90 V52 M52 54 L76 86 H52" stroke="#1e1b24" stroke-width="2" fill="none"/>
+      <path d="M0 84 H40 V80 H0 Z M8 80 V96 M24 80 V96" fill="#1e1b24" stroke="#1e1b24" stroke-width="2"/>
+    </svg>`,
+  hotel: `
+    <svg viewBox="0 0 200 140" aria-hidden="true">
+      <rect width="200" height="140" fill="#8e8a97"/>
+      <rect x="40" y="14" width="120" height="104" fill="#55515e"/>
+      <g fill="#c9c5d0" fill-opacity="0.45">
+        <rect x="52" y="24" width="14" height="14"/><rect x="78" y="24" width="14" height="14"/><rect x="108" y="24" width="14" height="14"/><rect x="134" y="24" width="14" height="14"/>
+        <rect x="52" y="50" width="14" height="14"/><rect x="78" y="50" width="14" height="14"/><rect x="108" y="50" width="14" height="14"/><rect x="134" y="50" width="14" height="14"/>
+        <rect x="52" y="76" width="14" height="14"/><rect x="134" y="76" width="14" height="14"/>
+      </g>
+      <path d="M76 118 V84 H124 V118 Z" fill="#1e1b24"/><path d="M70 84 H130 L124 76 H76 Z" fill="#2a2730"/>
+      <circle cx="100" cy="8" r="7" fill="#c9c5d0" fill-opacity="0.6" stroke="#2a2730" stroke-width="2"/>
+      <rect y="118" width="200" height="22" fill="#2a2730"/>
+    </svg>`,
+  mansion: `
+    <svg viewBox="0 0 200 140" aria-hidden="true">
+      <rect width="200" height="140" fill="#6e6a77"/>
+      <path d="M20 112 V56 L100 24 L180 56 V112 Z" fill="#3b3742"/>
+      <g fill="#c9c5d0" fill-opacity="0.6">
+        <rect x="36" y="66" width="12" height="18"/><rect x="60" y="66" width="12" height="18"/><rect x="128" y="66" width="12" height="18"/><rect x="152" y="66" width="12" height="18"/>
+      </g>
+      <path d="M86 112 V72 Q100 60 114 72 V112 Z" fill="#c9c5d0" fill-opacity="0.75"/>
+      <path d="M80 112 V64 M120 112 V64" stroke="#1e1b24" stroke-width="3"/>
+      <rect y="112" width="200" height="28" fill="#2a2730"/>
+      <path d="M0 112 Q10 96 18 112 M182 112 Q190 94 200 112" fill="#1e1b24"/>
+    </svg>`,
+  office: `
+    <svg viewBox="0 0 200 140" aria-hidden="true">
+      <rect width="200" height="140" fill="#77737f"/>
+      <rect x="120" y="14" width="64" height="56" fill="#9a96a3"/><path d="M152 14 V70 M120 42 H184" stroke="#55515e" stroke-width="3"/>
+      <path d="M100 6 V30" stroke="#2a2730" stroke-width="2"/><path d="M88 30 H112 L106 40 H94 Z" fill="#2a2730"/>
+      <path d="M100 40 L64 112 H136 Z" fill="#c9c5d0" fill-opacity="0.18"/>
+      <rect x="10" y="96" width="180" height="10" fill="#2a2730"/><rect x="20" y="106" width="8" height="34" fill="#2a2730"/><rect x="172" y="106" width="8" height="34" fill="#2a2730"/>
+      <path d="M66 96 V80 H120 V96 Z" fill="#1e1b24"/><path d="M76 80 V66 H110 V80" fill="#c9c5d0" fill-opacity="0.7"/>
+      <path d="M30 96 V84 H52 V96 Z" fill="#3b3742"/>
+    </svg>`,
+  ring: `
+    <svg viewBox="0 0 200 140" aria-hidden="true">
+      <rect width="200" height="140" fill="#2a2730"/>
+      <path d="M100 0 L40 92 H160 Z" fill="#c9c5d0" fill-opacity="0.18"/>
+      <path d="M20 92 L40 70 H160 L180 92 Z" fill="#77737f"/>
+      <path d="M40 70 V40 M160 70 V40 M20 92 V60 M180 92 V60" stroke="#1e1b24" stroke-width="4"/>
+      <path d="M40 46 H160 M40 56 H160 M20 66 L40 46 M180 66 L160 46 M20 76 L40 56 M180 76 L160 56" stroke="#c9c5d0" stroke-opacity="0.7" stroke-width="2"/>
+      <rect y="92" width="200" height="48" fill="#3b3742"/>
+      <circle cx="92" cy="58" r="5" fill="#1e1b24"/><path d="M86 70 L92 63 L98 70 L96 70 L92 66 L88 70 Z M89 63 L82 56 M95 63 L102 58" stroke="#1e1b24" stroke-width="3"/>
+      <circle cx="40" cy="120" r="6" fill="#1e1b24"/><circle cx="62" cy="122" r="6" fill="#1e1b24"/><circle cx="150" cy="120" r="6" fill="#1e1b24"/>
+    </svg>`,
+  lodge: `
+    <svg viewBox="0 0 200 140" aria-hidden="true">
+      <rect width="200" height="140" fill="#9a96a3"/>
+      <path d="M0 70 L40 30 L70 56 L110 14 L160 60 L200 36 V90 H0 Z" fill="#6e6a77"/>
+      <path d="M40 30 L50 40 L44 42 L34 36 Z M110 14 L122 26 L114 28 L102 22 Z" fill="#efe9dd"/>
+      <rect y="104" width="200" height="36" fill="#d9d6d3"/>
+      <path d="M50 104 V72 L100 50 L150 72 V104 Z" fill="#3b3742"/>
+      <path d="M44 74 L100 46 L156 74 L150 66 L100 42 L50 66 Z" fill="#efe9dd"/>
+      <rect x="68" y="80" width="14" height="12" fill="#c9c5d0" fill-opacity="0.8"/><rect x="118" y="80" width="14" height="12" fill="#c9c5d0" fill-opacity="0.8"/>
+      <path d="M92 104 V84 H108 V104 Z" fill="#1e1b24"/>
+      <g fill="#efe9dd"><circle cx="20" cy="20" r="1.5"/><circle cx="70" cy="12" r="1.2"/><circle cx="140" cy="30" r="1.5"/><circle cx="180" cy="14" r="1.2"/><circle cx="90" cy="34" r="1"/></g>
+    </svg>`,
 };
 
 // One guess on the rail: a detective in a fedora, face half in shadow.
