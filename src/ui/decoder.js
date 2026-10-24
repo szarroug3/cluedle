@@ -1,11 +1,9 @@
 // Cards brought forward over the board: a close look at any scrap, and the blank card where the
-// player writes the message they decoded. The wheels on the blank card are only a helper; nothing
+// player writes the message they decoded. The letter strips on the blank card are only a helper; nothing
 // is decoded or checked until the player pins their answer.
 import { isLocked, BLOT, MAX_TRIES } from "../game/cipher.js";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const STEP = 360 / 26;
-const SVG_NS = "http://www.w3.org/2000/svg";
 
 export const ANCHOR = `
   <svg class="anchor" viewBox="0 0 20 24" aria-hidden="true">
@@ -17,12 +15,6 @@ function el(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
   if (text != null) node.textContent = text;
-  return node;
-}
-
-function svg(tag, attrs = {}) {
-  const node = document.createElementNS(SVG_NS, tag);
-  for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
   return node;
 }
 
@@ -91,97 +83,102 @@ export function openStatement(stage, suspect) {
   openOverlay(stage, card);
 }
 
-// Two alphabet rings; either can be dragged around the hub. The hub shows how far apart they sit.
-function buildWheel() {
-  const wheel = svg("svg", { viewBox: "-130 -130 260 260", class: "wheel-svg", "aria-hidden": "true" });
-  const outer = svg("g", { class: "ring ring-outer" });
-  const inner = svg("g", { class: "ring ring-inner" });
-  outer.append(svg("circle", { r: 126, class: "wheel-outer" }));
-  inner.append(svg("circle", { r: 98, class: "wheel-inner" }));
-  [...ALPHABET].forEach((letter, i) => {
-    const a = svg("text", { class: "wheel-letter", transform: `rotate(${i * STEP}) translate(0 -108)` });
-    a.textContent = letter;
-    outer.append(a);
-    const b = svg("text", { class: "wheel-letter", transform: `rotate(${i * STEP}) translate(0 -80)` });
-    b.textContent = letter;
-    inner.append(b);
+// Two side-by-side columns of A–Z. Each slides up or down (drag it, or use its arrows) and wraps
+// around, so lining them up pairs each scrambled letter with its real one. Clicking a letter writes
+// it into the answer. The strips are only a helper; they never decode or check anything.
+function letterStrips(onLetter) {
+  const offsets = [0, 0];
+  const gap = el("div", "strip-gap");
+  const columns = offsets.map((_, side) => {
+    const column = el("div", "strip");
+    column.setAttribute("role", "group");
+    column.setAttribute("aria-label", side === 0 ? "Left letter strip" : "Right letter strip");
+    return column;
   });
-  const pointer = svg("path", { d: "M0 -130 L-6 -140 H6 Z", class: "wheel-pointer" });
-  const number = svg("text", { class: "wheel-number", y: 14 });
-  wheel.append(outer, inner, svg("circle", { r: 52, class: "wheel-hub" }), number, pointer);
-  return { wheel, outer, inner, number };
-}
-
-function cipherWheel() {
-  const turns = { outer: 0, inner: 0 };
-  const { wheel, outer, inner, number } = buildWheel();
-  const dial = el("div", "wheel");
-  dial.tabIndex = 0;
-  dial.setAttribute("role", "group");
-  dial.setAttribute("aria-label", "Cipher wheels: drag either ring, or use the arrow keys to turn the inner one");
-  dial.append(wheel);
 
   function draw() {
-    outer.style.transform = `rotate(${turns.outer * STEP}deg)`;
-    inner.style.transform = `rotate(${turns.inner * STEP}deg)`;
-    const offset = (((turns.inner - turns.outer) % 26) + 26) % 26;
-    number.textContent = String(offset);
+    columns.forEach((column, side) => {
+      column.replaceChildren(
+        ...[...ALPHABET].map((_, row) => {
+          const letter = ALPHABET[(((row + offsets[side]) % 26) + 26) % 26];
+          const key = el("button", "strip-letter", letter);
+          key.type = "button";
+          key.dataset.letter = letter;
+          return key;
+        }),
+      );
+    });
+    gap.textContent = String((((offsets[1] - offsets[0]) % 26) + 26) % 26);
   }
 
-  const angleAt = (event) => {
-    const box = dial.getBoundingClientRect();
-    return (Math.atan2(event.clientY - (box.top + box.height / 2), event.clientX - (box.left + box.width / 2)) * 180) / Math.PI;
+  function slide(side, steps) {
+    offsets[side] += steps;
+    draw();
+  }
+
+  // Dragging a strip by one row slides it one letter; a press without a drag is a click.
+  let drag = null;
+  let dragged = false;
+  columns.forEach((column, side) => {
+    column.addEventListener("pointerdown", (event) => {
+      const rowHeight = column.firstChild.getBoundingClientRect().height;
+      drag = { side, y: event.clientY, rowHeight };
+      dragged = false;
+    });
+    column.addEventListener("click", (event) => {
+      const key = event.target.closest(".strip-letter");
+      if (!key || dragged) return;
+      onLetter(key.dataset.letter);
+    });
+  });
+  const onMove = (event) => {
+    if (!drag) return;
+    const steps = Math.trunc((event.clientY - drag.y) / drag.rowHeight);
+    if (steps !== 0) {
+      slide(drag.side, -steps);
+      drag.y += steps * drag.rowHeight;
+      dragged = true;
+    }
   };
-  const ringAt = (event) => {
-    const box = dial.getBoundingClientRect();
-    const dx = event.clientX - (box.left + box.width / 2);
-    const dy = event.clientY - (box.top + box.height / 2);
-    return (Math.hypot(dx, dy) / box.width) * 260 > 99 ? "outer" : "inner";
+  const onUp = () => (drag = null);
+  window.addEventListener("pointermove", onMove);
+  window.addEventListener("pointerup", onUp);
+
+  const arrows = (side) => {
+    const up = el("button", "strip-arrow", "\u25b2");
+    const down = el("button", "strip-arrow", "\u25bc");
+    up.type = down.type = "button";
+    up.setAttribute("aria-label", `Slide the ${side === 0 ? "left" : "right"} strip up`);
+    down.setAttribute("aria-label", `Slide the ${side === 0 ? "left" : "right"} strip down`);
+    up.addEventListener("click", () => slide(side, 1));
+    down.addEventListener("click", () => slide(side, -1));
+    return [up, down];
   };
 
-  let drag = null;
-  dial.addEventListener("pointerdown", (event) => {
-    drag = { ring: ringAt(event), angle: angleAt(event) };
-    dial.setPointerCapture(event.pointerId);
-  });
-  dial.addEventListener("pointermove", (event) => {
-    if (!drag) return;
-    let delta = angleAt(event) - drag.angle;
-    if (delta > 180) delta -= 360;
-    if (delta < -180) delta += 360;
-    const steps = Math.round(delta / STEP);
-    if (steps !== 0) {
-      turns[drag.ring] += steps;
-      drag.angle = angleAt(event);
-      draw();
+  const panel = el("div", "strips");
+  const [leftUp, leftDown] = arrows(0);
+  const [rightUp, rightDown] = arrows(1);
+  const middle = el("div", "strip-middle");
+  middle.append(el("div", "card-label", "Gap"), gap);
+  panel.append(
+    el("div", "strip-col", null),
+    middle,
+    el("div", "strip-col", null),
+  );
+  panel.children[0].append(leftUp, columns[0], leftDown);
+  panel.children[2].append(rightUp, columns[1], rightDown);
+  draw();
+
+  // Stop listening once the card is gone.
+  const watch = new MutationObserver(() => {
+    if (!panel.isConnected) {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      watch.disconnect();
     }
   });
-  dial.addEventListener("pointerup", () => (drag = null));
-  dial.addEventListener("pointercancel", () => (drag = null));
-
-  const turn = (steps) => {
-    turns.inner += steps;
-    draw();
-  };
-  dial.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowRight" || event.key === "ArrowUp") turn(1);
-    else if (event.key === "ArrowLeft" || event.key === "ArrowDown") turn(-1);
-    else return;
-    event.preventDefault();
-  });
-
-  const back = el("button", "wheel-turn", "◀");
-  const forward = el("button", "wheel-turn", "▶");
-  back.type = forward.type = "button";
-  back.setAttribute("aria-label", "Turn the inner ring back");
-  forward.setAttribute("aria-label", "Turn the inner ring forward");
-  back.addEventListener("click", () => turn(-1));
-  forward.addEventListener("click", () => turn(1));
-
-  const row = el("div", "wheel-row");
-  row.append(back, dial, forward);
-  draw();
-  return row;
+  queueMicrotask(() => watch.observe(document.body, { childList: true, subtree: true }));
+  return panel;
 }
 
 // The blank card: write the decoded message and pin it. `readable()` is the message as it can
@@ -206,18 +203,41 @@ export function openBlankCard(stage, { state, readable, onSubmit, onClose }) {
   const status = el("p", "decoder-status");
   status.setAttribute("aria-live", "polite");
 
+  // Clicked letters go in at the cursor, the same as typing.
+  function write(text) {
+    if (answer.disabled || answer.hidden) return;
+    answer.setRangeText(text, answer.selectionStart, answer.selectionEnd, "end");
+    answer.dispatchEvent(new Event("input"));
+  }
+  const space = el("button", "key-button", "Space");
+  const erase = el("button", "key-button", "\u232b");
+  space.type = erase.type = "button";
+  erase.setAttribute("aria-label", "Erase a letter");
+  space.addEventListener("click", () => write(" "));
+  erase.addEventListener("click", () => {
+    if (answer.disabled || answer.hidden) return;
+    const { selectionStart: start, selectionEnd: end } = answer;
+    if (start !== end) answer.setRangeText("", start, end, "end");
+    else if (start > 0) answer.setRangeText("", start - 1, start, "end");
+    answer.dispatchEvent(new Event("input"));
+  });
+  const keys = el("div", "keys");
+  keys.append(space, erase);
+
   const side = el("div", "decoder-side");
   side.append(el("div", "card-label", "Tries left"), tries, pinButton, status);
-  const controls = el("div", "decoder-controls");
-  controls.append(cipherWheel(), side);
+  const footer = el("div", "decoder-controls");
+  footer.append(keys, side);
 
-  card.append(
+  const writing = el("div", "blank-writing");
+  writing.append(
     el("div", "card-label", "Blank card"),
     el("h2", "decoder-title", "Crack it on paper. Write what it really says."),
     answer,
     revealed,
-    controls,
+    footer,
   );
+  card.append(letterStrips(write), writing);
 
   function refresh() {
     const locked = isLocked(current);

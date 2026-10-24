@@ -23,7 +23,7 @@ PRD ref: `prd.md > The Core Journey`.
 3. **How to play.** If `cluedle:seenHowTo` isn't set, `howToPlay.js` shows the overlay and sets it when closed.
 4. **The board.** `board.js` lays out the case's pins from the case file data and redraws anything already in the progress: past stamps, unlocked clues, strings, cipher state.
 5. **Red string.** `string.js` adds or removes a string between two pins and saves it. Rules never read it.
-6. **Cipher.** Clicking any scrap, the scrawl included, opens the same close-up from `decoder.js`. Clicking the blank card opens it with its two wheels. **Pin it** calls `cipher.js` with the written answer. Right → the real message flips in, with blots for earlier misses, and stays on the blank card. Wrong → one more blot stage on the scrawl. The result is saved.
+6. **Cipher.** Clicking any scrap, the scrawl included, opens the same close-up from `decoder.js`. Clicking the blank card opens it with its two letter strips. **Pin it** calls `cipher.js` with the written answer. Right → the real message flips in, with blots for earlier misses, and stays on the blank card. Wrong → one more blot stage on the scrawl. The result is saved.
 7. **Accuse.** `stamps.js` collects a GUILTY stamp on a suspect, a motive, and a weapon. Confirm calls `rules.js`, which counts how many parts are right, records the guess, and says whether a clue unlocks or the case has ended. The stamps are numbered, the spent guess on the rail shows its count, a new clue pins up, and progress is saved.
 8. **LIAR.** `stamps.js` collects a LIAR stamp on a suspect card, then the player picks a truth about that suspect's statement. `rules.js` records the one shot, and the stamp recolors.
 9. **Ending.** When `rules.js` says closed or cold, `rank.js` scores the run (closed only), and `ending.js` shows the ending and rank.
@@ -32,8 +32,8 @@ PRD ref: `prd.md > The Core Journey`.
 
 ## Stack
 - **HTML, CSS, JavaScript (ES modules)** in the browser. No framework, no bundler. Learner accepted this recommendation: the game is DOM and SVG work, and a framework adds setup without helping. Tradeoff accepted: it needs a local server, not double-clicking the file. References: [MDN JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
-- **SVG** for the red string and the decoder wheel. [MDN SVG](https://developer.mozilla.org/en-US/docs/Web/SVG).
-- **Pointer events** for stamping, drawing string, and turning the wheel, so mouse and touch both work. [MDN Pointer events](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events).
+- **SVG** for the red string. [MDN SVG](https://developer.mozilla.org/en-US/docs/Web/SVG).
+- **Pointer events** for stamping, drawing string, and sliding the letter strips, so mouse and touch both work. [MDN Pointer events](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events).
 - **`localStorage`** for progress. [MDN localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
 - **Clipboard API** (`navigator.clipboard.writeText`) for the share card. [MDN Clipboard](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText).
 - **Node's built-in test runner** (`node --test`) for the rules, with no packages to install. Node v24 is installed. [Node test runner](https://nodejs.org/api/test.html).
@@ -95,7 +95,7 @@ PRD ref: `prd.md > Accusing With the GUILTY Stamp`, `prd.md > Clues Unlocking`, 
 - `matchesMessage(answer, readable)` → whether the written answer matches the message as far as it can still be read: letters only, blotted letters may be guessed or skipped, and about one letter in ten may be wrong.
 - `attempt(state, cipher, answer, seed)` → right or wrong. It allows three tries, then locks.
 - `blotted(plaintext, wrongTries, seed)` → the message with a fixed share of letters replaced by ink blots: none after zero misses, about 30% after one, about 60% after two. Which letters blot is decided by a seeded shuffle from the case id, so the same case always blots the same way, and blots only add up. The case can list `keepWords` that never blot, so a partly blotted clue stays useful.
-- The wheels on the blank card never call into `cipher.js`; they only line up two alphabets.
+- The letter strips on the blank card never call into `cipher.js`; they only line up two alphabets.
 PRD ref: `prd.md > Finding and Cracking the Cipher`.
 
 ### Rank (`src/game/rank.js`)
@@ -146,7 +146,7 @@ PRD ref: `prd.md > Red String`.
 
 ### Close Look and Blank Card (`src/ui/decoder.js`)
 - **Close look:** any scrap (decoys and the scrawl alike) brought forward to read, with blots drawn as ink. No controls, so nothing marks the cipher.
-- **Blank card:** a space to write the decoded message, two alphabet rings that can each be dragged (the inner one also turns with the arrow buttons or keys), the gap between them shown on the hub, **Pin it**, and tries left.
+- **Blank card:** a space to write the decoded message, two side-by-side A–Z strips that each slide up or down (drag, or their ▲▼ arrows) and wrap around, the gap between them shown in the middle, letters that write themselves into the answer when clicked, Space and ⌫ keys, **Pin it**, and tries left.
 - On a right answer, it plays the reveal: the real message flips into place left to right, and blotted letters stay as ink. As the card closes, the blank card on the board fills in with the message.
 PRD ref: `prd.md > Finding and Cracking the Cipher`.
 

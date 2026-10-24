@@ -15,7 +15,7 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 2. **How to play (first visit only).** Before the first case opens, a short how-to-play explains the stamps, the five guesses, the hidden cipher, and the red string. It can be reopened later from the board.
 3. **The board.** Opening the file shows the murder board: the newspaper-clipping story, 6 suspect cards (each holding that person's statement), 6 motive cards, 6 weapon cards, a tray with the **GUILTY** and **LIAR** stamps, a red-string spool, and the five guesses remaining.
 4. **Read.** The player reads the story, and clicks a suspect card to read that person's statement. They can draw red string between any pins to track their thinking.
-5. **Find and crack the cipher (any time, optional).** Every scrap on the board can be brought forward to read up close, and one of them, a pencil scrawl, is encrypted. Nothing marks which. A sharp-eyed player works out which scrap is the code, finds its key in the story, and decodes it on paper. They write the message on the **blank card** pinned to the board, using its two alphabet wheels as a helper, and pin it. They get three tries; each wrong answer runs ink over more of the scrawl for good.
+5. **Find and crack the cipher (any time, optional).** Every scrap on the board can be brought forward to read up close, and one of them, a pencil scrawl, is encrypted. Nothing marks which. A sharp-eyed player works out which scrap is the code, finds its key in the story, and decodes it on paper. They write the message on the **blank card** pinned to the board, using its two sliding letter strips as a helper (clicking a letter writes it), and pin it. They get three tries; each wrong answer runs ink over more of the scrawl for good.
 6. **Accuse.** The player picks up the **GUILTY** stamp, stamps a suspect card, a motive card, and a weapon card, and confirms. The guess shows how many of the three are right, but not which.
 7. **Miss → new clue.** A wrong accusation uses a guess and pins up a new plain clue.
 8. **Catch the liar (any time, optional).** The player stamps **LIAR** on a suspect's card and picks what really happened from a few options. It's free, but they get one shot.
@@ -30,7 +30,7 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 - **The murder board** — the one main surface. Everything in the case lives here as pinned items: newspaper-clipping story, suspect cards, motive cards, weapon cards, unlocked clues, scraps of evidence (one of them the cipher scrawl), and the blank card. The stamp tray, red-string spool, and guesses remaining sit at the edge of the board.
 - **Statement** — a suspect's statement brought forward over the board when their card is clicked.
 - **Close look** — any scrap brought forward over the board to read; every scrap looks the same here.
-- **Blank card** — brought forward over the board, with a space to write the decoded message, two spinnable alphabet wheels as a helper, **Pin it**, and the tries remaining. Closing it returns to the board.
+- **Blank card** — brought forward over the board, with a space to write the decoded message, two sliding A–Z strips as a helper (click a letter to write it), **Pin it**, and the tries remaining. Closing it returns to the board.
 - **Case ending** — over the board: **CASE CLOSED** or **GONE COLD**, what happened, the consequences, the detective rank, and **Copy share card**. On a return visit, it also shows the countdown to the next case.
 
 ## Look and Feel
@@ -79,13 +79,13 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 Source: `scope.md > The Unique Kernel`.
 - The encrypted clue is hidden on the board from the start as part of the scenery (for example, a pencil scrawl in a photo's margin), among decoy scraps written in the same hand. Nothing announces it.
 - Every scrap, the scrawl included, opens the same plain close-up. The game never says which scrap is the code; the player works it out and decodes it themselves, on paper.
-- The **blank card** is pinned to the board from the start. It holds a space to write the decoded message and two alphabet wheels the player can spin to line up letters. The wheels are only a helper: they never decode or check anything.
+- The **blank card** is pinned to the board from the start. It holds a space to write the decoded message and two side-by-side A–Z strips the player can slide up or down to line up letters; clicking a letter writes it into the answer. The strips are only a helper: they never decode or check anything.
 - The player writes the message and presses **Pin it**. Only letters count; spacing, punctuation, and capitals don't, and a typo or two is forgiven. Letters already lost to ink may be guessed or left out.
 - Three tries. A right answer flips the real message into place and leaves it written on the blank card. Each wrong answer permanently runs ink over more of the scrawl, so the rest is harder to decode and a crack on the second or third try reveals less.
 - After three wrong tries, the blank card no longer takes answers.
 - Cracking never uses a guess. A player who never finds or cracks the cipher can still solve the case.
 - [ ] Every scrap opens the same close-up, with nothing marking the cipher.
-- [ ] Spinning the wheels never reveals or checks anything.
+- [ ] Sliding the strips never reveals or checks anything.
 - [ ] Writing the right message on the first try shows the full message.
 - [ ] A right message after one or two wrong tries shows it with more blotted out.
 - [ ] After three wrong tries, the blank card no longer takes answers and the scrawl stays scrambled.
@@ -152,7 +152,7 @@ Source: `scope.md > The POC Boundary` (cheap version).
 - **Feedback says how many, not which** — each guess tells the player how many of its three parts are right, so the case is cracked by reasoning from clues, not by working through the cards in order.
 - **Statements live on suspect cards, and LIAR stamps the card** — every witness is a suspect, which frees the board for weapon cards.
 - **LIAR stamp, one shot, free** — mirrors the GUILTY stamp; catching the liar is something the player does, so it can count toward the rank.
-- **Decode it yourself, then write it on a blank card, with three tries that blot out more each miss** — finding the code is real work (no scrap gives itself away by opening a decoder), the wheels help without solving it, and the reveal still lands on a right answer.
+- **Decode it yourself, then write it on a blank card, with three tries that blot out more each miss** — finding the code is real work (no scrap gives itself away by opening a decoder), the strips help without solving it, and the reveal still lands on a right answer.
 - **Gone-cold ending tells what not catching them cost** — gives losing weight.
 - **Return visit shows the finished board and a countdown** — the board is the record of how you solved it.
 - **1940s noir in reds, purples, and blues; no orange, yellow, or green** — the learner's palette, applied to the share card too.
@@ -177,7 +177,7 @@ Everything under `## Features and Behavior` and `## States and Boundaries`, with
 ## Non-Goals
 - **Accusing by dragging red string** — the string is for thinking (`scope.md > Explicitly Cut`).
 - **Accounts or a server** — progress lives on the player's device.
-- **The game decoding for the player** — the wheels on the blank card only line up alphabets; turning them never unscrambles anything, which would make brute-forcing trivial.
+- **The game decoding for the player** — the strips on the blank card only line up alphabets; sliding them never unscrambles anything, which would make brute-forcing trivial.
 - **AI at runtime** — everything is hand-written and rule-based.
 
 ## Open Questions
