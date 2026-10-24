@@ -103,4 +103,5 @@ Activity mode: [live app and editor, explicit static fallback, focused alternati
 
 ## Revisions
 
+- Look test: added decoy evidence scraps in the same pencil hand as the scrawl, and buried the cipher key (a passing "Pier Nine", tied to an anchor doodle on the scrawl) next to a decoy number (a watch stopped at twelve) — the learner found the scrawl and its key too easy to spot when the scrawl was the only handwriting and the story named the key outright.
 - Added a `photo` pin to the case data, with the scrawl pencilled in its margin, and a handwriting font (Reenie Beanie) for the scrawl — the spec's data model named a photo as a hiding place but had no field for it, and the scrawl needed to look different from the typed papers to read as an odd thing to notice.

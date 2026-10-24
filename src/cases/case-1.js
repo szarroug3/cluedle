@@ -9,11 +9,10 @@ export default {
     headline: "Orchid King Found Dead Among His Flowers",
     dateline: "RIVERSIDE HEIGHTS, Oct. 23, 1946",
     body:
-      "Cornelius Vane, 61, the shipping man whose prize orchids drew crowds to every flower show from here to Boston, " +
-      "was found dead in his glasshouse Tuesday night. His housekeeper raised the alarm shortly after ten.\n" +
-      "Police say Vane lay among his beloved blooms with a cold cup of tea at his elbow and, curiously, a seed packet " +
-      "clutched in his fist on which he had written nothing but the number 9. Friends say the old man was fond of " +
-      "private codes and kept every secret note locked with a number.\n" +
+      "Cornelius Vane, 61, who built a shipping fortune from one leaky tug at Pier Nine and spent much of it on prize " +
+      "orchids, was found dead in his glasshouse Tuesday night. His housekeeper raised the alarm shortly after ten.\n" +
+      "Police say Vane lay among his beloved blooms with a cold cup of tea at his elbow. His wristwatch, smashed in " +
+      "the fall, had stopped at twelve sharp.\n" +
       "Dr. Arthur Penrose, the family physician, called it “a heart that simply stopped.” Detectives are not so sure. " +
       "Vane leaves a young wife, the former nightclub singer Lillian Vane, and a nephew, Edward “Teddy” Vane. " +
       "The family declined to comment.",
@@ -95,6 +94,13 @@ export default {
   ],
 
   photo: { caption: "The glasshouse, spring ’46" },
+
+  // Decoys: handwritten scraps that look like code from across the board but read plainly up close.
+  evidence: [
+    { id: "matchbook", kind: "matchbook", label: "The Blue Lantern", note: "LAkeview 4-0712 — after 11" },
+    { id: "pawn-ticket", kind: "ticket", label: "Feldman’s Loans · No. 3318", note: "pearl necklace — L.V." },
+    { id: "prescription", kind: "prescription", label: "Arthur Penrose, M.D.", note: "digit. 0.1 mg prn — A.P." },
+  ],
 
   cipher: {
     hiddenOn: "photo",

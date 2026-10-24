@@ -3,6 +3,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { cases } from "../src/cases/index.js";
 
+const NUMBER_WORDS = [
+  "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
+  "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "twenty-one",
+  "twenty-two", "twenty-three", "twenty-four", "twenty-five",
+];
+
 for (const c of cases) {
   test(`${c.id}: has a title, story, and 3–4 suspects and motives with unique ids`, () => {
     assert.ok(c.title);
@@ -38,8 +44,9 @@ for (const c of cases) {
     for (const word of c.cipher.keepWords) assert.ok(c.cipher.plaintext.includes(word), `missing keep word ${word}`);
   });
 
-  test(`${c.id}: the cipher key appears in the story`, () => {
-    assert.match(c.clipping.body, new RegExp(`\\b${c.cipher.shift}\\b`));
+  test(`${c.id}: the cipher key appears in the story, as a numeral or a word`, () => {
+    const word = NUMBER_WORDS[c.cipher.shift];
+    assert.match(c.clipping.body, new RegExp(`\\b(${c.cipher.shift}|${word})\\b`, "i"));
   });
 
   test(`${c.id}: both endings are written`, () => {

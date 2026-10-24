@@ -26,7 +26,12 @@ const LAYOUT = {
     { x: 1066, y: 278, r: -1.5 },
     { x: 1312, y: 284, r: 0.8 },
   ],
-  photo: { x: 1090, y: 540, r: 3 },
+  photo: { x: 1092, y: 522, r: 3 },
+  evidence: [
+    { x: 1356, y: 540, r: -4 },
+    { x: 1100, y: 768, r: 1.5 },
+    { x: 1350, y: 694, r: 2.5 },
+  ],
   clues: [
     { x: 40, y: 588, r: -1 },
     { x: 262, y: 598, r: 1.2 },
@@ -129,12 +134,28 @@ function photoPaper(caseData) {
   return paper;
 }
 
-// The hidden encrypted clue: faint pencil, only the start of the message, nothing announcing it.
+const ANCHOR = `
+  <svg class="anchor" viewBox="0 0 20 24" aria-hidden="true">
+    <circle cx="10" cy="4" r="2.6"/>
+    <path d="M10 6.5V21 M5 10.5H15 M3 15c1 4.5 4 6 7 6s6-1.5 7-6 M3 15l-1.5 1.8 M17 15l1.5 1.8"/>
+  </svg>`;
+
+// The hidden encrypted clue: pencil like the other scraps, only the start of the message,
+// signed with the little anchor that points to the key. Nothing announces it.
 function scrawl(cipher) {
   const text = encode(cipher.plaintext, cipher.shift);
-  const node = el("div", "scrawl", `${text.slice(0, 26).trim()}…`);
+  const node = el("div", "scrawl hand", `${text.slice(0, 22).trim()}…`);
+  node.insertAdjacentHTML("beforeend", ANCHOR);
   node.dataset.pin = "scrawl";
   return node;
+}
+
+// Decoy scraps: a printed label with a handwritten note.
+function evidencePaper(item) {
+  const paper = el("div", `paper evidence evidence-${item.kind}`);
+  if (item.kind === "prescription") paper.append(el("span", "rx", "℞"));
+  paper.append(el("div", "evidence-label", item.label), el("div", "evidence-note hand", item.note));
+  return paper;
 }
 
 function clueSlot(index, slot) {
@@ -194,6 +215,9 @@ export function renderBoard(caseData, { caseNumber }) {
     board.append(pinItem(`statement:${s.id}`, "statement", LAYOUT.statements[i], s.pos, statementPaper(s))),
   );
   board.append(pinItem("photo", "photo", LAYOUT.photo, caseData.photo.pos, photoPaper(caseData)));
+  (caseData.evidence || []).forEach((e, i) =>
+    board.append(pinItem(`evidence:${e.id}`, "evidence", LAYOUT.evidence[i], e.pos, evidencePaper(e))),
+  );
   caseData.clues.forEach((_, i) => board.append(clueSlot(i, LAYOUT.clues[i])));
 
   board.append(el("div", "lamp"));

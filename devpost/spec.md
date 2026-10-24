@@ -167,10 +167,11 @@ PRD ref: `prd.md > Case Ending`, `prd.md > Share Card`, `prd.md > States and Bou
                  truthOptions: [string], truthIndex }],   // only on the lie
   clues:      [string],          // plain clues, in unlock order (4: one per possible miss)
   photo:      { caption },       // a pinned photograph; scenery, and a place to hide the scrawl
+  evidence:   [{ id, kind, label, note }],  // decoy scraps (matchbook, ticket, prescription) in the same pencil hand as the scrawl
   cipher: {
     hiddenOn: "photo",           // which pin hides the scrawl
     plaintext: "...",
-    shift: 7,                    // 1–25; its key is hidden in the clipping
+    shift: 7,                    // 1–25; its key is hidden in the clipping, alongside decoy numbers
     keepWords: ["..."]           // never blotted
   },
   solution: { suspectId, motiveId },
