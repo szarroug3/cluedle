@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cluedle PRD</title>
+<style>
+  :root {
+    --night: #13111c;
+    --night-2: #1d1a2b;
+    --paper: #efe9dd;
+    --paper-2: #e3dccd;
+    --ink: #1f1b24;
+    --muted: #5e566a;
+    --red: #b3263a;
+    --red-ink: #8f1d2e;
+    --purple: #6b3fa0;
+    --blue: #2f5aa8;
+    --line: #cfc5b3;
+    --glow: rgba(150, 120, 220, .18);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    color: var(--paper);
+    background:
+      radial-gradient(1200px 600px at 50% -10%, var(--glow), transparent 60%),
+      repeating-linear-gradient(100deg, rgba(255,255,255,.015) 0 2px, transparent 2px 7px),
+      var(--night);
+    font: 16px/1.55 Georgia, "Times New Roman", serif;
+  }
+  main { max-width: 960px; margin: 0 auto; padding: 32px 16px 72px; }
+  .mono { font-family: "Courier New", Courier, ui-monospace, monospace; }
+  .sheet {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 24px;
+    margin: 0 0 28px;
+    box-shadow: 0 14px 30px rgba(0,0,0,.45);
+    background-image: linear-gradient(transparent 0 0);
+  }
+  header.sheet { text-align: center; position: relative; overflow: hidden; }
+  .kicker { font: 700 12px/1 "Courier New", monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--red); }
+  h1 { font-size: clamp(40px, 8vw, 66px); margin: 8px 0 6px; letter-spacing: .02em; }
+  h2 { font-size: 23px; margin: 0 0 12px; }
+  h2 small { display: block; font: 700 11px/1 "Courier New", monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  h3 { font-size: 18px; margin: 18px 0 6px; }
+  p { margin: 0 0 10px; }
+  .lede { font-style: italic; color: var(--muted); font-size: 18px; }
+  .stamp {
+    display: inline-block; margin-top: 12px; padding: 6px 12px;
+    border: 3px solid var(--red); color: var(--red);
+    font: 700 13px/1 "Courier New", monospace; letter-spacing: .14em; text-transform: uppercase;
+    transform: rotate(-4deg); opacity: .9;
+  }
+  .grow { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: center; }
+  .grow .from { color: var(--muted); font-style: italic; }
+  .grow .arrow { color: var(--red); font-size: 22px; }
+  @media (max-width: 640px) { .grow { grid-template-columns: 1fr; } .grow .arrow { transform: rotate(90deg); justify-self: start; } }
+  svg { width: 100%; height: auto; display: block; }
+  .stepper input { position: absolute; opacity: 0; pointer-events: none; }
+  .steps { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 10px; }
+  .steps label {
+    font: 700 12px/1 "Courier New", monospace; padding: 8px 9px; cursor: pointer;
+    border: 1px solid var(--line); background: #fff; color: var(--ink);
+  }
+  .step-text p { display: none; color: var(--ink); margin: 0; min-height: 3.2em; }
+  #j0:checked ~ .steps label[for="j0"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j0:focus-visible ~ .steps label[for="j0"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j0:checked ~ .step-text .t0 { display: block; }
+  #j1:checked ~ .steps label[for="j1"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j1:focus-visible ~ .steps label[for="j1"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j1:checked ~ .step-text .t1 { display: block; }
+  #j2:checked ~ .steps label[for="j2"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j2:focus-visible ~ .steps label[for="j2"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j2:checked ~ .step-text .t2 { display: block; }
+  #j3:checked ~ .steps label[for="j3"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j3:focus-visible ~ .steps label[for="j3"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j3:checked ~ .step-text .t3 { display: block; }
+  #j4:checked ~ .steps label[for="j4"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j4:focus-visible ~ .steps label[for="j4"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j4:checked ~ .step-text .t4 { display: block; }
+  #j5:checked ~ .steps label[for="j5"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j5:focus-visible ~ .steps label[for="j5"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j5:checked ~ .step-text .t5 { display: block; }
+  #j6:checked ~ .steps label[for="j6"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j6:focus-visible ~ .steps label[for="j6"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j6:checked ~ .step-text .t6 { display: block; }
+  #j7:checked ~ .steps label[for="j7"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  #j7:focus-visible ~ .steps label[for="j7"] { outline: 2px solid var(--red); outline-offset: 2px; }
+  #j7:checked ~ .step-text .t7 { display: block; }
+  details { border-top: 1px dashed var(--line); padding: 10px 0; }
+  details:first-of-type { border-top: 0; }
+  summary { cursor: pointer; font-weight: bold; list-style: none; display: flex; gap: 10px; align-items: baseline; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "▸"; color: var(--red); transition: transform .15s; display: inline-block; }
+  details[open] > summary::before { transform: rotate(90deg); }
+  summary .src { font: 400 12px/1 "Courier New", monospace; color: var(--muted); margin-left: auto; }
+  ul { margin: 8px 0 0; padding-left: 22px; }
+  li { margin: 4px 0; }
+  ul.checks { list-style: none; padding-left: 4px; }
+  ul.checks li::before { content: "☐ "; color: var(--blue); }
+  .tag { font: 700 11px/1 "Courier New", monospace; letter-spacing: .1em; text-transform: uppercase; padding: 4px 6px; color: #fff; border-radius: 2px; }
+  .tag.now { background: var(--blue); }
+  .tag.later { background: var(--purple); }
+  .tag.cut { background: var(--red); }
+  .options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 12px; }
+  @media (max-width: 760px) { .options { grid-template-columns: 1fr; } }
+  .opt { border: 1px solid var(--line); background: #fff; padding: 14px; position: relative; }
+  .opt .letter { position: absolute; top: -12px; left: 12px; background: var(--ink); color: var(--paper); font: 700 12px/1 "Courier New", monospace; padding: 5px 8px; }
+  .opt h3 { margin-top: 6px; }
+  .ladder { list-style: none; padding: 0; margin: 8px 0 0; }
+  .ladder li { padding: 6px 8px; border-left: 4px solid var(--purple); background: var(--paper-2); margin: 4px 0; }
+  .ladder li:nth-child(1) { border-color: #8d86a0; }
+  .ladder li:nth-child(2) { border-color: var(--blue); }
+  .ladder li:nth-child(3) { border-color: var(--purple); }
+  .ladder li:nth-child(4) { border-color: var(--red); }
+  .ladder li:nth-child(5) { border-color: var(--red-ink); font-weight: bold; }
+  .ladder li .note { float: right; font-family: "Courier New", monospace; }
+  .card-text {
+    white-space: pre; font: 15px/1.5 ui-monospace, "Courier New", monospace;
+    background: var(--night-2); color: var(--paper); padding: 12px; overflow-x: auto; margin-top: 8px;
+  }
+  .note { font-size: 14px; color: var(--muted); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+  .q { border-left: 4px solid var(--red); padding: 8px 12px; background: var(--paper-2); margin: 8px 0; }
+  .q b { color: var(--red-ink); }
+  footer { text-align: center; color: #9a91ad; font: 13px/1.4 "Courier New", monospace; }
+</style>
+</head>
+<body>
+<main>
+
+  <header class="sheet">
+    <div class="kicker">Case file · Product requirements</div>
+    <h1>Cluedle</h1>
+    <p class="lede">Wordle for armchair detectives: a daily 1940s-noir mystery, worked on a murder board, where you stamp who did it and why in five guesses or fewer.</p>
+    <span class="stamp">Approved</span>
+  </header>
+
+  <section class="sheet">
+    <h2><small>What got sharper since scope</small>The sketch, filled in</h2>
+    <div class="grow"><p class="from">Scope: "Guess who did it and why."</p><span class="arrow">→</span><p>Pick up the <b>GUILTY</b> stamp, stamp a suspect and a motive, confirm. Each stamp changes color to show which half was right, and stays on the board.</p></div>
+    <div class="grow"><p class="from">Scope: "Some witnesses lie."</p><span class="arrow">→</span><p>Stamp <b>LIAR</b> on a statement and pick what really happened. Free, but one shot.</p></div>
+    <div class="grow"><p class="from">Scope: "Crack the cipher."</p><span class="arrow">→</span><p>A decoder wheel you set and commit with <b>Decode</b>. Three tries; each miss blots out more of the message for good.</p></div>
+    <div class="grow"><p class="from">Scope: "Or the case goes cold."</p><span class="arrow">→</span><p><b>GONE COLD</b>: who did it, why, and what not catching them cost.</p></div>
+  </section>
+
+  <section class="sheet">
+    <h2><small>The core journey</small>From case file to countdown</h2>
+    <svg viewBox="0 0 900 330" role="img" aria-labelledby="j-title">
+      <title id="j-title">Journey: case file, how to play on first visit, the board, then reading, optional cipher and liar side paths, accusing, new clues on a miss, and the case-closed or gone-cold ending with rank and share card.</title>
+      <defs>
+        <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b3263a"/></marker>
+      </defs>
+      <g font-family="Georgia, serif" font-size="14" fill="#1f1b24" text-anchor="middle">
+        <rect x="10" y="20" width="130" height="50" fill="#fff" stroke="#cfc5b3"/><text x="75" y="50">Case file</text>
+        <rect x="10" y="120" width="130" height="50" fill="#fff" stroke="#cfc5b3" stroke-dasharray="5 4"/><text x="75" y="142">How to play</text><text x="75" y="160" font-size="12" fill="#5e566a">first visit</text>
+        <rect x="200" y="120" width="140" height="50" fill="#fff" stroke="#cfc5b3"/><text x="270" y="150">Read the board</text>
+        <rect x="200" y="20" width="140" height="50" fill="#fff" stroke="#6b3fa0" stroke-dasharray="5 4"/><text x="270" y="42">Find + decode</text><text x="270" y="60" font-size="12" fill="#5e566a">3 tries, blots grow</text>
+        <rect x="200" y="230" width="140" height="50" fill="#fff" stroke="#6b3fa0" stroke-dasharray="5 4"/><text x="270" y="252">LIAR stamp</text><text x="270" y="270" font-size="12" fill="#5e566a">one shot, free</text>
+        <rect x="410" y="120" width="150" height="50" fill="#fff" stroke="#cfc5b3"/><text x="485" y="142">GUILTY stamp</text><text x="485" y="160" font-size="12" fill="#5e566a">suspect + motive</text>
+        <rect x="410" y="230" width="150" height="50" fill="#fff" stroke="#cfc5b3"/><text x="485" y="252">Miss → new clue</text><text x="485" y="270" font-size="12" fill="#5e566a">uses 1 of 5 guesses</text>
+        <rect x="630" y="70" width="150" height="56" fill="#dfe6f5" stroke="#2f5aa8"/><text x="705" y="94" font-weight="bold">CASE CLOSED</text><text x="705" y="112" font-size="12">who you saved · rank</text>
+        <rect x="630" y="200" width="150" height="56" fill="#f2dde1" stroke="#b3263a"/><text x="705" y="224" font-weight="bold">GONE COLD</text><text x="705" y="242" font-size="12">what it cost · rank</text>
+        <rect x="810" y="135" width="84" height="56" fill="#fff" stroke="#cfc5b3"/><text x="852" y="160">Share</text><text x="852" y="178" font-size="12" fill="#5e566a">+ countdown</text>
+      </g>
+      <g fill="none" stroke="#b3263a" stroke-width="2.3" marker-end="url(#a)">
+        <path d="M75,70 L75,118"/>
+        <path d="M140,145 L198,145"/>
+        <path d="M340,145 L408,145"/>
+        <path d="M470,170 L470,228"/>
+        <path d="M410,255 C380,230 360,200 330,172"/>
+        <path d="M560,135 C600,120 610,100 628,98"/>
+        <path d="M560,160 C600,190 610,215 628,226"/>
+        <path d="M780,98 C800,110 805,135 820,140"/>
+        <path d="M780,228 C800,215 805,195 820,190"/>
+      </g>
+      <g fill="none" stroke="#6b3fa0" stroke-width="2" stroke-dasharray="5 4" marker-start="url(#a)" marker-end="url(#a)">
+        <path d="M270,72 L270,118"/>
+        <path d="M270,172 L270,228"/>
+      </g>
+      <g font-family="'Courier New', monospace" font-size="11" fill="#5e566a">
+        <text x="480" y="205">wrong</text>
+        <text x="575" y="112">right</text>
+        <text x="572" y="200">5th miss</text>
+        <text x="280" y="100">any time</text>
+        <text x="280" y="205">any time</text>
+      </g>
+    </svg>
+    <div class="stepper">
+      <input type="radio" name="j" id="j0" checked><input type="radio" name="j" id="j1"><input type="radio" name="j" id="j2"><input type="radio" name="j" id="j3"><input type="radio" name="j" id="j4"><input type="radio" name="j" id="j5"><input type="radio" name="j" id="j6"><input type="radio" name="j" id="j7">
+      <div class="steps">
+        <label for="j0">1 · Case file</label><label for="j1">2 · How to play</label><label for="j2">3 · Read</label><label for="j3">4 · Decode</label><label for="j4">5 · Accuse</label><label for="j5">6 · LIAR</label><label for="j6">7 · Ending</label><label for="j7">8 · Come back</label>
+      </div>
+      <div class="step-text">
+        <p class="t0">Today's case arrives as a closed case file: case number, date, title, and <b>Open the file</b>.</p>
+        <p class="t1">First visit only: a short how-to-play covering the stamps, the five guesses, the hidden cipher, and the red string. Reopenable from the board.</p>
+        <p class="t2">The murder board: newspaper-clipping story, 3–4 suspect cards, motive cards, witness statements, the stamp tray, the red-string spool, and five guesses. Draw string between pins to think.</p>
+        <p class="t3">Spot the hidden scrawl, click it, and the decoder card comes forward. Set the wheel to the key from the story and press <b>Decode</b>. Three tries; each miss blots out more for good. Never costs a guess.</p>
+        <p class="t4">Stamp <b>GUILTY</b> on a suspect and a motive, then confirm. Each stamp changes color to show which half was right. A miss pins up a new plain clue.</p>
+        <p class="t5">Stamp <b>LIAR</b> on a witness statement and pick what really happened. Free, one shot. The stamp's color shows whether you were right.</p>
+        <p class="t6"><b>CASE CLOSED</b> with what happened, who you saved, and your rank, or <b>GONE COLD</b> with who did it, why, and what it cost. Then <b>Copy share card</b>.</p>
+        <p class="t7">Reopen the same day: your finished board, the ending, and a countdown to the next case.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <h2><small>Behavior and how we'll know it works</small>Features</h2>
+    <details open><summary>Accusing with the GUILTY stamp <span class="src">scope › Core Loop</span></summary>
+      <ul><li>Stamp a suspect card and a motive card, then confirm. Uses one of five guesses.</li><li>Each stamp changes color: suspect right or wrong, motive right or wrong.</li><li>Past stamps stay on the board as a record.</li></ul>
+      <ul class="checks"><li>One confirm uses exactly one guess.</li><li>Suspect and motive stamps show right or wrong independently.</li><li>Earlier stamps stay visible after later guesses.</li></ul>
+    </details>
+    <details><summary>Clues unlocking <span class="src">scope › Core Loop</span></summary>
+      <ul><li>Each wrong accusation pins up the case's next plain clue.</li></ul>
+      <ul class="checks"><li>After each wrong guess, one new clue appears.</li></ul>
+    </details>
+    <details><summary>Catching the liar with the LIAR stamp <span class="src">scope › Unique Kernel</span></summary>
+      <ul><li>Stamp LIAR on a statement, then pick what really happened from a few options.</li><li>Free, one shot per case. The stamp's color shows right or wrong.</li></ul>
+      <ul class="checks"><li>Guesses remaining don't change.</li><li>The LIAR stamp can't be used a second time.</li><li>A correct catch counts toward the rank.</li></ul>
+    </details>
+    <details><summary>Finding and cracking the cipher <span class="src">scope › Unique Kernel</span></summary>
+      <ul><li>Hidden on the board from the start as part of the scenery; nothing announces it.</li><li>The wheel never unscrambles live; <b>Decode</b> commits.</li><li>Three tries. Each wrong try permanently blots out more of the message. Three misses: it stays scrambled.</li><li>Never costs a guess; the case is solvable without it.</li></ul>
+      <ul class="checks"><li>Turning the wheel alone never reveals readable text.</li><li>First-try crack shows the full message.</li><li>A later crack shows more blotted out.</li><li>After three misses, Decode is gone.</li><li>Cipher tries never change guesses.</li></ul>
+    </details>
+    <details><summary>Red string <span class="src">scope › POC Boundary</span></summary>
+      <ul><li>Draw string between any two pins; remove it. Only for the player's thinking.</li></ul>
+      <ul class="checks"><li>String stays until removed.</li><li>String never affects guesses, rank, or outcome.</li></ul>
+    </details>
+    <details><summary>Case ending <span class="src">scope › What "Working" Looks Like</span></summary>
+      <ul><li><b>CASE CLOSED</b>: what really happened, who was saved, the rank.</li><li><b>GONE COLD</b>: the culprit, motive, what happened, and the cost. "It was Martha… not catching her cost 7 innocent people their lives."</li></ul>
+      <ul class="checks"><li>The fifth miss shows the gone-cold ending with the true answer.</li><li>A right guess shows the closed ending with the rank.</li></ul>
+    </details>
+    <details><summary>Daily case, case file, how to play <span class="src">scope › POC Boundary</span></summary>
+      <ul><li>One case per day, the same for everyone, chosen by date from three cases.</li><li>Case file first; how-to-play on the first visit only, reopenable from the board.</li></ul>
+      <ul class="checks"><li>Same date, same case; different dates, different cases.</li><li>First visit: file → how to play → board. Later visits skip the how-to-play.</li></ul>
+    </details>
+    <details><summary>States <span class="src">what if?</span></summary>
+      <ul><li><b>Mid-case return:</b> closing and reopening the same day keeps everything, so reloading never resets tries.</li><li><b>Finished, same day:</b> finished board, ending, countdown.</li><li><b>New day:</b> the next case's file.</li><li><b>Copy fails:</b> the card text is shown to copy by hand.</li></ul>
+    </details>
+  </section>
+
+  <section class="sheet">
+    <h2><small>Decided</small>Detective rank</h2>
+    <div class="two">
+      <div class="opt"><span class="letter">Ladder</span><h3>Five ranks</h3><ol class="ladder five"><li>Amateur Sleuth <span class="note">0–1</span></li><li>Private Eye <span class="note">2–3</span></li><li>Hard-Boiled Investigator <span class="note">4–5</span></li><li>Seasoned Detective <span class="note">6–7</span></li><li>Basically Sherlock <span class="note">8–10</span></li></ol></div>
+      <div class="opt"><span class="letter">Points</span><h3>Hidden points, 0–10</h3><ul><li>Guesses left after solving: 0–4</li><li>Cipher: 3 first try, 2 second, 1 third, 0 not cracked</li><li>Liar caught: 3</li></ul><p class="note">Only a solved case earns a rank. Values and bands are a starting point, tuned while playtesting in 5-build.</p></div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <h2><small>Decided</small>Share card: case file</h2>
+    <p>Only red, purple, blue, and neutral emoji. No spoilers. Each case has its own closing noir line.</p>
+    <div class="two">
+      <div class="opt"><span class="letter">Closed</span>
+<div class="card-text">🗂️ CLUEDLE · CASE #3
+━━ CLOSED in 3/5 ━━
+Cipher 🔓  Liar 🎭
+Rank: Seasoned Detective
+"The ink never lies."</div></div>
+      <div class="opt"><span class="letter">Gone cold</span>
+<div class="card-text">🗂️ CLUEDLE · CASE #3
+━━ GONE COLD ━━
+Cipher 🔒  Liar 🎭
+"Some files never close."</div></div>
+    </div>
+    <p class="note" style="margin-top:12px">Stamps: <b style="color:var(--blue)">blue for right</b>, <b style="color:var(--red)">red for wrong</b>.</p>
+  </section>
+
+  <section class="sheet">
+    <h2><small>The boundary</small>Building, deferred, not doing</h2>
+    <details open><summary><span class="tag now">Building</span> The proof of concept</summary>
+      <p>Every feature above, three hand-written cases (Claude drafts, you edit), as a static web app in the browser. No AI at runtime.</p>
+    </details>
+    <details><summary><span class="tag later">Deferred</span> Not now, with reasons</summary>
+      <ul><li>Red-string physics: polish after the core works.</li><li>Correct string links counting toward rank: needs "correct" links defined.</li><li>Cases four through seven: content after three polished ones.</li><li>Streaks and stats across days: not needed to prove the kernel.</li><li>Later ideas: a case archive; typewriter, stamp, and rain sounds.</li></ul>
+    </details>
+    <details><summary><span class="tag cut">Not doing</span> Non-goals</summary>
+      <ul><li>Accusing by dragging red string: string is for thinking.</li><li>Accounts or a server: progress stays on the device.</li><li>Live unscrambling as the wheel turns: makes brute force trivial.</li><li>AI at runtime.</li></ul>
+    </details>
+  </section>
+
+  <section class="sheet">
+    <h2><small>Before 4-spec</small>Open questions</h2>
+    <p>None blocking. Can wait for 5-build:</p>
+    <ul><li>How hidden the cipher scrawl should be, tuned while writing and playtesting the cases.</li><li>Rank point values and bands, tuned while playtesting.</li></ul>
+  </section>
+
+  <footer>Companion to devpost/prd.md · the Markdown file is the official version</footer>
+</main>
+</body>
+</html>
