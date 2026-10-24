@@ -13,6 +13,24 @@ test("every case has its own id", () => {
   assert.equal(new Set(cases.map((c) => c.id)).size, cases.length);
 });
 
+// There are only 25 keys, so some reuse is allowed once there are enough cases. What isn't allowed is
+// cases piling onto the same key (drafts converge on favourite numbers), or back-to-back days sharing one.
+test("cipher keys are spread out across the cases", () => {
+  const fairShare = Math.ceil(cases.length / 25);
+  const uses = new Map();
+  for (const c of cases) uses.set(c.cipher.shift, [...(uses.get(c.cipher.shift) ?? []), c.id]);
+  for (const [shift, ids] of uses) {
+    assert.ok(ids.length <= fairShare, `key ${shift} is used by ${ids.join(", ")} (at most ${fairShare} allowed)`);
+  }
+});
+
+test("cases on back-to-back days never share a cipher key", () => {
+  cases.forEach((c, i) => {
+    const next = cases[(i + 1) % cases.length];
+    if (next !== c) assert.notEqual(c.cipher.shift, next.cipher.shift, `${c.id} and ${next.id} share key ${c.cipher.shift}`);
+  });
+});
+
 for (const c of cases) {
   // Six of each, so working through the cards in order can't always win in five guesses.
   test(`${c.id}: has a title, story, and 6 suspects, motives, and weapons with unique ids`, () => {
