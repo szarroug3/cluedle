@@ -9,39 +9,45 @@ export const STAGE_HEIGHT = 1000;
 const LAYOUT = {
   clipping: { x: 492, y: 22, r: -0.8 },
   suspects: [
-    { x: 38, y: 26, r: -2 },
-    { x: 260, y: 36, r: 1.5 },
-    { x: 44, y: 298, r: 1 },
-    { x: 264, y: 308, r: -1.5 },
+    { x: 34, y: 22, r: -2 },
+    { x: 258, y: 30, r: 1.5 },
+    { x: 38, y: 202, r: 1 },
+    { x: 262, y: 210, r: -1.2 },
+    { x: 34, y: 382, r: -0.6 },
+    { x: 258, y: 390, r: 1.8 },
   ],
   motives: [
-    { x: 498, y: 494, r: 1 },
-    { x: 770, y: 500, r: -1.2 },
-    { x: 504, y: 590, r: -0.8 },
-    { x: 776, y: 596, r: 1.4 },
+    { x: 494, y: 494, r: 1 },
+    { x: 674, y: 500, r: -1.2 },
+    { x: 854, y: 494, r: 0.6 },
+    { x: 498, y: 596, r: -0.8 },
+    { x: 678, y: 602, r: 1.4 },
+    { x: 856, y: 596, r: -1 },
   ],
   statements: [
-    { x: 1062, y: 22, r: 1.2 },
-    { x: 1308, y: 30, r: -1 },
-    { x: 1066, y: 278, r: -1.5 },
-    { x: 1312, y: 284, r: 0.8 },
+    { x: 1054, y: 20, r: 1.2 },
+    { x: 1302, y: 26, r: -1 },
+    { x: 1058, y: 188, r: -1.5 },
+    { x: 1306, y: 194, r: 0.8 },
+    { x: 1054, y: 356, r: 0.6 },
+    { x: 1302, y: 362, r: -1.4 },
   ],
-  photo: { x: 1092, y: 522, r: 3 },
+  photo: { x: 1066, y: 560, r: 3 },
   evidence: [
-    { x: 1356, y: 540, r: -4 },
-    { x: 1100, y: 768, r: 1.5 },
-    { x: 1350, y: 694, r: 2.5 },
+    { x: 1336, y: 556, r: -4 },
+    { x: 512, y: 720, r: 1.5 },
+    { x: 1330, y: 700, r: 2.5 },
   ],
   clues: [
-    { x: 40, y: 588, r: -1 },
-    { x: 262, y: 598, r: 1.2 },
-    { x: 504, y: 694, r: 0.6 },
-    { x: 772, y: 700, r: -1.3 },
+    { x: 34, y: 580, r: -1 },
+    { x: 258, y: 586, r: 1.2 },
+    { x: 36, y: 714, r: 0.6 },
+    { x: 260, y: 718, r: -1.3 },
   ],
 };
 
 const PORTRAIT = `
-  <svg viewBox="0 0 176 118" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+  <svg viewBox="40 10 96 108" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
     <circle cx="88" cy="48" r="22" fill="#16131b"/>
     <path d="M38 118 C40 80 136 80 138 118 Z" fill="#16131b"/>
   </svg>`;
@@ -97,15 +103,13 @@ function clippingPaper(clipping) {
 
 function suspectPaper(suspect, index) {
   const paper = el("div", "paper suspect");
-  paper.append(el("div", "card-label", `Suspect No. ${index + 1}`));
   const portrait = el("div", "portrait");
   portrait.innerHTML = PORTRAIT;
-  paper.append(
-    portrait,
-    el("h2", "suspect-name", suspect.name),
-    el("div", "suspect-role", suspect.role),
-    el("p", "suspect-desc", suspect.description),
-  );
+  const heading = el("div", "suspect-heading");
+  heading.append(el("div", "card-label", `Suspect No. ${index + 1}`), el("h2", "suspect-name", suspect.name), el("div", "suspect-role", suspect.role));
+  const top = el("div", "suspect-top");
+  top.append(portrait, heading);
+  paper.append(top, el("p", "suspect-desc", suspect.description));
   return paper;
 }
 

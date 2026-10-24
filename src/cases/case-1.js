@@ -23,8 +23,7 @@ export default {
       id: "lillian",
       name: "Lillian Vane",
       role: "The widow",
-      description:
-        "Sang at the Blue Lantern until Cornelius married her. Thirty years his junior, and the will leaves her the house.",
+      description: "Sang at the Blue Lantern until Cornelius married her. Thirty years younger. The will leaves her the house.",
     },
     {
       id: "teddy",
@@ -42,7 +41,19 @@ export default {
       id: "mae",
       name: "Mae Hollis",
       role: "The housekeeper",
-      description: "Quiet, careful, never late with the tea. Came to the Vane house four years ago with fine references.",
+      description: "Quiet, careful, never late with the tea. Came to the house four years ago with fine references.",
+    },
+    {
+      id: "sid",
+      name: "Sid Barlow",
+      role: "The chauffeur",
+      description: "Drove for Vane eleven years. Hears every secret said in the back seat, and is owed three months\u2019 wages.",
+    },
+    {
+      id: "krall",
+      name: "Victor Krall",
+      role: "The partner",
+      description: "Vane\u2019s partner in the shipping line. Their last meeting ended with a slammed door heard down the street.",
     },
   ],
 
@@ -51,31 +62,33 @@ export default {
     { id: "debts", text: "To wipe out gambling debts" },
     { id: "affair", text: "To keep a love affair quiet" },
     { id: "revenge", text: "To avenge a lost brother" },
+    { id: "blackmail", text: "To bury a blackmail secret" },
+    { id: "business", text: "To seize the shipping line" },
   ],
 
   statements: [
     {
-      id: "sid",
+      id: "sid-statement",
       witness: "Sid Barlow, chauffeur",
-      text: "I drove Mr. Teddy to the Blue Lantern at eight and fetched him home at half past midnight. He never left the card room.",
+      text: "Drove Mr. Teddy to the Blue Lantern at eight, fetched him at half past midnight. He never left the card room.",
       isLie: false,
     },
     {
       id: "lillian-statement",
       witness: "Lillian Vane, the widow",
-      text: "Mae brings the tea round at nine, same as every night. I took mine in the parlor with the radio. Cornelius took his among the orchids.",
+      text: "Mae brings the tea round at nine, every night. I took mine in the parlor. Cornelius took his among the orchids.",
       isLie: false,
     },
     {
       id: "penrose-statement",
       witness: "Dr. Arthur Penrose",
-      text: "I examined Cornelius on Monday. Heart like a bull’s. I told him he’d outlive the lot of us.",
+      text: "I examined Cornelius on Monday. Heart like a bull\u2019s. I told him he\u2019d outlive the lot of us.",
       isLie: false,
     },
     {
       id: "mae-statement",
       witness: "Mae Hollis, housekeeper",
-      text: "I never set foot in the glasshouse. Mr. Vane didn’t allow the help anywhere near his orchids.",
+      text: "I never set foot in the glasshouse. Mr. Vane didn\u2019t allow the help near his orchids.",
       isLie: true,
       truthOptions: [
         "She carried his tea into the glasshouse herself",
@@ -83,6 +96,18 @@ export default {
         "She left the tea tray at the glasshouse door",
       ],
       truthIndex: 0,
+    },
+    {
+      id: "krall-statement",
+      witness: "Victor Krall, partner",
+      text: "Haven\u2019t seen Cornelius since Friday\u2019s board meeting. Tuesday night I was at my club until one. Ask any waiter.",
+      isLie: false,
+    },
+    {
+      id: "pruitt-statement",
+      witness: "Ned Pruitt, gardener",
+      text: "I lock the kitchen garden gate at six, same as always. Only the household keeps a key.",
+      isLie: false,
     },
   ],
 

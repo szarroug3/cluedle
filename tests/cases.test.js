@@ -10,11 +10,12 @@ const NUMBER_WORDS = [
 ];
 
 for (const c of cases) {
-  test(`${c.id}: has a title, story, and 3–4 suspects and motives with unique ids`, () => {
+  // Six of each, so working through the cards in order can't always win in five guesses.
+  test(`${c.id}: has a title, story, and 6 suspects, motives, and statements with unique ids`, () => {
     assert.ok(c.title);
     assert.ok(c.clipping.headline && c.clipping.body);
-    for (const list of [c.suspects, c.motives]) {
-      assert.ok(list.length >= 3 && list.length <= 4, `expected 3–4, got ${list.length}`);
+    for (const list of [c.suspects, c.motives, c.statements]) {
+      assert.equal(list.length, 6);
       assert.equal(new Set(list.map((x) => x.id)).size, list.length, "ids must be unique");
     }
   });
@@ -30,7 +31,6 @@ for (const c of cases) {
     const [lie] = lies;
     assert.ok(Array.isArray(lie.truthOptions) && lie.truthOptions.length >= 2);
     assert.ok(Number.isInteger(lie.truthIndex) && lie.truthIndex >= 0 && lie.truthIndex < lie.truthOptions.length);
-    assert.equal(new Set(c.statements.map((s) => s.id)).size, c.statements.length, "statement ids must be unique");
   });
 
   test(`${c.id}: has four plain clues, one per possible miss`, () => {

@@ -161,8 +161,8 @@ PRD ref: `prd.md > Case Ending`, `prd.md > Share Card`, `prd.md > States and Bou
   id: "orchid-house",            // stable id, also the blot seed
   title: "The Orchid House",
   clipping: { headline, dateline, body },   // the story; contains the cipher key somewhere
-  suspects:   [{ id, name, role, description }],          // 3–4
-  motives:    [{ id, text }],                             // 3–4
+  suspects:   [{ id, name, role, description }],          // 6
+  motives:    [{ id, text }],                             // 6
   statements: [{ id, witness, text, isLie,                // at least one isLie
                  truthOptions: [string], truthIndex }],   // only on the lie
   clues:      [string],          // plain clues, in unlock order (4: one per possible miss)
@@ -244,7 +244,7 @@ cluedle/
 └── devpost/                # planning docs (scope, prd, spec, checklist)
 ```
 
-`tests/cases.test.js` checks each case: the solution ids exist, exactly one statement lies and has truth options, there are four clues, the cipher shift is 1–25, the keep words appear in the plaintext, and the share line has no suspect or motive names.
+`tests/cases.test.js` checks each case: there are 6 suspects, 6 motives, and 6 statements, the solution ids exist, exactly one statement lies and has truth options, there are four clues, the cipher shift is 1–25, the keep words appear in the plaintext, and the share line has no suspect or motive names.
 
 ## External Services and Dependencies
 - **Google Fonts** (Special Elite, Playfair Display), loaded with a `<link>` in `index.html`. No key or cost. If it fails to load, the fallback fonts take over. [Special Elite](https://fonts.google.com/specimen/Special+Elite), [Playfair Display](https://fonts.google.com/specimen/Playfair+Display).

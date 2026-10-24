@@ -30,7 +30,7 @@ The "oh, that's cool" beat: noticing the hidden clue, then watching it unscrambl
 
 ## The POC Boundary
 - Three polished, hand-written cases (Claude drafts them, the learner edits), with the daily case chosen by date.
-- Each case has a story, 3–4 suspects, a few motives, plain clues that unlock on wrong guesses, at least one witness who lies, and one or two encrypted clues hidden on the board whose key is hidden in the story.
+- Each case has a story, 6 suspects, 6 motives, 6 witness statements (exactly one of which lies), plain clues that unlock on wrong guesses, and one or two encrypted clues hidden on the board whose key is hidden in the story.
 - Guessing who and why, with per-guess feedback (suspect / motive / both / neither), five guesses max, and "the case goes cold" on a loss.
 - Finding and cracking an encrypted clue, at any time, reveals it without spending a guess. A player who never finds it can still solve the case.
 - A detective rank (e.g. Amateur up to Seasoned Detective) based on what's already in the core: guesses used, cipher found and cracked, liar caught. Exact ranks and rules are set in the PRD.

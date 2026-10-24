@@ -13,7 +13,7 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 
 1. **Case file.** The player opens Cluedle and sees today's case as a closed case file: case number, date, case title, and an **Open the file** action.
 2. **How to play (first visit only).** Before the first case opens, a short how-to-play explains the stamps, the five guesses, the hidden cipher, and the red string. It can be reopened later from the board.
-3. **The board.** Opening the file shows the murder board: the newspaper-clipping story, 3–4 suspect cards, the motive cards, witness statements, a tray with the **GUILTY** and **LIAR** stamps, a red-string spool, and the five guesses remaining.
+3. **The board.** Opening the file shows the murder board: the newspaper-clipping story, 6 suspect cards, 6 motive cards, 6 witness statements, a tray with the **GUILTY** and **LIAR** stamps, a red-string spool, and the five guesses remaining.
 4. **Read.** The player reads the story and the statements. They can draw red string between any pins to track their thinking.
 5. **Find and crack the cipher (any time, optional).** A sharp-eyed player spots an odd scrawl hidden on the board. Clicking it brings the encrypted card forward with a decoder wheel. They set the wheel to the key they found in the story and press **Decode**. They get three tries; each wrong try blots out more of the message for good.
 6. **Accuse.** The player picks up the **GUILTY** stamp, stamps a suspect card, stamps a motive card, and confirms. Each stamp changes color to show whether that half was right.
@@ -42,7 +42,8 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 
 ### Daily Case
 - One case per day, the same for every player, chosen by date from three hand-written cases.
-- Each case has: a story, 3–4 suspects, a few motives, witness statements (at least one of which lies), plain clues that unlock on wrong guesses, one or two hidden cipher clues whose key is in the story, the true solution, and both endings (closed and gone cold).
+- Each case has: a story, 6 suspects, 6 motives, 6 witness statements (exactly one of which lies), plain clues that unlock on wrong guesses, one or two hidden cipher clues whose key is in the story, the true solution, and both endings (closed and gone cold).
+- Six suspects and six motives so guessing can't brute-force the case: with per-half feedback, N options per side take up to N guesses, so five guesses can only be lost with six or more.
 - [ ] Two different dates show different cases; the same date always shows the same case.
 
 ### Case File and How to Play
