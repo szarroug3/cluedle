@@ -290,7 +290,7 @@
   text-transform: uppercase;
   color: var(--ink-soft);
 }
-.evidence-note { margin-top: 6px; transform: rotate(-1.5deg); transform-origin: left center; }
+.evidence-note { margin-top: 6px; white-space: normal; transform: rotate(-1.5deg); transform-origin: left center; }
 
 .evidence-matchbook {
   width: 176px;
