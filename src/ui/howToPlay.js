@@ -14,7 +14,7 @@ const STEPS = [
   ["The liar", "Click a suspect to read their statement. One of them is lying. Stamp LIAR on their card and say what really happened. One shot; it costs no guesses."],
   ["The message", "Something on this board is hiding a message. Find it, crack it on paper, and write it on the blank card. Three tries, and every wrong one costs ink."],
   ["Red string", "Tie string between pins to keep your thinking straight. It’s yours; the case never reads it."],
-  ["Your rank", "Solve it fast and thorough to earn your rank. A new case every day."],
+  ["Your rank", "The faster and more thoroughly you crack it, the higher your rank. A new case comes out every day."],
 ];
 
 export function showHowToPlay(stage, { onClose } = {}) {

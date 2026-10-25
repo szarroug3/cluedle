@@ -12,7 +12,7 @@ Everything is hand-written and rule-based. There's no AI at runtime, no server, 
 - **Catch the liar.** Click a suspect to read their statement. One of them is lying. Stamp LIAR on that suspect's card and say what really happened. You get one shot, and it doesn't use a guess.
 - **Crack the message.** One scrap on the board is written in code. Work out which one, find its key in the story, decode it on paper, and write the message on the blank card. You get three tries, and every wrong one runs more ink over the code.
 - **Red string.** Click the spool, then two pins, to tie string between them. Click a string to take it down. It's only for your own thinking.
-- **Rank and share.** Solve it fast and thoroughly to earn a rank, from Amateur Sleuth up to Basically Sherlock. Then copy a spoiler-free share card.
+- **Rank and share.** The faster and more thoroughly you crack the case, the higher your rank, from Amateur Sleuth up to Basically Sherlock. Then copy a spoiler-free share card.
 
 ## Run it
 
