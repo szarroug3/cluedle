@@ -3,6 +3,7 @@
 
 const PREFIX = "cluedle:progress:";
 const SEEN_HOW_TO = "cluedle:seenHowTo";
+const USED_STAMPS = "cluedle:usedStamps";
 
 function storage() {
   try {
@@ -40,6 +41,23 @@ export function seenHowTo(store = storage()) {
     return store.getItem(SEEN_HOW_TO) === "1";
   } catch {
     return false;
+  }
+}
+
+// Whether the player has ever picked up a stamp; until then the stamps glow.
+export function usedStamps(store = storage()) {
+  try {
+    return store.getItem(USED_STAMPS) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function markStampsUsed(store = storage()) {
+  try {
+    store.setItem(USED_STAMPS, "1");
+  } catch {
+    // They'll glow again next time; harmless.
   }
 }
 

@@ -122,3 +122,27 @@
 .stamp-mark.liar-mark { color: var(--purple); top: auto; bottom: 34%; }
 .stamp-mark.liar-mark.right { color: var(--blue); }
 .stamp-mark.liar-mark.wrong { color: var(--red); opacity: 0.8; }
+
+/* Until a player first picks one up, the stamps glow and the tray label invites them to. */
+.stamp.beckon .stamp-face { animation: beckon 1.6s ease-in-out infinite; }
+@keyframes beckon {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 233, 221, 0); transform: translateY(0); }
+  50% { box-shadow: 0 0 0 4px rgba(239, 233, 221, 0.35), 0 0 16px 4px rgba(179, 38, 58, 0.55); transform: translateY(-3px); }
+}
+.stamp-liar.beckon .stamp-face { animation-delay: 0.8s; }
+@media (prefers-reduced-motion: reduce) {
+  .stamp.beckon .stamp-face { animation: none; box-shadow: 0 0 0 3px rgba(239, 233, 221, 0.6); }
+}
+.tray + .rail-label { transition: color 0.2s; }
+.stage:has(.stamp.beckon) .tray + .rail-label { color: var(--paper); }
+
+/* The slip's how-to, shown until something is stamped. */
+.accusation-howto {
+  width: 220px;
+  margin: 0;
+  font-family: var(--font-type);
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.accusation-howto[hidden], .accusation-lines[hidden] { display: none; }

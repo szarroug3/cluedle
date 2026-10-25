@@ -4,8 +4,9 @@
 // read it.
 //
 // Each string is a short chain of points under gravity (Verlet integration): a new string drops and
-// settles, and strings sway when something nearby is clicked or the pointer brushes them. The
-// simulation only runs while something is moving.
+// settles, and strings sway when something nearby is clicked or the pointer brushes them. Each
+// string wakes only when something happens near it and sleeps once it settles, so a crowded board
+// stays smooth: only the strings near what you touched move.
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 const SEGMENTS = 14;
@@ -33,7 +34,7 @@ export function createString(stage, { strings, onChange }) {
 
   let threading = false;
   let first = null;
-  let ropes = []; // one per string: { a, b, points: [{ x, y, px, py }], rest, group, hit, line }
+  let ropes = []; // one per string: { a, b, points: [{ x, y, px, py }], rest, group, hit, line, awake }
   let drawing = null; // the string following the pointer while the player drags, if any
   let running = false;
 
@@ -68,21 +69,19 @@ export function createString(stage, { strings, onChange }) {
     const hit = svg("path", { class: "string-hit" });
     const line = svg("path", { class: className });
     group.append(hit, line);
-    return { points, rest: (length * SLACK) / SEGMENTS, group, hit, line };
+    return { points, rest: (length * SLACK) / SEGMENTS, group, hit, line, awake: false };
   }
 
-  function makeRope([a, b], index, hanging, carried = null) {
+  function makeRope([a, b], hanging, carried = null) {
     const from = headOf(a);
     const to = headOf(b);
     if (!from || !to) return null;
-    const rope = ropeBetween(from, to, { hanging, from: carried });
-    rope.group.dataset.index = String(index);
-    return Object.assign(rope, { a, b });
+    return Object.assign(ropeBetween(from, to, { hanging, from: carried }), { a, b });
   }
 
   function rebuild({ hanging }) {
     layer.replaceChildren();
-    ropes = strings.map((pair, i) => makeRope(pair, i, hanging)).filter(Boolean);
+    ropes = strings.map((pair) => makeRope(pair, hanging)).filter(Boolean);
     for (const rope of ropes) layer.append(rope.group);
     for (const rope of ropes) render(rope);
   }
@@ -138,27 +137,36 @@ export function createString(stage, { strings, onChange }) {
     return fastest;
   }
 
+  // Only awake strings are simulated and redrawn; each goes back to sleep once it's still.
   function loop() {
-    let moving = 0;
-    for (const rope of drawing ? [...ropes, drawing] : ropes) {
-      moving = Math.max(moving, step(rope));
+    let awake = false;
+    for (const rope of ropes) {
+      if (!rope.awake) continue;
+      if (step(rope) > REST_SPEED) awake = true;
+      else rope.awake = false;
       render(rope);
     }
-    // Keep going while the player is drawing, even if the string has come to rest.
-    if (moving > REST_SPEED || drawing) requestAnimationFrame(loop);
+    if (drawing) {
+      step(drawing);
+      render(drawing);
+    }
+    // Keep going while any string is moving, or while the player is drawing one.
+    if (awake || drawing) requestAnimationFrame(loop);
     else running = false;
   }
 
-  function wake() {
+  function wake(rope) {
+    if (rope) rope.awake = true;
     if (running) return;
     running = true;
     requestAnimationFrame(loop);
   }
 
-  // Push the middle of every string within reach of a point, strongest nearest.
+  // Push the middle of each string within reach of a point, strongest nearest. Strings out of reach
+  // stay asleep.
   function nudge(at, strength, reach) {
-    let touched = false;
     for (const rope of ropes) {
+      let touched = false;
       for (let i = 1; i < rope.points.length - 1; i++) {
         const pt = rope.points[i];
         const dist = Math.hypot(pt.x - at.x, pt.y - at.y);
@@ -168,8 +176,8 @@ export function createString(stage, { strings, onChange }) {
         pt.py -= force * 0.5;
         touched = true;
       }
+      if (touched) wake(rope);
     }
-    if (touched) wake();
   }
 
   function setThreading(on) {
@@ -186,12 +194,12 @@ export function createString(stage, { strings, onChange }) {
     if (a === b || exists) return;
     strings.push([a, b]);
     onChange(strings);
-    const rope = makeRope([a, b], strings.length - 1, false, carried);
+    const rope = makeRope([a, b], false, carried);
     if (!rope) return;
     ropes.push(rope);
     layer.append(rope.group);
     render(rope);
-    wake();
+    wake(rope);
   }
 
   function tie(item) {
@@ -299,11 +307,14 @@ export function createString(stage, { strings, onChange }) {
         if (item) tie(item);
         return true;
       }
-      const string = event.target.closest(".string");
-      if (string) {
-        strings.splice(Number(string.dataset.index), 1);
+      // Taking one string down removes just that one; the click itself sways its neighbours.
+      const group = event.target.closest(".string");
+      const rope = group && ropes.find((r) => r.group === group);
+      if (rope) {
+        group.remove();
+        ropes.splice(ropes.indexOf(rope), 1);
+        strings.splice(strings.findIndex(([x, y]) => x === rope.a && y === rope.b), 1);
         onChange(strings);
-        rebuild({ hanging: true });
         return true;
       }
       return false;

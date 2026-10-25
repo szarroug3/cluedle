@@ -39,7 +39,7 @@ function placeMark(mark, number) {
   mark.style.setProperty("--stamp-rot", `${-12 + ((number - 1) % 5) * 6}deg`);
 }
 
-export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, suspects, onFlagLiar, onReopen }) {
+export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, suspects, onFlagLiar, onReopen, beckon, onFirstUse }) {
   ensureInkFilter();
   const board = stage.querySelector(".board");
   const trays = { guilty: stage.querySelector(".stamp-guilty"), liar: stage.querySelector(".stamp-liar") };
@@ -51,6 +51,8 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
 
   let held = null; // "guilty", "liar", or nothing
   let ended = false;
+  let beckoning = beckon; // the stamps glow until a player first picks one up
+  const trayLabel = stage.querySelector(".tray + .rail-label");
   let liarUsed = false;
   const pending = { suspect: null, motive: null, weapon: null };
 
@@ -68,9 +70,11 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
     lines[kind] = el("dd", null, "—");
     list.append(el("dt", null, KIND_LABEL[kind]), lines[kind]);
   }
+  // With nothing stamped yet, the slip says how to accuse instead of showing empty lines.
+  const howTo = el("p", "accusation-howto", "Pick up GUILTY, then stamp a suspect, a motive, and a weapon.");
   const accuseButton = el("button", "accuse-button", "Make the accusation");
   accuseButton.type = "button";
-  slip.append(list, accuseButton);
+  slip.append(howTo, list, accuseButton);
   stage.querySelector(".case-tag").before(slip);
 
   function refresh() {
@@ -78,6 +82,9 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
     const final = ended ? lastGuess() : null;
     const shown = final ? { suspect: final.suspectId, motive: final.motiveId, weapon: final.weaponId } : pending;
     for (const kind of KINDS) lines[kind].textContent = shown[kind] ? names[kind](shown[kind]) : "—";
+    const empty = !final && KINDS.every((kind) => !pending[kind]);
+    howTo.hidden = !empty;
+    list.hidden = empty;
     // Once the case is over, the slip's button brings the ending (and its share card) back.
     accuseButton.textContent = ended ? "Reopen the ending" : "Make the accusation";
     accuseButton.disabled = !ended && KINDS.some((kind) => !pending[kind]);
@@ -88,11 +95,18 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
     ghost.hidden = !held;
     ghost.classList.toggle("liar", held === "liar");
     ghostFace.textContent = held === "liar" ? "LIAR" : "GUILTY";
+    const glowing = beckoning && !ended;
+    for (const tray of Object.values(trays)) tray.classList.toggle("beckon", glowing && !tray.classList.contains("used"));
+    if (trayLabel) trayLabel.textContent = glowing ? "Pick one up" : "Stamps";
   }
 
   function pickUp(kind) {
     if (ended || (kind === "liar" && liarUsed)) return;
     held = held === kind ? null : kind;
+    if (held && beckoning) {
+      beckoning = false;
+      onFirstUse?.();
+    }
     refresh();
   }
 

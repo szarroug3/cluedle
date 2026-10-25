@@ -9,7 +9,7 @@ export default {
     headline: "Orchid King Found Dead Among His Flowers",
     dateline: "RIVERSIDE HEIGHTS, Oct. 23, 1946",
     body:
-      "Cornelius Vane, 61, who built a shipping fortune from one leaky tug at Pier Nine, lost the freighter Albatross " +
+      "Cornelius Vane, 61, who built a shipping fortune from one leaky tugboat at Pier Nine, lost the freighter Albatross " +
       "in \u201931, and spent much of it on prize " +
       "orchids, was found dead in his glasshouse Tuesday night. His housekeeper raised the alarm shortly after ten.\n" +
       "Police say Vane lay among his beloved blooms with a cold cup of tea at his elbow. His wristwatch, smashed in " +

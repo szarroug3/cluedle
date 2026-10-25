@@ -103,6 +103,8 @@ Build mode: fast
 - [x] Red string physics: strings drop, bounce, and settle when tied, and sway when something nearby is clicked or the pointer brushes them (learner reviewed and liked it)
 - [x] Drag from one card to another to tie a string; the string being drawn has the same physics and carries on into the tied string (learner reviewed)
 - [ ] Case 1: an earlier link from the decoded "Holloway boy" to Mae — a sailor's photo signed "D.H., 1931" on her card, and the clipping now says the Albatross was lost in '31 (learner found only clue 4 tied them together)
+- [x] Strings only move near what's touched: each string wakes and sleeps on its own, and removing one leaves the rest alone (a tester reported lag with many strings)
+- [x] Stamps easier to discover: the empty accusation slip explains how to accuse, and the stamps glow until first picked up (a tester found them unclear)
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

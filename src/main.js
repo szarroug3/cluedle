@@ -86,6 +86,8 @@ const stamps = createStamps(stage, {
   },
   guessNumber: () => progress.guesses.length + 1,
   lastGuess: () => progress.guesses.at(-1),
+  beckon: !saved.usedStamps(),
+  onFirstUse: () => saved.markStampsUsed(),
   onReopen: showCaseEnding,
   suspects: caseData.suspects,
   onFlagLiar(suspectId, truthIndex) {
