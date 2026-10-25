@@ -211,6 +211,8 @@ export function createString(stage, { strings, onChange }) {
     const exists = strings.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
     if (a === b || exists) return;
     if (full()) return refuse();
+    // Both ends must land on a real pushpin; anything else isn't tied.
+    if (!headOf(a) || !headOf(b)) return;
     strings.push([a, b]);
     onChange(strings);
     const rope = makeRope([a, b], false, carried);
@@ -235,34 +237,71 @@ export function createString(stage, { strings, onChange }) {
   }
 
   // Dragging from a card draws a string that follows the pointer; letting go on another card ties
-  // it. A press that never really moves stays an ordinary click.
+  // it. A press that never really moves stays an ordinary click. On a touch screen a swipe has to
+  // stay a scroll, so drawing starts only after a long press on the card.
   const DRAG_START = 8;
+  const LONG_PRESS = 350;
   let drag = null;
+
+  function startDrawing(event) {
+    if (full()) {
+      cancelDrag();
+      return refuse();
+    }
+    drag.drawing = true;
+    drag.item.classList.add("string-first");
+    stage.classList.add("drawing-string");
+    drawing = ropeBetween(headOf(drag.item.dataset.pin), toBoard(event.clientX, event.clientY), {
+      className: "string-line string-preview",
+    });
+    layer.append(drawing.group);
+    wake();
+  }
+
+  // Let go of the drag, tying the string if it ended on another card.
+  function endDrag(over) {
+    if (!drag) return;
+    const { item, drawing: wasDrawing, timer } = drag;
+    clearTimeout(timer);
+    drag = null;
+    item.classList.remove("string-first");
+    if (!wasDrawing) return;
+    board.querySelector(".string-target")?.classList.remove("string-target");
+    stage.classList.remove("drawing-string");
+    const carried = drawing.points;
+    drawing.group.remove();
+    drawing = null;
+    if (over && board.contains(over)) addString(item.dataset.pin, over.dataset.pin, carried);
+  }
+  const cancelDrag = () => endDrag(null);
 
   board.addEventListener("pointerdown", (event) => {
     if (event.button !== 0 || stage.classList.contains("holding")) return;
     const item = event.target.closest(".pin-item");
     if (!item || event.target.closest(".string")) return;
-    drag = { item, x: event.clientX, y: event.clientY, drawing: false };
+    drag = { item, x: event.clientX, y: event.clientY, drawing: false, touch: event.pointerType !== "mouse", armed: false };
+    // On touch, holding still on the card arms it: the pin lights up and the next move draws.
+    if (drag.touch) {
+      drag.timer = setTimeout(() => {
+        if (!drag) return;
+        drag.armed = true;
+        item.classList.add("string-first");
+        navigator.vibrate?.(10);
+      }, LONG_PRESS);
+    }
   });
 
   window.addEventListener("pointermove", (event) => {
     if (!drag) return;
-    const from = headOf(drag.item.dataset.pin);
-    const to = toBoard(event.clientX, event.clientY);
     if (!drag.drawing) {
       if (Math.hypot(event.clientX - drag.x, event.clientY - drag.y) < DRAG_START) return;
-      if (full()) {
-        drag = null;
-        return refuse();
-      }
-      drag.drawing = true;
-      drag.item.classList.add("string-first");
-      stage.classList.add("drawing-string");
-      drawing = ropeBetween(from, to, { className: "string-line string-preview" });
-      layer.append(drawing.group);
-      wake();
+      // A touch that moves before the long press is a scroll or a pan, not a string.
+      if (drag.touch && !drag.armed) return cancelDrag();
+      startDrawing(event);
+      if (!drag) return;
     }
+    const from = headOf(drag.item.dataset.pin);
+    const to = toBoard(event.clientX, event.clientY);
     // The free end rides on the pointer; the string lengthens to keep a little slack.
     const end = drawing.points[SEGMENTS];
     end.x = end.px = to.x;
@@ -273,25 +312,30 @@ export function createString(stage, { strings, onChange }) {
     if (over && over !== drag.item) over.classList.add("string-target");
   });
 
+  // While a string is being drawn by touch, keep the page from scrolling under the finger.
+  board.addEventListener(
+    "touchmove",
+    (event) => {
+      if (drag && (drag.armed || drag.drawing)) event.preventDefault();
+    },
+    { passive: false },
+  );
+
   window.addEventListener("pointerup", (event) => {
     if (!drag) return;
-    const { item, drawing: wasDrawing } = drag;
-    drag = null;
-    if (!wasDrawing) return;
-    const over = document.elementFromPoint(event.clientX, event.clientY)?.closest(".pin-item");
-    item.classList.remove("string-first");
-    board.querySelector(".string-target")?.classList.remove("string-target");
-    stage.classList.remove("drawing-string");
-    const carried = drawing.points;
-    drawing.group.remove();
-    drawing = null;
-    if (over && board.contains(over)) addString(item.dataset.pin, over.dataset.pin, carried);
+    const wasDrawing = drag.drawing;
+    const wasArmed = drag.armed;
+    endDrag(document.elementFromPoint(event.clientX, event.clientY)?.closest(".pin-item"));
+    if (!wasDrawing && !wasArmed) return;
     // The drag ends in a click; don't let it open the card underneath. If no click comes (the pointer
     // was let go off the board), the guard lapses straight away.
     const swallow = (e) => e.stopPropagation();
     stage.addEventListener("click", swallow, { capture: true, once: true });
     setTimeout(() => stage.removeEventListener("click", swallow, { capture: true }), 0);
   });
+
+  // The browser can take a touch over (to scroll or zoom); drop the drag rather than leave it stuck.
+  window.addEventListener("pointercancel", cancelDrag);
 
   spool.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {

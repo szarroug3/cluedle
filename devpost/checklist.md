@@ -107,6 +107,7 @@ Build mode: fast
 - [x] Stamps easier to discover: the empty accusation slip explains how to accuse, and the stamps glow until first picked up (a tester found them unclear)
 - [x] Player-facing text made less AI-sounding: varied the repeated ending and description shapes across cases, cut epigram closers and stock phrases, plainer UI and README copy; rank line now about guesses, not speed (learner request)
 - [x] Smoother string on a crowded board: shadows drawn as plain offset lines instead of CSS filters, the string layer composited on its own, and a generous cap of 40 strings with an "Out of string" spool (learner found it still laggy with many strings)
+- [x] Touch: string no longer gets stuck or draws on a swipe. Cancelled touches end the drag, drawing on touch needs a long-press on a card, and a string is only kept when both ends land on pins (a tester's phone kept drawing string everywhere)
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

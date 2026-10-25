@@ -198,6 +198,7 @@ function letterStrips(onLetter) {
   const onUp = () => (drag = null);
   window.addEventListener("pointermove", onMove);
   window.addEventListener("pointerup", onUp);
+  window.addEventListener("pointercancel", onUp);
 
   const arrows = (side) => {
     const up = el("button", "strip-arrow", "\u25b2");
@@ -240,6 +241,7 @@ function letterStrips(onLetter) {
     if (!panel.isConnected) {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
       watch.disconnect();
     }
   });
