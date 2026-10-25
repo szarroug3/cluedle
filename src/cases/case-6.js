@@ -26,7 +26,7 @@ export default {
       role: "The widow",
       description: "Twenty years younger than Leland and bored at every party. Under the old will, the hotel is hers.",
       statement: {
-        text: "I danced in the Starlight Room from nine until they came for me. I never left the floor once, not all night.",
+        text: "I danced in the Starlight Room from nine until they came for me. I didn’t leave the floor once.",
         isLie: true,
         truthOptions: [
           "She spent an hour in Room 814 with the lawyer",
@@ -50,7 +50,7 @@ export default {
       id: "pell",
       name: "Gordon Prewitt",
       role: "The manager",
-      description: "Manager for nineteen years. Keeps the ledgers, signs every bank slip, never misses a night in the ballroom.",
+      description: "Manager for nineteen years. He keeps the ledgers and signs every bank slip himself.",
       statement: {
         text: "From eleven on I was in the Starlight Room shaking hands. Three hundred guests saw me. Ask any of them.",
         isLie: false,
@@ -141,8 +141,7 @@ export default {
         "opener. Then he turned the desk clock forward to 11:40, laid it face-down, and went down to shake three " +
         "hundred hands.",
       saved:
-        "Celeste Whitcomb, who couldn’t account for her missing hour without naming her lover, would have hanged for " +
-        "it. She walks out of the Meridian with her secret mostly intact.",
+        "Celeste Whitcomb was gone for an hour and wouldn’t say where. With Prewitt charged, nobody asks her again.",
     },
     cold: {
       headline: "Gone Cold",
@@ -151,9 +150,9 @@ export default {
         "letter opener at half past ten, then set the desk clock forward to 11:40 and went down to the ball.",
       cost:
         "Celeste Whitcomb wouldn’t say where she’d been without ruining Sutter, so she said nothing. She was convicted " +
-        "in March. Prewitt bought the Meridian at auction the next year.",
+        "in March, and Prewitt kept running the hotel.",
     },
   },
 
-  shareLine: "Every clock tells somebody’s lie.",
+  shareLine: "Check the clock twice.",
 };

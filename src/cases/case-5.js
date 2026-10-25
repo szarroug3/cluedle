@@ -39,7 +39,7 @@ export default {
       id: "banning",
       name: "Eli Banning",
       role: "The assistant keeper",
-      description: "Twenty-four, ambitious, sick of polishing another man’s lens. Wren’s death could get him the light.",
+      description: "He’s twenty-four and tired of polishing another man’s lens. Wren’s death could get him the light.",
       statement: {
         text: "I kept the lamp-room watch till four. Near one a boat came in running dark, and a dory rowed to our slip.",
         isLie: false,
@@ -139,8 +139,8 @@ export default {
         "logged every trip. When Wren threatened Customs, Tolliver rowed out to the slip, struck him down with a belaying " +
         "pin off the Mary Clare, took the logbook, and rolled him into the harbor. At five he cast off and found the body himself.",
       saved:
-        "Eli Banning, who wanted the light and had only the lamp for an alibi, would have stood trial come spring. " +
-        "He keeps the light instead.",
+        "Eli Banning had no alibi and a reason to want Wren gone. With Tolliver charged, the police leave him alone, " +
+        "and the light is his.",
     },
     cold: {
       headline: "Gone Cold",
@@ -148,10 +148,10 @@ export default {
         "It was Royce Tolliver, protecting his whisky run. He clubbed Silas Wren with a belaying pin at the cottage slip, " +
         "put him in the harbor, and was first on the scene at dawn to find him.",
       cost:
-        "Wren went down as a fall on the ice. Tolliver ran whisky under the light for six more years, and Eli Banning, " +
-        "who had seen the dark boat, was pulled from below the breakwater that June.",
+        "Wren’s death was ruled a fall on the ice. Tolliver ran whisky for six more years. Eli Banning had seen the dark " +
+        "boat, and his body was found below the breakwater that June.",
     },
   },
 
-  shareLine: "The light sees everything.",
+  shareLine: "Keep the light burning.",
 };

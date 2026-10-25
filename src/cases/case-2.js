@@ -13,7 +13,7 @@ export default {
       "of “Midnight in Lisbon” neared its close. The prop revolver fired by her leading man, Julian Crane, was meant " +
       "to hold only blanks.\n" +
       "Audiences filled the house for 212 nights to watch Miss Delacroix sweep out of the dressing room marked Four, the " +
-      "gold star still on its door. The curtain fell at eleven; the house had gone silent long before.\n" +
+      "gold star still on its door. The curtain came down at eleven.\n" +
       "Producer Harold Voss called the death “a terrible accident.” Police are holding the revolver and questioning " +
       "the company.",
   },
@@ -54,9 +54,9 @@ export default {
       id: "voss",
       name: "Harold Voss",
       role: "The producer",
-      description: "Owns the Majestic and the show. Smiles for the papers; argues with the bank behind closed doors.",
+      description: "Owns the Majestic and the show. He’s been arguing with his bank for months.",
       statement: {
-        text: "I watched all of Act Three from my box. Never went backstage once, not all night.",
+        text: "I watched all of Act Three from my box. I didn’t go backstage all night.",
         isLie: true,
         truthOptions: [
           "He went to the prop table at intermission",
@@ -70,7 +70,7 @@ export default {
       id: "kell",
       name: "Rosie Kell",
       role: "The dresser",
-      description: "Has dressed Margot for nine years. Knows every secret in the building and keeps them, mostly.",
+      description: "Has dressed Margot for nine years. She hears most of what goes on backstage and repeats some of it.",
       statement: {
         text: "I was pinning Miss Pike’s hem in the wings all act. At intermission I heard Miss Margot shouting at Mr. Voss.",
         isLie: false,
@@ -136,10 +136,10 @@ export default {
     closed: {
       headline: "Case Closed",
       text:
-        "Harold Voss was drowning. The bank was days from taking the Majestic, and Margot was leaving for Hollywood at " +
+        "Harold Voss was broke. The bank was days from taking the Majestic, and Margot was leaving for Hollywood at " +
         "the end of the run. At intermission he let himself into the prop table with his own key, swapped one blank for " +
         "a live round, and went back to his box to watch Julian Crane pull the trigger.",
-      saved: "Julian Crane, who would have hanged for a murder he was tricked into, walks out of the Majestic a free man.",
+      saved: "The charges against Julian Crane are dropped. He fired the gun, but Voss loaded it.",
     },
     cold: {
       headline: "Gone Cold",
@@ -147,8 +147,8 @@ export default {
         "It was Harold Voss, cashing in his star. He doubled her insurance in May, and at intermission he swapped a blank " +
         "for a live round in the prop revolver.",
       cost:
-        "Julian Crane was convicted of manslaughter and died in prison. Voss collected, reopened the Majestic, and " +
-        "insured his next leading lady the week she signed.",
+        "Julian Crane was convicted of manslaughter and died in prison. Voss collected the insurance and kept the " +
+        "Majestic open.",
     },
   },
 

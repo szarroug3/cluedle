@@ -23,7 +23,7 @@ export default {
       id: "brennan",
       name: "Joe Brennan",
       role: "The opponent",
-      description: "Twenty-four, hungry, and hits like a mule. Seen twice this fall at the Starlight with Rourke’s wife.",
+      description: "Twenty-four, and he hits like a mule. Seen twice this fall at the Starlight with Rourke’s wife.",
       statement: {
         text: "It was a short left, nothing on it. He was glassy before I threw it. I’ve seen drunks walk straighter.",
         isLie: false,
@@ -33,7 +33,7 @@ export default {
       id: "pell",
       name: "Sal Dunn",
       role: "The trainer",
-      description: "Trained Rourke since the kid was sixteen. Tapes the hands, mixes the water, never misses a fight.",
+      description: "Trained Rourke since the kid was sixteen. He tapes the hands and mixes the water in the corner.",
       statement: {
         text: "I filled Tommy’s bottle before the fight and never touched another. Anybody at ringside could’ve got to it.",
         isLie: true,
@@ -137,9 +137,9 @@ export default {
       text:
         "Sal Dunn sold Tommy Rourke’s Baltimore fight in ’45 and paid his note with the money. The kid worked it out " +
         "and booked a Thursday with the commission. Sal lifted Rita’s sleeping pills at the gym, emptied them into a " +
-        "fresh bottle after the sixth, and let the bell do the rest. Joe Brennan’s left only finished what the water started.",
+        "fresh bottle after the sixth, and handed it over. Rourke was going down from the chloral before Brennan’s punch landed.",
       saved:
-        "Joe Brennan, who would have stood trial for a punch that barely landed, keeps his license and his good name.",
+        "The charges against Joe Brennan are dropped, and he keeps his license.",
     },
     cold: {
       headline: "Gone Cold",
@@ -147,8 +147,8 @@ export default {
         "It was Sal Dunn, Rourke’s own trainer, burying the fight he sold in Baltimore. After the sixth he poured the " +
         "kid a fresh water bottle, doped with chloral lifted from Rita Rourke’s handbag.",
       cost:
-        "Joe Brennan was convicted of manslaughter and never fought again. Sal Dunn had a new kid in his corner by " +
-        "spring, and went back to selling fights.",
+        "Joe Brennan was convicted of manslaughter and never fought again. Sal Dunn kept training fighters, " +
+        "and he kept selling fights.",
     },
   },
 

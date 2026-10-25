@@ -105,6 +105,7 @@ Build mode: fast
 - [ ] Case 1: an earlier link from the decoded "Holloway boy" to Mae — a sailor's photo signed "D.H., 1931" on her card, and the clipping now says the Albatross was lost in '31 (learner found only clue 4 tied them together)
 - [x] Strings only move near what's touched: each string wakes and sleeps on its own, and removing one leaves the rest alone (a tester reported lag with many strings)
 - [x] Stamps easier to discover: the empty accusation slip explains how to accuse, and the stamps glow until first picked up (a tester found them unclear)
+- [x] Player-facing text made less AI-sounding: varied the repeated ending and description shapes across cases, cut epigram closers and stock phrases, plainer UI and README copy; rank line now about guesses, not speed (learner request)
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

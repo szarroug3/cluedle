@@ -59,7 +59,7 @@ export default {
       id: "varga",
       name: "Nico Ferraro",
       role: "The bandleader",
-      description: "Leads the orchestra from a bandstand that sees the whole room. Sends Mrs. Ashcombe roses every week.",
+      description: "Leads the orchestra from a bandstand with a view of the whole room. Sends Mrs. Ashcombe roses every week.",
       statement: {
         text: "The Harlequin stood by my bandstand from eleven till near midnight, calling for songs. Tall fella; sleeves halfway up his arms.",
         isLie: false,
@@ -137,8 +137,8 @@ export default {
       text:
         "Laurence Pryor had bled the Ashcombe trust of $60,000, and the auditors were due Friday. At eleven he dared " +
         "Rupert into trading costumes, climbed to the library in the Red Cardinal’s robe, and strangled Gideon with its " +
-        "scarlet sash. Then he traded back, and let an honest witness and a dragging hem hang the son.",
-      saved: "Rupert Ashcombe, the Cardinal every witness swore to, walks out of the station house a free man.",
+        "scarlet sash. Then he traded back. Everyone who saw the Cardinal named Rupert.",
+      saved: "The charges against Rupert Ashcombe are dropped. He was dancing in Harlequin’s diamonds the whole time.",
     },
     cold: {
       headline: "Gone Cold",
@@ -146,10 +146,9 @@ export default {
         "It was Laurence Pryor, hiding $60,000 looted from the Ashcombe trust. He swapped costumes with Rupert and " +
         "strangled Gideon with the Red Cardinal’s scarlet sash.",
       cost:
-        "Rupert Ashcombe went to the chair in the spring, convicted by an honest witness and a robe made to fit him. " +
-        "Pryor settled the estate, and billed it for his trouble.",
+        "Rupert Ashcombe was convicted and executed that winter. Pryor stayed on as the family’s lawyer.",
     },
   },
 
-  shareLine: "Every mask hides two faces.",
+  shareLine: "Never trust a costume.",
 };

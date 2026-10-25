@@ -34,7 +34,7 @@ export default {
       id: "teddy",
       name: "Teddy Vane",
       role: "The nephew",
-      description: "Charming, broke, and in debt to the wrong people. His uncle stopped covering his markers in spring.",
+      description: "Broke and in debt to the wrong people. His uncle stopped covering his markers in spring.",
       statement: {
         text: "I was at the Blue Lantern all night. Ask Sid. And I’ve never been near the kitchen garden; only Mae and the gardener have keys.",
         isLie: false,
@@ -70,7 +70,7 @@ export default {
       id: "sid",
       name: "Sid Barlow",
       role: "The chauffeur",
-      description: "Drove for Vane eleven years. Hears every secret said in the back seat, and is owed three months’ wages.",
+      description: "Drove for Vane eleven years and hears plenty from the back seat. He’s owed three months’ wages.",
       statement: {
         text: "Drove Mr. Teddy to the Blue Lantern at eight, fetched him at half past midnight. He never left the card room.",
         isLie: false,
@@ -140,7 +140,7 @@ export default {
         "Cornelius Vane sank for the insurance in 1931. Mae took a job under a borrowed name, waited four years for the right " +
         "night, and steeped foxglove from the kitchen garden in his evening tea.",
       saved:
-        "Mae meant to finish the Vane line: Lillian by Christmas, Teddy by Easter. Both of them will see the spring.",
+        "Mae meant to kill Lillian by Christmas and Teddy by Easter. Both are still alive.",
     },
     cold: {
       headline: "Gone Cold",

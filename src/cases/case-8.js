@@ -106,7 +106,7 @@ export default {
   ],
 
   clues: [
-    "The coroner: one blow behind the ear from something heavy and rounded. No struggle. He never saw it coming.",
+    "The coroner: one blow behind the ear from something heavy and rounded. No struggle and no defensive wounds.",
     "On Brisco’s blotter, in green ink: “9 a.m. — have it out with him. Bring the court records.”",
     "The bronze eagle paperweight turned up in the washroom sink, scrubbed clean but for one grey hair caught in a wing.",
     "The county clerk: not one dockman quoted in the waterfront series appears on any union roll, payroll, or census.",
@@ -135,12 +135,12 @@ export default {
     closed: {
       headline: "Case Closed",
       text:
-        "Roy Danner’s waterfront series was made up from the first word: the dockmen, the bosses, the bribes. Walt Brisco " +
+        "Roy Danner made up his whole waterfront series, down to the dockmen he quoted. Walt Brisco " +
         "found out and meant to fire him at nine. Before one o’clock Danner brought the bronze eagle down from behind, " +
         "washed it, and crossed to the diner. Then he wrote the story himself and moved the last page to two, to fit his alibi.",
       saved:
-        "Spiro Petrakis, whom Danner’s back-stairs line had the police circling, goes home to his family. The prize " +
-        "committee pulls the series.",
+        "The police stop looking at Spiro Petrakis, and he goes home to his family. The prize committee pulls Danner’s " +
+        "series.",
     },
     cold: {
       headline: "Gone Cold",
@@ -149,7 +149,7 @@ export default {
         "eagle from the crime desk, then wrote the story himself and moved the time of death to fit his alibi.",
       cost:
         "The police took the Courier at its word and charged Spiro Petrakis from the press room. Danner won his prize " +
-        "that spring and sat down in Brisco’s chair.",
+        "that fall and took over Brisco’s desk.",
     },
   },
 

@@ -181,7 +181,7 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
     confirm.type = "button";
     body.append(
       el("p", "statement-quote", `\u201c${suspect.statement.text}\u201d`),
-      el("p", "liar-warning", "You get one shot at this. Make it count."),
+      el("p", "liar-warning", "You only get one shot at this."),
       confirm,
     );
     slip.append(el("div", "card-label", "Liar?"), el("h2", "statement-name", suspect.name), body);
@@ -201,7 +201,7 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
         option.addEventListener("click", () => {
           const result = finish(index);
           body.replaceChildren(
-            el("p", "liar-verdict", result?.correct ? "Caught in the lie." : "Wrong call. Whatever happened, it wasn\u2019t that."),
+            el("p", "liar-verdict", result?.correct ? "Caught in the lie." : "Wrong call. That\u2019s not what happened."),
           );
           setTimeout(close, 1400);
         });

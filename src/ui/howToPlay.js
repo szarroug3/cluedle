@@ -13,8 +13,8 @@ const STEPS = [
   ["Five guesses", "Each accusation tells you how many of the three you got right, never which. Every miss pins up a new clue."],
   ["The liar", "Click a suspect to read their statement. One of them is lying. Stamp LIAR on their card and say what really happened. One shot; it costs no guesses."],
   ["The message", "Something on this board is hiding a message. Find it, crack it on paper, and write it on the blank card. Three tries, and every wrong one costs ink."],
-  ["Red string", "Tie string between pins to keep your thinking straight. It’s yours; the case never reads it."],
-  ["Your rank", "The faster and more thoroughly you crack it, the higher your rank. A new case comes out every day."],
+  ["Red string", "Tie string between pins to keep your thinking straight. It doesn’t affect your score."],
+  ["Your rank", "The fewer guesses you need, the higher your rank. Cracking the code and catching the liar count too. A new case comes out every day."],
 ];
 
 export function showHowToPlay(stage, { onClose } = {}) {

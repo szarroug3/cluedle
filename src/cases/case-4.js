@@ -137,8 +137,8 @@ export default {
       text:
         "Sterling Gage wanted the whole Blue Moon Room, and the 1939 papers gave it to the partner left standing. At a " +
         "quarter to twelve, with the bar empty, he spooned silver dip from the pantry into Rex Malone’s Blue Moon. Then " +
-        "the lights went down, Desmond Ashby reached for the wrong glass, and the wrong man died.",
-      saved: "Gage meant to try again before spring. Rex Malone pours his own drinks now, and he’ll live to see 1948.",
+        "the lights went down, and Desmond Ashby picked up the glass by mistake.",
+      saved: "Gage was going to try again. Rex Malone mixes his own drinks now.",
     },
     cold: {
       headline: "Gone Cold",
@@ -146,8 +146,8 @@ export default {
         "It was Sterling Gage, out to take the whole club from his partner. He spooned silver-plate dip, cyanide, into " +
         "Rex Malone’s Blue Moon, and Desmond Ashby drank it by mistake in the dark.",
       cost:
-        "Benny Fiorello mixed the drink, so Benny took the fall. In March Rex Malone drowned off his own pier, and Sterling " +
-        "Gage hung a brand-new neon moon over the door.",
+        "Benny Fiorello mixed the drink, so he took the blame. Rex Malone drowned off his own pier in March, and Sterling " +
+        "Gage got the club.",
     },
   },
 

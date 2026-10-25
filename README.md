@@ -8,11 +8,11 @@ Everything is hand-written and rule-based. There's no AI at runtime, no server, 
 
 ## How to play
 
-- **Accuse.** Pick up the GUILTY stamp, stamp a suspect, a motive, and a weapon, then make the accusation. Each guess tells you how many of the three are right, never which ones. Every miss pins up a new clue.
-- **Catch the liar.** Click a suspect to read their statement. One of them is lying. Stamp LIAR on that suspect's card and say what really happened. You get one shot, and it doesn't use a guess.
-- **Crack the message.** One scrap on the board is written in code. Work out which one, find its key in the story, decode it on paper, and write the message on the blank card. You get three tries, and every wrong one runs more ink over the code.
-- **Red string.** Click the spool, then two pins, to tie string between them. Click a string to take it down. It's only for your own thinking.
-- **Rank and share.** The faster and more thoroughly you crack the case, the higher your rank, from Amateur Sleuth up to Basically Sherlock. Then copy a spoiler-free share card.
+- Pick up the GUILTY stamp, stamp a suspect, a motive, and a weapon, then make the accusation. Each guess tells you how many of the three are right, never which ones. Every miss pins up a new clue.
+- Click a suspect to read their statement. One of them is lying. Stamp LIAR on that suspect's card and say what really happened. You get one shot, and it doesn't use a guess.
+- One scrap on the board is written in code. Work out which one, find its key in the story, decode it on paper, and write the message on the blank card. You get three tries, and every wrong one runs more ink over the code.
+- Click the spool, then two pins, to tie string between them. Click a string to take it down. It's only for your own thinking.
+- The fewer guesses you need, the higher your rank, from Amateur Sleuth up to Basically Sherlock. Cracking the code and catching the liar count too. Then copy a spoiler-free share card.
 
 ## Run it
 
@@ -39,7 +39,7 @@ They work together: `http://localhost:3000/?case=3&fresh`.
 npm test
 ```
 
-This runs the rules with Node's built-in test runner: the accusation and liar rules, the cipher and its ink blots, the rank, the share card, the daily case, saved progress, and checks that every case is well formed.
+This runs the tests with Node's built-in test runner. They cover the game rules, the cipher, the rank, the share card, the daily case, saved progress, and the data in every case.
 
 ## Project layout
 

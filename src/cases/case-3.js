@@ -23,7 +23,7 @@ export default {
       id: "lindqvist",
       name: "Vera Lindqvist",
       role: "The fiancée",
-      description: "Engaged to Felix for a month. Her family lost everything in ’29; his never did.",
+      description: "Engaged to Felix for a month. Her family lost everything in ’29, and his didn’t.",
       statement: {
         text: "Felix said goodnight at eleven and locked his door. I heard the bolt go. I never saw him again.",
         isLie: false,
@@ -138,7 +138,7 @@ export default {
         "Dr. Simon Reyes had followed the Hargrove diamond across three states. He paid the porter fifty dollars to leave " +
         "his post, let himself in with a pass key, and drove Agnes Thorne’s lost hatpin home beneath Hargrove’s ear. " +
         "Then he waited to be called, pronounced the man dead, and sewed the stone into his bag.",
-      saved: "Agnes Thorne, whose hatpin would have hanged her, steps off the train at Toledo a free woman.",
+      saved: "The police let Agnes Thorne go at Toledo. The hatpin was hers, but she never used it.",
     },
     cold: {
       headline: "Gone Cold",
@@ -146,10 +146,9 @@ export default {
         "It was Dr. Simon Reyes, after the Hargrove diamond. He bribed the porter off his post and killed Hargrove with " +
         "Agnes Thorne’s lost hatpin.",
       cost:
-        "Agnes Thorne was tried on the hatpin alone and hanged in the spring. The diamond turned up in Lisbon two years " +
-        "later, on a stranger’s hand.",
+        "Agnes Thorne was tried on the hatpin alone and hanged. The diamond turned up in Lisbon two years later.",
     },
   },
 
-  shareLine: "Every berth has a secret.",
+  shareLine: "Next stop, Toledo.",
 };

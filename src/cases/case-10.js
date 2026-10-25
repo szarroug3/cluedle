@@ -23,7 +23,7 @@ export default {
       id: "greta",
       name: "Greta Halverson",
       role: "The wife",
-      description: "Twenty-five years younger than Erik. Stands to inherit the lodge, for now. Bored of snow.",
+      description: "Twenty-five years younger than Erik. Under his current will, she inherits the lodge.",
       statement: {
         text: "Anton and I played gin by the fire from nine until midnight. He never once left his chair.",
         isLie: true,
@@ -139,7 +139,7 @@ export default {
         "stone. When Erik came down the back stairs for firewood, Anton was waiting. He left the body on the salted " +
         "steps for the snow to cover, and Greta swore he never left his chair. Saturday’s will would have left them " +
         "nothing.",
-      saved: "Teo Varga, blamed for stairs he had salted, keeps his name and his post. Greta Halverson stands trial beside her alibi.",
+      saved: "Teo Varga keeps his job. Greta Halverson is charged with lying to cover for Anton.",
     },
     cold: {
       headline: "Gone Cold",
@@ -147,10 +147,10 @@ export default {
         "It was Anton Rusk, to stop a new will that cut Greta Halverson out. He struck Erik down with the trophy " +
         "curling stone, and Greta swore he never left the card table.",
       cost:
-        "The fall was ruled an accident and Teo Varga was turned out for the ice. By spring the widow and the ski man " +
-        "had sold the lodge and gone west together.",
+        "The fall was ruled an accident and Teo Varga was turned out for the ice. By summer Greta and Anton " +
+        "had sold the lodge and moved west together.",
     },
   },
 
-  shareLine: "The snow covers everything. Almost.",
+  shareLine: "Watch the stairs.",
 };
