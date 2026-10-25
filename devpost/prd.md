@@ -118,17 +118,17 @@ Source: `scope.md > The POC Boundary` (cheap version).
 - [ ] Solving on the fifth guess without the cipher or the liar earns Amateur Sleuth.
 
 ### Share Card
-- **Copy share card** copies a text result to the clipboard: case number, the guess history as emoji (one row per guess: a 🔵 for each right part and a ⚫ for each wrong one, in that order, so it never says which), cipher and liar results, and the rank. No spoilers: it never names the culprit, motive, or weapon.
-- Uses only red, purple, blue, and neutral emoji.
+- **Copy share card** copies a text result to the clipboard: case number, the guess history as emoji (one row per guess: a 🔵 for each right part and a 🔴 for each wrong one, in that order, so it never says which), cipher and liar results, and the rank. No spoilers: it never names the culprit, motive, or weapon.
+- Uses only red and blue emoji, so the card reads on light and dark backgrounds.
 - **Case-file style**, for example:
 
   ```
   CLUEDLE · CASE #3
   ━━ CLOSED in 3/5 ━━
-  🔵⚫⚫
-  🔵🔵⚫
+  🔵🔴🔴
+  🔵🔵🔴
   🔵🔵🔵
-  Cipher ✔️  Liar ✔️
+  Cipher ☑️  Liar ☑️
   Rank: Seasoned Detective
   "The ink never lies."
   ```

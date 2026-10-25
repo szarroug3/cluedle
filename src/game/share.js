@@ -1,7 +1,7 @@
 // The share card: case number, a row per guess, cipher and liar results, the rank, and the
-// case's noir line. No names, and only blue, black, and neutral emoji (no orange, yellow, or green).
+// case's noir line. No names, and only red and blue emoji, which show on light and dark backgrounds (no orange, yellow, or green).
 
-export const SHARE_EMOJI = ["\u{1F535}", "⚫", "✔️", "✖️"];
+export const SHARE_EMOJI = ["\u{1F535}", "\u{1F534}", "\u2611\uFE0F", "\u274C"];
 const [RIGHT, WRONG, YES, NO] = SHARE_EMOJI;
 
 export function shareText(caseNumber, caseData, progress, rank) {

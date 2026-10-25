@@ -19,10 +19,10 @@ test("a closed case reads like the case-file card", () => {
     [
       "CLUEDLE · CASE #1",
       "━━ CLOSED in 3/5 ━━",
-      "🔵⚫⚫",
-      "🔵🔵⚫",
+      "🔵🔴🔴",
+      "🔵🔵🔴",
       "🔵🔵🔵",
-      "Cipher ✔️  Liar ✔️",
+      "Cipher ☑️  Liar ☑️",
       "Rank: Seasoned Detective",
       `“${caseData.shareLine}”`,
     ].join("\n"),
@@ -33,8 +33,8 @@ test("a cold case reads GONE COLD and shows no rank", () => {
   const text = shareText(4, caseData, cold, null);
   assert.match(text, /━━ GONE COLD ━━/);
   assert.doesNotMatch(text, /Rank/);
-  assert.match(text, /Cipher ✖️ {2}Liar ✖️/);
-  assert.equal(text.split("\n").filter((line) => /^[🔵⚫]+$/u.test(line)).length, 5);
+  assert.match(text, /Cipher ❌ {2}Liar ❌/);
+  assert.equal(text.split("\n").filter((line) => /^[🔵🔴]+$/u.test(line)).length, 5);
 });
 
 test("no suspect, motive, or weapon names, and no emoji outside the allowed set", () => {
