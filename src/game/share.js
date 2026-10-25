@@ -1,8 +1,11 @@
-// The share card: case number, a row per guess, cipher and liar results, the rank, and the
-// case's noir line. No names, and only red and blue emoji, which show on light and dark backgrounds (no orange, yellow, or green).
+// The share card: case number, a row per guess, cipher and liar results, the rank, the
+// case's noir line, and a link to play. No names, and only red and blue emoji, which show on light and dark backgrounds (no orange, yellow, or green).
 
 export const SHARE_EMOJI = ["\u{1F535}", "\u{1F534}", "\u2611\uFE0F", "\u274C"];
 const [RIGHT, WRONG, YES, NO] = SHARE_EMOJI;
+
+// Always the live address, so a card copied while testing locally never shares localhost.
+export const PLAY_URL = "https://szarroug3.github.io/cluedle/";
 
 export function shareText(caseNumber, caseData, progress, rank) {
   const closed = progress.status === "closed";
@@ -15,5 +18,6 @@ export function shareText(caseNumber, caseData, progress, rank) {
     `Cipher ${progress.cipher.cracked ? YES : NO}  Liar ${progress.liar?.correct ? YES : NO}`,
     ...(closed && rank ? [`Rank: ${rank}`] : []),
     `“${caseData.shareLine}”`,
+    PLAY_URL,
   ].join("\n");
 }

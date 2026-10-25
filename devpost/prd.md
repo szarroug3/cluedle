@@ -131,6 +131,7 @@ Source: `scope.md > The POC Boundary` (cheap version).
   Cipher ☑️  Liar ☑️
   Rank: Seasoned Detective
   "The ink never lies."
+  https://szarroug3.github.io/cluedle/
   ```
 
   A gone-cold card reads `GONE COLD` in place of `CLOSED in 3/5` and shows no rank. Each case has its own closing noir line.

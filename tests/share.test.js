@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { shareText, SHARE_EMOJI } from "../src/game/share.js";
+import { shareText, SHARE_EMOJI, PLAY_URL } from "../src/game/share.js";
 import { cases } from "../src/cases/index.js";
 
 const caseData = cases[0];
@@ -25,6 +25,7 @@ test("a closed case reads like the case-file card", () => {
       "Cipher ☑️  Liar ☑️",
       "Rank: Seasoned Detective",
       `“${caseData.shareLine}”`,
+      "https://szarroug3.github.io/cluedle/",
     ].join("\n"),
   );
 });
@@ -46,4 +47,8 @@ test("no suspect, motive, or weapon names, and no emoji outside the allowed set"
     const emoji = text.match(/\p{Extended_Pictographic}️?/gu) ?? [];
     for (const e of emoji) assert.ok(SHARE_EMOJI.includes(e), `unexpected emoji ${e}`);
   }
+});
+
+test("the card ends with a link to play", () => {
+  for (const progress of [closed, cold]) assert.equal(shareText(1, caseData, progress, "Private Eye").split("\n").at(-1), PLAY_URL);
 });
