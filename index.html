@@ -17,6 +17,19 @@
   <p id="needs-server" class="needs-server">
     Cluedle needs a local server. Run <code>npx serve .</code> in the project folder and open the address it prints.
   </p>
+  <!-- On a phone held upright, suggest turning it sideways; it can be dismissed. -->
+  <div id="rotate-hint" class="rotate-hint" role="dialog" aria-label="Turn your phone sideways">
+    <div class="rotate-card">
+      <svg class="rotate-icon" viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="6" y="8" width="18" height="30" rx="3"/>
+        <rect x="30" y="30" width="30" height="18" rx="3"/>
+        <path d="M22 46q4 10 14 8 M36 54l-3-3 M36 54l-4 2"/>
+      </svg>
+      <p class="rotate-title">Turn your phone sideways</p>
+      <p class="rotate-text">The case board is laid out wide. Landscape gives you a much better view, and you can pinch to zoom in on cards.</p>
+      <button type="button" class="rotate-dismiss">Play anyway</button>
+    </div>
+  </div>
   <main id="app"></main>
   <script type="module" src="src/main.js"></script>
 </body>

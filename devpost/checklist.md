@@ -108,6 +108,7 @@ Build mode: fast
 - [x] Player-facing text made less AI-sounding: varied the repeated ending and description shapes across cases, cut epigram closers and stock phrases, plainer UI and README copy; rank line now about guesses, not speed (learner request)
 - [x] Smoother string on a crowded board: shadows drawn as plain offset lines instead of CSS filters, the string layer composited on its own, and a generous cap of 40 strings with an "Out of string" spool (learner found it still laggy with many strings)
 - [x] Touch: string no longer gets stuck or draws on a swipe. Cancelled touches end the drag, drawing on touch needs a long-press on a card, and a string is only kept when both ends land on pins (a tester's phone kept drawing string everywhere)
+- [x] Phones held upright get a "Turn your phone sideways" prompt with a Play anyway button; a full mobile layout stays out of scope for the PoC (a tester found it not mobile friendly)
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map

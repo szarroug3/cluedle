@@ -17,6 +17,9 @@ import { dateKey, caseNumberFor, caseIndexFor, msUntilNextCase } from "./game/da
 import * as saved from "./game/progress.js";
 
 document.getElementById("needs-server")?.remove();
+document.querySelector(".rotate-dismiss")?.addEventListener("click", () => {
+  document.getElementById("rotate-hint").classList.add("dismissed");
+});
 
 // ?case=N plays case N on any day, and ?fresh ignores saved progress: demo and testing aids.
 const params = new URLSearchParams(location.search);
