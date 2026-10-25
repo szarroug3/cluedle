@@ -132,6 +132,7 @@ export function openStatement(stage, suspect) {
     el("div", "card-label", "Statement of"),
     el("h2", "statement-name", suspect.name),
     el("div", "suspect-role", suspect.role),
+    el("p", "statement-desc", suspect.description),
     el("p", "statement-quote", `“${suspect.statement.text}”`),
   );
   openOverlay(stage, card);

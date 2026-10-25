@@ -262,6 +262,13 @@
   font-weight: 900;
   font-size: 30px;
 }
+.statement-desc {
+  margin: 12px 0 0;
+  font-family: var(--font-story);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
 .statement-quote {
   margin: 18px 0 0;
   padding-top: 14px;
