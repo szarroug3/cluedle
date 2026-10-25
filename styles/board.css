@@ -538,15 +538,23 @@
   z-index: 40;
   overflow: visible;
   pointer-events: none;
+  /* Its own compositing layer, so a moving string never makes the cards underneath repaint. */
+  will-change: transform;
 }
 .string { pointer-events: stroke; cursor: pointer; }
 .string-hit { fill: none; stroke: transparent; stroke-width: 14; }
+.string-shadow {
+  fill: none;
+  stroke: rgba(8, 5, 14, 0.45);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transform: translate(1.5px, 3.5px);
+}
 .string-line {
   fill: none;
   stroke: var(--red);
   stroke-width: 2.5;
   stroke-linecap: round;
-  filter: drop-shadow(1px 3px 2px rgba(0, 0, 0, 0.55));
 }
 .string:hover .string-line { stroke: var(--red-dark); stroke-dasharray: 6 4; }
 .stage.threading .string,
@@ -564,3 +572,12 @@
 .stage.drawing-string .pin-item { cursor: crosshair; }
 .pin-item.string-target > .pushpin { box-shadow: 0 0 0 4px var(--paper), 0 0 12px 4px var(--red); }
 .pin-item { user-select: none; -webkit-user-select: none; }
+
+/* Out of string: the spool dims, and shakes if you try to tie another. */
+.spool.empty { opacity: 0.35; }
+.spool.refuse { animation: spool-refuse 0.35s; }
+@keyframes spool-refuse {
+  25% { transform: translateX(-5px) rotate(-6deg); }
+  50% { transform: translateX(5px) rotate(6deg); }
+  75% { transform: translateX(-3px); }
+}

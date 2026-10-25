@@ -15,6 +15,7 @@ const GRAVITY = 0.35;
 const DAMPING = 0.965;
 const ITERATIONS = 8;
 const REST_SPEED = 0.02; // below this, everything is still and the loop stops
+const MAX_STRINGS = 40; // generous, but keeps a crowded board smooth
 
 function svg(tag, attrs = {}) {
   const node = document.createElementNS(SVG_NS, tag);
@@ -31,6 +32,19 @@ export function createString(stage, { strings, onChange }) {
 
   const layer = svg("svg", { class: "string-layer", "aria-hidden": "true" });
   board.append(layer);
+  const spoolLabel = spool.parentElement.querySelector(".rail-label");
+
+  // At the cap the spool dims and says so; taking a string down frees one up.
+  const full = () => strings.length >= MAX_STRINGS;
+  function updateSpool() {
+    spool.classList.toggle("empty", full());
+    if (spoolLabel) spoolLabel.textContent = full() ? "Out of string" : "String";
+  }
+  function refuse() {
+    spool.classList.remove("refuse");
+    void spool.offsetWidth;
+    spool.classList.add("refuse");
+  }
 
   let threading = false;
   let first = null;
@@ -65,11 +79,14 @@ export function createString(stage, { strings, onChange }) {
     }
     points[0] = { ...points[0], x: from.x, y: from.y };
     points[SEGMENTS] = { ...points[SEGMENTS], x: to.x, y: to.y };
+    // The shadow is a second, offset path rather than a CSS filter: filters are costly to repaint,
+    // and a moving string repaints the whole layer.
     const group = svg("g", { class: "string" });
     const hit = svg("path", { class: "string-hit" });
+    const shadow = svg("path", { class: "string-shadow" });
     const line = svg("path", { class: className });
-    group.append(hit, line);
-    return { points, rest: (length * SLACK) / SEGMENTS, group, hit, line, awake: false };
+    group.append(hit, shadow, line);
+    return { points, rest: (length * SLACK) / SEGMENTS, group, hit, shadow, line, awake: false };
   }
 
   function makeRope([a, b], hanging, carried = null) {
@@ -96,6 +113,7 @@ export function createString(stage, { strings, onChange }) {
     }
     d += ` L${p[p.length - 1].x.toFixed(1)} ${p[p.length - 1].y.toFixed(1)}`;
     rope.hit.setAttribute("d", d);
+    rope.shadow.setAttribute("d", d);
     rope.line.setAttribute("d", d);
   }
 
@@ -192,6 +210,7 @@ export function createString(stage, { strings, onChange }) {
   function addString(a, b, carried = null) {
     const exists = strings.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
     if (a === b || exists) return;
+    if (full()) return refuse();
     strings.push([a, b]);
     onChange(strings);
     const rope = makeRope([a, b], false, carried);
@@ -200,6 +219,8 @@ export function createString(stage, { strings, onChange }) {
     layer.append(rope.group);
     render(rope);
     wake(rope);
+    updateSpool();
+    if (full()) setThreading(false);
   }
 
   function tie(item) {
@@ -231,6 +252,10 @@ export function createString(stage, { strings, onChange }) {
     const to = toBoard(event.clientX, event.clientY);
     if (!drag.drawing) {
       if (Math.hypot(event.clientX - drag.x, event.clientY - drag.y) < DRAG_START) return;
+      if (full()) {
+        drag = null;
+        return refuse();
+      }
       drag.drawing = true;
       drag.item.classList.add("string-first");
       stage.classList.add("drawing-string");
@@ -294,12 +319,14 @@ export function createString(stage, { strings, onChange }) {
   });
 
   rebuild({ hanging: true });
+  updateSpool();
 
   return {
     // Handles a click if it belongs to the string; returns whether it did.
     handleClick(event) {
       if (event.target.closest(".spool")) {
-        setThreading(!threading);
+        if (full() && !threading) refuse();
+        else setThreading(!threading);
         return true;
       }
       if (threading) {
@@ -315,6 +342,7 @@ export function createString(stage, { strings, onChange }) {
         ropes.splice(ropes.indexOf(rope), 1);
         strings.splice(strings.findIndex(([x, y]) => x === rope.a && y === rope.b), 1);
         onChange(strings);
+        updateSpool();
         return true;
       }
       return false;
