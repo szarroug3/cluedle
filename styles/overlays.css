@@ -558,19 +558,45 @@
 }
 .index-remove:hover { text-decoration: underline; }
 
+/* The notepad lies open beside the board and any open card, above both, until it's closed. */
 .notepad {
-  width: 560px;
-  padding: 26px 30px 24px 56px;
-  border-top: 14px solid #2a2232;
+  position: absolute;
+  right: 28px;
+  bottom: 128px;
+  z-index: 102;
+  width: 380px;
+  padding: 0 18px 14px 46px;
   background:
-    linear-gradient(90deg, transparent 40px, rgba(179, 38, 58, 0.45) 40px 41px, transparent 41px),
+    linear-gradient(90deg, transparent 32px, rgba(179, 38, 58, 0.45) 32px 33px, transparent 33px),
     var(--paper);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.7);
+  transform: rotate(-0.6deg);
+}
+.notepad[hidden] { display: none; }
+.notepad-binding {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 -18px 0 -46px;
+  padding: 6px 10px 6px 46px;
+  background: #2a2232;
+  cursor: grab;
+  touch-action: none;
+}
+.notepad-binding .card-label { color: rgba(239, 233, 221, 0.7); }
+.notepad-close {
+  border: 0;
+  background: none;
+  color: var(--paper);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
 }
 .notepad-input {
-  height: 420px;
-  margin-top: 8px;
-  font-size: 28px;
-  line-height: 36px;
-  background: repeating-linear-gradient(transparent 0 35px, rgba(47, 90, 168, 0.35) 35px 36px);
+  height: 360px;
+  margin-top: 6px;
+  font-size: 26px;
+  line-height: 34px;
+  background: repeating-linear-gradient(transparent 0 33px, rgba(47, 90, 168, 0.35) 33px 34px);
   background-attachment: local;
 }

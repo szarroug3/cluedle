@@ -103,7 +103,7 @@ Source: `scope.md > The Unique Kernel`.
 Added after launch, so players can build a timeline and keep track of their thinking. None of it touches the rules or the rank, and all of it is saved with the day's progress.
 - **Moving cards:** dragging a card by its paper moves it anywhere on the board; its strings stay tied and follow. Dragging from its pin still ties string. On a touch screen, press and hold first.
 - **Index cards:** a stack of blank index cards on the rail. Taking one pins it to the board and opens it to write a short line. It moves and ties string like any card, and can be taken down, which takes its strings with it. Up to 10.
-- **Notepad:** a notepad on the rail opens a ruled page for longer notes.
+- **Notepad:** a notepad on the rail opens a ruled page for longer notes. It lies open beside the board and stays open while a statement or scrap is up, so the player can read and write at once. It can be dragged aside by its binding and closed from the rail or its ×.
 - **Grease pencils:** a red and a blue pencil on the rail. They stay in reach while a statement or a scrap is open. With one in hand, selecting words in the newspaper story, a suspect's description or statement, a clue, or a scrap brought up close marks them in that colour, snapped to whole words. Clicking a mark with a pencil in hand rubs it out. Only red and blue, per the color rule.
 - [ ] A moved card stays where it was put after leaving and coming back the same day, and its strings follow it.
 - [ ] An index card can be written on, moved, tied with string, and taken down.

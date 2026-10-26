@@ -1,6 +1,7 @@
 // The player's own notes. A stack of blank index cards on the rail: take one, write a line on it
 // ("9:15 cab", "scream on a record?"), and it's pinned to the board like any card, so it can be
-// moved and tied with string. And a notepad on the rail for longer working. Neither touches the
+// moved and tied with string. And a notepad on the rail for longer working, which stays open beside
+// whatever else the player has open. Neither touches the
 // rules; both are saved with the day's progress.
 import { openOverlay } from "./decoder.js";
 
@@ -28,11 +29,11 @@ export function createNotes(stage, { progress, string, mover, onChange }) {
   const tools = el("div", "desk-tools");
   const stack = el("button", "card-stack");
   stack.type = "button";
-  const pad = el("button", "notepad-button");
-  pad.type = "button";
-  pad.setAttribute("aria-label", "Open the notepad");
-  pad.append(el("span", "notepad-lines"));
-  tools.append(stack, pad);
+  const padButton = el("button", "notepad-button");
+  padButton.type = "button";
+  padButton.setAttribute("aria-label", "Open the notepad");
+  padButton.append(el("span", "notepad-lines"));
+  tools.append(stack, padButton);
   group.append(tools, el("div", "rail-label", "Notes"));
   stage.querySelector(".case-tag").before(group);
 
@@ -104,23 +105,51 @@ export function createNotes(stage, { progress, string, mover, onChange }) {
     edit(note);
   }
 
-  function openPad() {
-    const card = el("div", "paper notepad");
-    card.setAttribute("role", "dialog");
-    card.setAttribute("aria-label", "Notepad");
-    const text = el("textarea", "notepad-input");
-    text.maxLength = PAD_LENGTH;
-    text.value = progress.notepad;
-    text.setAttribute("aria-label", "Notepad");
-    text.placeholder = "Times, names, hunches…";
-    text.addEventListener("input", () => {
-      progress.notepad = text.value;
-      onChange();
-    });
-    card.append(el("div", "card-label", "Notepad"), text);
-    openOverlay(stage, card);
-    text.focus();
+  // The notepad lies open beside everything else, so the player can read a statement or a scrap and
+  // write it down at the same time. Drag it by its binding to move it out of the way.
+  const pad = el("section", "paper notepad");
+  pad.setAttribute("aria-label", "Notepad");
+  pad.hidden = true;
+  const binding = el("div", "notepad-binding");
+  const shut = el("button", "notepad-close", "×");
+  shut.type = "button";
+  shut.setAttribute("aria-label", "Close the notepad");
+  binding.append(el("span", "card-label", "Notepad"), shut);
+  const padText = el("textarea", "notepad-input");
+  padText.maxLength = PAD_LENGTH;
+  padText.value = progress.notepad;
+  padText.setAttribute("aria-label", "Notepad");
+  padText.placeholder = "Times, names, hunches…";
+  padText.addEventListener("input", () => {
+    progress.notepad = padText.value;
+    onChange();
+  });
+  pad.append(binding, padText);
+  stage.append(pad);
+
+  function togglePad(open = pad.hidden) {
+    pad.hidden = !open;
+    padButton.classList.toggle("open", open);
+    if (open) padText.focus();
   }
+  shut.addEventListener("click", () => togglePad(false));
+
+  binding.addEventListener("pointerdown", (event) => {
+    if (event.target.closest(".notepad-close")) return;
+    const scale = stage.getBoundingClientRect().width / stage.offsetWidth || 1;
+    const start = { x: event.clientX, y: event.clientY, left: pad.offsetLeft, top: pad.offsetTop };
+    const move = (e) => {
+      const x = Math.min(Math.max(start.left + (e.clientX - start.x) / scale, 0), stage.offsetWidth - pad.offsetWidth);
+      const y = Math.min(Math.max(start.top + (e.clientY - start.y) / scale, 0), stage.offsetHeight - pad.offsetHeight);
+      Object.assign(pad.style, { left: `${x}px`, top: `${y}px`, right: "auto", bottom: "auto" });
+    };
+    const stop = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", stop);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", stop);
+  });
 
   refreshStack();
 
@@ -137,7 +166,7 @@ export function createNotes(stage, { progress, string, mover, onChange }) {
         return true;
       }
       if (event.target.closest(".notepad-button")) {
-        openPad();
+        togglePad();
         return true;
       }
       const item = event.target.closest(".pin-note");

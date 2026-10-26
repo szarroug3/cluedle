@@ -900,7 +900,9 @@
 /* Two grease pencils standing in a cup; the one in hand rises. */
 /* The pencils stay in reach above an open card, so the player can mark what they're reading. */
 .rail-group.pencils { position: relative; }
-.stage:has(.overlay :is(.statement-open, .close-look)) .rail-group.pencils { z-index: 101; }
+.rail-group.desk { position: relative; }
+.stage:has(.overlay :is(.statement-open, .close-look)) :is(.rail-group.pencils, .rail-group.desk) { z-index: 101; }
+.notepad-button.open { transform: translateY(-6px); box-shadow: 0 0 0 3px var(--paper), 0 6px 10px rgba(0, 0, 0, 0.45); }
 .pencil-cup { display: flex; align-items: flex-end; gap: 8px; height: 52px; }
 .pencil {
   position: relative;

@@ -152,7 +152,7 @@ PRD ref: `prd.md > Red String`.
 
 ### Notes (`src/ui/notes.js`)
 - Index cards: `note:<id>` pins built from `progress.notes`, landing in the open corner below the photo. Clicking one opens it to write (90 characters) or take down, which drops its strings with `string.drop(pinId)`. Up to 10.
-- Notepad: an overlay with a ruled textarea (3,000 characters), saved as you type.
+- Notepad: a floating panel on the stage, above the board and any open card, with a ruled textarea (3,000 characters) saved as you type. Its binding drags it; the rail button and its × close it. The notes rail button, like the pencils, stays clickable over an open statement or close-up.
 
 ### Grease Pencils (`src/ui/pencil.js`)
 - Red and blue pencils on the rail; holding one sets `.marking` on the stage, which makes the story, suspect descriptions, statements, clues, and close-up scrap notes selectable. While a statement or close-up is open the pencils sit above it so they can still be picked up and stops cards moving or tying string. Picking up a pencil puts the stamp down, and the other way round.
