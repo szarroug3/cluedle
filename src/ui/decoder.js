@@ -170,6 +170,17 @@ export function openCloseLook(stage, { kind, label, note, code, doodle, seed = "
   return card;
 }
 
+// A clue brought forward: when it's clicked, and the moment a miss unlocks it.
+export function openClue(stage, index, text) {
+  const card = el("div", "paper clue clue-open");
+  card.setAttribute("role", "dialog");
+  card.setAttribute("aria-label", `Clue ${index + 1}`);
+  card.dataset.clue = String(index);
+  card.append(el("div", "card-label", `Clue ${index + 1}`), el("p", "clue-text", text));
+  openOverlay(stage, card);
+  return card;
+}
+
 // A suspect's statement, brought forward when their card is clicked.
 export function openStatement(stage, suspect) {
   const card = el("div", "paper statement-open");

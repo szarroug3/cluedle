@@ -16,9 +16,9 @@ function el(tag, className, text) {
   return node;
 }
 
-// New cards land in the open corner below the photo, each a little lower and to the right.
+// New cards land in the open corner below the photo, each a little lower and to the left.
 function landingSpot(count) {
-  return { x: 1010 + (count % 5) * 24, y: 636 + (count % 5) * 16, r: ((count * 7) % 5) - 2 };
+  return { x: 1350 - (count % 5) * 22, y: 676 + (count % 5) * 14, r: ((count * 7) % 5) - 2 };
 }
 
 export function createNotes(stage, { progress, string, mover, onChange }) {

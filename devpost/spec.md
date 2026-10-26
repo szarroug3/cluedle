@@ -129,7 +129,7 @@ A short overlay covering the stamps, the five guesses, "something on this board 
 PRD ref: `prd.md > Case File and How to Play`.
 
 ### Murder Board (`src/ui/board.js`)
-- Lays out pins from the case data: the newspaper clipping, suspect cards (clicking one brings its statement forward), motive cards, weapon cards, clue slots, the photo, three evidence scraps (the code hides in one of them, the photo, or the clipping's personals), and the blank card. The edges hold the stamp tray, the guesses left (five bullet holes or matches), and **?**.
+- Lays out pins from the case data: suspect cards three across and two down, each with its description and typed statement (clicking one brings the statement forward), the newspaper clipping, motive cards, weapon cards, clue slots, the photo, three evidence scraps (the code hides in one of them, the photo, or the clipping's personals), and the blank card. The edges hold the stamp tray, the guesses left (five bullet holes or matches), and **?**.
 - Positions come from a fixed layout per pin type, with an optional `pos` per pin in the case data for hand-tuning.
 - Every pin has a stable id, which string, stamps, and progress use.
 PRD ref: `prd.md > Screens and Layout`.

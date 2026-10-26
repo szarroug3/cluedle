@@ -3,7 +3,7 @@
 // after each change.
 import { cases } from "./cases/index.js";
 import { renderBoard, updateScrawl, fillBlankCard, pinClue, markGuessSpent, STAGE_WIDTH, STAGE_HEIGHT } from "./ui/board.js";
-import { openCloseLook, openBlankCard, openStatement } from "./ui/decoder.js";
+import { openCloseLook, openBlankCard, openStatement, openClue } from "./ui/decoder.js";
 import { createStamps } from "./ui/stamps.js";
 import { createString } from "./ui/string.js";
 import { createMover } from "./ui/move.js";
@@ -88,6 +88,11 @@ function openCard() {
   });
 }
 
+function showClue(index) {
+  if (stage.querySelector(".overlay")) return;
+  pencil.apply(openClue(stage, index, caseData.clues[index]));
+}
+
 const byId = (list, key) => (id) => list.find((item) => item.id === id)[key];
 const stamps = createStamps(stage, {
   names: {
@@ -118,6 +123,8 @@ const stamps = createStamps(stage, {
     if (unlockedClueIndex != null) {
       pinClue(stage, unlockedClueIndex, caseData.clues[unlockedClueIndex]);
       pencil.apply(stage);
+      // A new clue comes straight up close, once the stamps have settled, so it can't be missed.
+      setTimeout(() => progress.status === "playing" && showClue(unlockedClueIndex), 900);
     }
     if (status !== "playing") setTimeout(showCaseEnding, 700);
     return step;
@@ -180,6 +187,11 @@ stage.addEventListener("click", (event) => {
   }
   if (event.target.closest('[data-pin="blank-card"]')) {
     openCard();
+    return;
+  }
+  const clue = event.target.closest(".pin-clue");
+  if (clue) {
+    showClue(Number(clue.dataset.pin.replace("clue:", "")));
     return;
   }
   const suspectCard = event.target.closest(".pin-suspect");

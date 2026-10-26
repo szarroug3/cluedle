@@ -10,8 +10,8 @@ function el(tag, className, text) {
 
 const STEPS = [
   ["Accuse", "Pick up the GUILTY stamp. Stamp a suspect, a motive, and a weapon, then make the accusation."],
-  ["Five guesses", "Each accusation tells you how many of the three you got right, never which. Every miss pins up a new clue."],
-  ["The liar", "Click a suspect to read their statement. One of them is lying. Stamp LIAR on their card and say what really happened. One shot; it costs no guesses."],
+  ["Five guesses", "Each accusation tells you how many of the three you got right, never which. Every miss pins up a new clue; click a clue to read it again."],
+  ["The liar", "Each suspect\u2019s statement is on their card. One of them is lying. Stamp LIAR on their card and say what really happened. One shot; it costs no guesses."],
   ["The message", "Something on this board is hiding a message. Find it, crack it on paper, and write it on the blank card. Three tries, and every wrong one costs ink."],
   ["Red string", "Drag from a card\u2019s pin to another card to tie string between them. On a phone, press and hold the pin first. Click a string to take it down."],
   ["Your working", "Drag a card by its paper to move it; its strings follow. Take an index card from the rail to pin up a note, keep longer notes in the notepad, and mark words red or blue with the pencils, even on a card you have open. None of it affects your score."],

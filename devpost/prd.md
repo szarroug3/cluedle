@@ -13,11 +13,11 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 
 1. **Case file.** The player opens Cluedle and sees today's case as a closed case file: case number, date, case title, and an **Open the file** action.
 2. **How to play (first visit only).** Before the first case opens, a short how-to-play explains the stamps, the five guesses, the hidden cipher, and the red string. It can be reopened later from the board.
-3. **The board.** Opening the file shows the murder board: the newspaper-clipping story, 6 suspect cards (each holding that person's statement), 6 motive cards, 6 weapon cards, a tray with the **GUILTY** and **LIAR** stamps, a red-string spool, and the five guesses remaining.
-4. **Read.** The player reads the story, and clicks a suspect card to read that person's statement. They can draw red string between any pins to track their thinking.
+3. **The board.** Opening the file shows the murder board: the newspaper-clipping story, 6 suspect cards (each showing that person's description and typed statement), 6 motive cards, 6 weapon cards, a tray with the **GUILTY** and **LIAR** stamps, the player's notes and pencils, and the five guesses remaining.
+4. **Read.** The player reads the story and the statements typed on each suspect card, and can click a card to bring the statement up close. They can draw red string between any pins to track their thinking.
 5. **Find and crack the cipher (any time, optional).** Every scrap on the board can be brought forward to read up close, and one of them carries a line in code, written in the same hand or type as the paper around it. Nothing marks which. The decoded message is a small extra clue, never the answer. A sharp-eyed player works out which scrap is the code, finds its key in the story, and decodes it on paper. They write the message on the **blank card** pinned to the board, using its two sliding letter strips as a helper (clicking a letter writes it), and pin it. They get three tries; each wrong answer runs ink over more of the code for good.
 6. **Accuse.** The player picks up the **GUILTY** stamp, stamps a suspect card, a motive card, and a weapon card, and confirms. The guess shows how many of the three are right, but not which.
-7. **Miss → new clue.** A wrong accusation uses a guess and pins up a new plain clue.
+7. **Miss → new clue.** A wrong accusation uses a guess and pins up a new plain clue, which comes straight up close so it can't be missed.
 8. **Catch the liar (any time, optional).** The player stamps **LIAR** on a suspect's card and picks what really happened from a few options. It's free, but they get one shot.
 9. **The case ends.** A right accusation within five guesses closes the case: **CASE CLOSED**, what really happened, who was saved, and the player's detective rank. Five misses: **GONE COLD**, what really happened, and what not catching the culprit cost.
 10. **Share.** The player copies a share card to the clipboard.
@@ -28,7 +28,8 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 - **Case file cover** — the first thing seen each day. Case number, date, title, **Open the file**.
 - **How to play** — a short overlay shown once before the first case, and reopenable from the board.
 - **The murder board** — the one main surface. Everything in the case lives here as pinned items: newspaper-clipping story, suspect cards, motive cards, weapon cards, unlocked clues, scraps of evidence (the code hides in one of them, the photo, or the clipping), and the blank card. The stamp tray and guesses remaining sit at the edge of the board.
-- **Statement** — a suspect's statement brought forward over the board when their card is clicked.
+- **Statement** — typed on each suspect's card, and brought forward over the board when the card is clicked.
+- **Clue close-up** — a clue brought forward when it's unlocked or clicked.
 - **Close look** — any scrap brought forward over the board to read; every scrap looks the same here.
 - **Blank card** — brought forward over the board, with a space to write the decoded message, two sliding A–Z strips as a helper (click a letter to write it), **Pin it**, and the tries remaining. Closing it returns to the board.
 - **Case ending** — over the board: **CASE CLOSED** or **GONE COLD**, what happened, the consequences, the detective rank, and **Copy share card**. On a return visit, it also shows the countdown to the next case.
@@ -63,11 +64,12 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 - [ ] Earlier stamps stay visible on the cards, numbered, after later guesses.
 
 ### Clues Unlocking
-- Each wrong accusation pins up the case's next plain clue.
-- [ ] After each wrong guess, one new clue appears on the board.
+- Each wrong accusation pins up the case's next plain clue and brings it up close. Any pinned clue opens up close when clicked.
+- [ ] After each wrong guess, one new clue appears on the board and opens up close.
+- [ ] Clicking a pinned clue opens it.
 
 ### Catching the Liar With the LIAR Stamp
-- Clicking a suspect's card brings their statement forward to read.
+- Each suspect's card shows their statement typed under their description. Clicking the card brings it forward to read.
 - The player stamps **LIAR** on a suspect's card, then picks what really happened from a few options about that suspect's statement.
 - It doesn't use a guess, but the player gets one shot per case.
 - Right or wrong is shown by the LIAR stamp's color: blue for right, red for wrong.
@@ -104,7 +106,7 @@ Added after launch, so players can build a timeline and keep track of their thin
 - **Moving cards:** dragging a card by its paper moves it anywhere on the board; its strings stay tied and follow. Dragging from its pin still ties string. On a touch screen, press and hold first.
 - **Index cards:** a stack of blank index cards on the rail. Taking one pins it to the board and opens it to write a short line. It moves and ties string like any card, and can be taken down, which takes its strings with it. Up to 10.
 - **Notepad:** a notepad on the rail opens a ruled page for longer notes. It lies open beside the board and stays open while a statement or scrap is up, so the player can read and write at once. It can be dragged aside by its binding and closed from the rail or its ×.
-- **Grease pencils:** a red and a blue pencil on the rail. They stay in reach while a statement or a scrap is open. With one in hand, selecting words in the newspaper story, a suspect's description or statement, a clue, or a scrap brought up close marks them in that colour, snapped to whole words. Clicking a mark with a pencil in hand rubs it out. Only red and blue, per the color rule.
+- **Grease pencils:** a red and a blue pencil on the rail. They stay in reach while a statement, clue, or scrap is open. Marks on a statement or a clue show on the card and in its close-up alike. With one in hand, selecting words in the newspaper story, a suspect's description or statement, a clue, or a scrap brought up close marks them in that colour, snapped to whole words. Clicking a mark with a pencil in hand rubs it out. Only red and blue, per the color rule.
 - [ ] A moved card stays where it was put after leaving and coming back the same day, and its strings follow it.
 - [ ] An index card can be written on, moved, tied with string, and taken down.
 - [ ] Notepad text is still there after leaving and coming back the same day.

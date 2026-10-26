@@ -216,13 +216,15 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
     });
   }
 
-  stage.addEventListener("pointermove", (event) => {
+  // The stamp in hand rides on the pointer, from the moment it's picked up.
+  function follow(event) {
     if (!held) return;
     const box = stage.getBoundingClientRect();
     const scale = box.width / stage.offsetWidth;
     ghost.style.left = `${(event.clientX - box.left) / scale}px`;
     ghost.style.top = `${(event.clientY - box.top) / scale}px`;
-  });
+  }
+  stage.addEventListener("pointermove", follow);
   for (const [kind, tray] of Object.entries(trays)) {
     tray.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
@@ -242,10 +244,12 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
     handleClick(event) {
       if (event.target.closest(".stamp-guilty")) {
         pickUp("guilty");
+        follow(event);
         return true;
       }
       if (event.target.closest(".stamp-liar")) {
         pickUp("liar");
+        follow(event);
         return true;
       }
       if (!held) return false;

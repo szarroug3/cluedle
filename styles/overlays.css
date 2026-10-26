@@ -272,13 +272,17 @@
   line-height: 1.5;
   color: var(--ink-soft);
 }
+/* The statement on the same typed slip as on the card, just bigger. */
 .statement-quote {
-  margin: 18px 0 0;
-  padding-top: 14px;
-  border-top: 1px dashed rgba(31, 27, 38, 0.4);
+  margin: 18px -8px 0;
+  padding: 12px 16px 14px;
+  background: #f6f2ea;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  border-left: 5px solid var(--purple);
   font-family: var(--font-type);
   font-size: 22px;
   line-height: 1.45;
+  color: var(--ink);
 }
 
 /* ---- The case ending ---- */
@@ -600,3 +604,13 @@
   background: repeating-linear-gradient(transparent 0 33px, rgba(47, 90, 168, 0.35) 33px 34px);
   background-attachment: local;
 }
+
+/* A clue brought up close. */
+.clue.clue-open {
+  width: 520px;
+  min-height: 0;
+  padding: 24px 32px 28px;
+  transform: rotate(-0.6deg);
+}
+.clue-open .card-label { font-size: 13px; }
+.clue-open .clue-text { margin-top: 12px; font-size: 22px; line-height: 1.45; }

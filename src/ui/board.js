@@ -8,44 +8,44 @@ export const STAGE_HEIGHT = 1000;
 // Default positions (inside the board's frame) and tilt for each pin type.
 // A pin in the case data can override its slot with `pos: { x, y, r }`.
 const LAYOUT = {
-  clipping: { x: 492, y: 22, r: -0.8 },
+  clipping: { x: 768, y: 16, r: -0.8 },
   suspects: [
-    { x: 34, y: 22, r: -2 },
-    { x: 258, y: 30, r: 1.5 },
-    { x: 38, y: 202, r: 1 },
-    { x: 262, y: 210, r: -1.2 },
-    { x: 34, y: 382, r: -0.6 },
-    { x: 258, y: 390, r: 1.8 },
+    { x: 16, y: 14, r: -1.6 },
+    { x: 264, y: 20, r: 1.2 },
+    { x: 512, y: 14, r: -0.8 },
+    { x: 18, y: 274, r: 1 },
+    { x: 266, y: 280, r: -1.2 },
+    { x: 514, y: 274, r: 1.5 },
   ],
   motives: [
-    { x: 494, y: 494, r: 1 },
-    { x: 674, y: 500, r: -1.2 },
-    { x: 854, y: 494, r: 0.6 },
-    { x: 498, y: 596, r: -0.8 },
-    { x: 678, y: 602, r: 1.4 },
-    { x: 856, y: 596, r: -1 },
+    { x: 768, y: 426, r: 1 },
+    { x: 952, y: 432, r: -1.2 },
+    { x: 1136, y: 426, r: 0.6 },
+    { x: 772, y: 520, r: -0.8 },
+    { x: 954, y: 526, r: 1.4 },
+    { x: 1138, y: 520, r: -1 },
   ],
   weapons: [
-    { x: 1058, y: 24, r: 1.2 },
-    { x: 1306, y: 30, r: -1 },
-    { x: 1062, y: 150, r: -1.5 },
-    { x: 1310, y: 156, r: 0.8 },
-    { x: 1058, y: 276, r: 0.6 },
-    { x: 1306, y: 282, r: -1.4 },
+    { x: 1326, y: 14, r: 1.2 },
+    { x: 1322, y: 88, r: -1 },
+    { x: 1326, y: 162, r: -1.5 },
+    { x: 1322, y: 236, r: 0.8 },
+    { x: 1326, y: 310, r: 0.6 },
+    { x: 1322, y: 384, r: -1.4 },
   ],
-  photo: { x: 1066, y: 440, r: 3 },
+  photo: { x: 1330, y: 470, r: 3 },
   evidence: [
-    { x: 1316, y: 430, r: -4 },
-    { x: 506, y: 698, r: 1.5 },
-    { x: 1316, y: 600, r: 2.5 },
+    { x: 498, y: 540, r: -2 },
+    { x: 790, y: 630, r: 1.5 },
+    { x: 1050, y: 630, r: 2.5 },
   ],
   clues: [
-    { x: 34, y: 580, r: -1 },
-    { x: 258, y: 586, r: 1.2 },
-    { x: 36, y: 714, r: 0.6 },
-    { x: 260, y: 718, r: -1.3 },
+    { x: 16, y: 538, r: -1 },
+    { x: 250, y: 544, r: 1.2 },
+    { x: 18, y: 684, r: 0.6 },
+    { x: 252, y: 688, r: -1.3 },
   ],
-  blankCard: { x: 770, y: 704, r: -2 },
+  blankCard: { x: 488, y: 714, r: -2 },
 };
 
 const PORTRAIT = `
@@ -233,8 +233,9 @@ function suspectPaper(suspect, index) {
   heading.append(el("div", "card-label", `Suspect No. ${index + 1}`), el("h2", "suspect-name", suspect.name), el("div", "suspect-role", suspect.role));
   const top = el("div", "suspect-top");
   top.append(portrait, heading);
-  // A typed slip peeking out from under the card: their statement, read by clicking the card.
-  paper.append(top, el("p", "suspect-desc", suspect.description), el("div", "statement-tab", "Statement \u25b8"));
+  // Their statement, typed on the card itself so marks made on it stay in sight. Clicking the card
+  // brings it up close. The quotes match the close-up's, so a mark lands on the same words in both.
+  paper.append(top, el("p", "suspect-desc", suspect.description), el("p", "suspect-statement", `\u201c${suspect.statement.text}\u201d`));
   return paper;
 }
 
@@ -307,12 +308,14 @@ function evidencePaper(item, caseData, scrawlText) {
   return paper;
 }
 
-// The blank card where the player writes the decoded message. Once cracked, it holds the message.
+// The blank card where the player writes the decoded message. It says what it's for, so players
+// know to open it once they've cracked something. Once cracked, it holds the message.
 function blankCardPaper() {
   const paper = el("div", "paper blank-card");
   paper.setAttribute("role", "button");
   paper.setAttribute("aria-label", "Blank card: write a decoded message");
   paper.tabIndex = 0;
+  paper.append(el("div", "card-label", "Decoded message"), el("p", "blank-card-hint", "Cracked the code? Click to write the message here."));
   return paper;
 }
 
@@ -324,7 +327,8 @@ export function fillBlankCard(stage, text) {
   [...text].forEach((ch, i) => body.append(ch === BLOT ? inkBlot(i) : ch));
   paper.classList.add("filled");
   paper.setAttribute("aria-label", "Decoded message");
-  paper.append(el("div", "card-label", "Decoded"), body);
+  paper.querySelector(".blank-card-hint").remove();
+  paper.append(body);
   item.classList.add("just-pinned");
 }
 

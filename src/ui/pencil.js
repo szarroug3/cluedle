@@ -16,8 +16,11 @@ function el(tag, className, text) {
 const MARKABLE = [
   { selector: ".pin-clipping .story", target: () => "clipping" },
   { selector: ".pin-suspect .suspect-desc", target: (node) => node.closest(".pin-item").dataset.pin },
+  { selector: ".pin-suspect .suspect-statement", target: (node) => `statement:${node.closest(".pin-item").dataset.pin.replace("suspect:", "")}` },
   { selector: ".pin-clue .clue-text", target: (node) => node.closest(".pin-item").dataset.pin },
-  { selector: ".statement-open .statement-desc", target: (node) => `desc:${node.closest("[data-suspect]").dataset.suspect}` },
+  { selector: ".clue-open .clue-text", target: (node) => `clue:${node.closest("[data-clue]").dataset.clue}` },
+  // The close-up shares its marks with the card on the board.
+  { selector: ".statement-open .statement-desc", target: (node) => `suspect:${node.closest("[data-suspect]").dataset.suspect}` },
   { selector: ".statement-open .statement-quote", target: (node) => `statement:${node.closest("[data-suspect]").dataset.suspect}` },
   { selector: ".close-look .close-look-note:not(.close-look-code)", target: (node) => `look:${node.closest("[data-look]").dataset.look}` },
 ];
@@ -136,7 +139,8 @@ export function createPencil(stage, { marks, onChange, onPickUp }) {
     if (next === marks) return;
     marks.splice(0, marks.length, ...next);
     onChange();
-    apply(start.host.closest(".overlay") ?? stage);
+    // Redraw everywhere: a statement's marks show on its card and in its close-up alike.
+    apply(stage);
     justMarked = true;
     setTimeout(() => (justMarked = false), 0);
   });
@@ -165,7 +169,7 @@ export function createPencil(stage, { marks, onChange, onPickUp }) {
       if (mark) {
         marks.splice(marks.findIndex((m) => String(m.id) === mark.dataset.mark), 1);
         onChange();
-        apply(mark.closest(".overlay") ?? stage);
+        apply(stage);
         return true;
       }
       return false;

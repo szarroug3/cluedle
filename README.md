@@ -8,8 +8,8 @@ Everything is hand-written and rule-based. There's no AI at runtime, no server, 
 
 ## How to play
 
-- Pick up the GUILTY stamp, stamp a suspect, a motive, and a weapon, then make the accusation. Each guess tells you how many of the three are right, never which ones. Every miss pins up a new clue.
-- Click a suspect to read their statement. One of them is lying. Stamp LIAR on that suspect's card and say what really happened. You get one shot, and it doesn't use a guess.
+- Pick up the GUILTY stamp, stamp a suspect, a motive, and a weapon, then make the accusation. Each guess tells you how many of the three are right, never which ones. Every miss pins up a new clue and shows it to you; click any clue to read it again.
+- Each suspect's statement is typed on their card; click the card to read it up close. One of them is lying. Stamp LIAR on that suspect's card and say what really happened. You get one shot, and it doesn't use a guess.
 - One scrap on the board is written in code. Work out which one, find its key in the story, decode it on paper, and write the message on the blank card. You get three tries, and every wrong one runs more ink over the code.
 - Drag from a card's pin to another card to tie red string between them. On a phone, press and hold the pin first. Click a string to take it down.
 - Drag a card by its paper to move it, say to line things up in the order they happened. Its strings follow.
