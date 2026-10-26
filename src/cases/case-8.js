@@ -66,7 +66,7 @@ export default {
       },
     },
     {
-      id: "whitcomb",
+      id: "ames",
       name: "Harlan Ames",
       role: "The publisher",
       description: "Owns the Courier and wants to sell it to a Chicago chain. Brisco swore the newsroom would walk out first.",
@@ -76,8 +76,8 @@ export default {
       },
     },
     {
-      id: "wren",
-      name: "Opal Dunning",
+      id: "quarles",
+      name: "Thelma Quarles",
       role: "The morgue clerk",
       description: "Keeps the paper’s files of old clippings. Has carried a torch for Walter Brisco since before his marriage.",
       statement: {
@@ -106,26 +106,26 @@ export default {
   ],
 
   clues: [
-    "The coroner: one blow behind the ear from something heavy and rounded. No struggle and no defensive wounds.",
+    "The city pathologist: one blow to the temple from something heavy with a curved edge. No struggle. He never turned round.",
     "On Brisco’s blotter, in green ink: “9 a.m. — have it out with him. Bring the court records.”",
-    "The bronze eagle paperweight turned up in the washroom sink, scrubbed clean but for one grey hair caught in a wing.",
+    "The bronze eagle paperweight turned up in the washroom sink, scrubbed clean but for a fleck of green ink under one wing.",
     "The county clerk: not one dockman quoted in the waterfront series appears on any union roll, payroll, or census.",
   ],
 
   photo: { caption: "The city room, after midnight", scene: "office" },
 
-  // Decoys, plus the morgue slip Brisco signed, which carries the scrawl.
+  // A personal ad in the Courier carries the code; the morgue request and the diner tab fix the times.
   evidence: [
-    { id: "diner", kind: "matchbook", label: "Gus’s All-Night Diner", note: "MAin 6-2290 — R.D. tab" },
-    { id: "morgue-slip", kind: "ticket", label: "Courier Morgue · Slip 4471", note: "waterfront ser. 1–6 — W.B." },
-    { id: "nitro", kind: "prescription", label: "Dr. L. Amsel", note: "nitro 1/150 gr prn — H.W." },
+    { id: "personal", kind: "classified", label: "Courier Personals · Jan. 13", note: "W.B. — Walked every pier like you asked. Write me. —A friend" },
+    { id: "morgue-slip", kind: "report", label: "Courier Morgue · Request 4471", note: "11 p.m. Waterfront series, parts 1–6, to night desk. — W.B." },
+    { id: "diner", kind: "receipt", label: "Gus’s All-Night Diner", note: "Counter, R.D.: coffee ×4, apple pie. In 1:05 a.m. Paid 2:55." },
   ],
 
   cipher: {
-    hiddenOn: "evidence:morgue-slip",
-    plaintext: "NO SUCH MEN ON THE DOCKS. HIS SOURCES ARE GHOSTS. FIRE HIM AT NINE.",
+    hiddenOn: "evidence:personal",
+    plaintext: "NOT ONE NAME IN THE SERIES CHECKS OUT ON THE PIERS.",
     shift: 17,
-    keepWords: ["DOCKS", "GHOSTS"],
+    keepWords: ["SERIES"],
     doodle: "pen",
   },
 
@@ -148,8 +148,8 @@ export default {
         "It was Roy Danner, hiding a prize series he had made up from whole cloth. He struck Brisco with the bronze " +
         "eagle from the crime desk, then wrote the story himself and moved the time of death to fit his alibi.",
       cost:
-        "The police took the Courier at its word and charged Spiro Petrakis from the press room. Danner won his prize " +
-        "that fall and took over Brisco’s desk.",
+        "The police took the Courier at its word and charged Spiro Petrakis. He sat a year in the county jail before a " +
+        "jury let him go. By then Danner had his prize.",
     },
   },
 

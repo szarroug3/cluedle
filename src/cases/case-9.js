@@ -23,14 +23,14 @@ export default {
       id: "brennan",
       name: "Joe Brennan",
       role: "The opponent",
-      description: "Twenty-four, and he hits like a mule. Seen twice this fall at the Starlight with Rourke’s wife.",
+      description: "Twenty-four, and he hits like a mule. Seen twice this fall at the Peacock Lounge with Rourke’s wife.",
       statement: {
         text: "It was a short left, nothing on it. He was glassy before I threw it. I’ve seen drunks walk straighter.",
         isLie: false,
       },
     },
     {
-      id: "pell",
+      id: "dunn",
       name: "Sal Dunn",
       role: "The trainer",
       description: "Trained Rourke since the kid was sixteen. He tapes the hands and mixes the water in the corner.",
@@ -46,7 +46,7 @@ export default {
       },
     },
     {
-      id: "kessel",
+      id: "ganz",
       name: "Manny Ganz",
       role: "The manager",
       description: "Takes half of every purse. Took out a $10,000 policy on his fighter last spring, “strictly business.”",
@@ -61,7 +61,7 @@ export default {
       role: "The cut man",
       description: "Stops the bleeding for a dollar a round. Owes Vince Lasko more than he’ll earn in a year.",
       statement: {
-        text: "Sal sent me for ice after the sixth. When I got back he was screwing the cap on a new bottle.",
+        text: "Sal sent me for ice after the sixth. When I got back there was a new bottle in the bucket.",
         isLie: false,
       },
     },
@@ -106,7 +106,7 @@ export default {
   ],
 
   clues: [
-    "The coroner: Brennan’s left barely bruised the jaw. Rourke died of chloral, a heavy dose, swallowed minutes before he fell.",
+    "Brennan’s left barely bruised the jaw, the autopsy found. Rourke died of chloral, a heavy dose, swallowed minutes before.",
     "The water bottle from Rourke’s corner is thick with chloral. Brennan’s gloves and corner bottle are clean.",
     "Rourke telephoned the state boxing commission Friday and booked an appointment for Thursday morning.",
     "Bank ledger, Baltimore, March ’45: Sal Dunn paid off a $3,000 note the week Rourke lost a fight he led.",
@@ -114,22 +114,22 @@ export default {
 
   photo: { caption: "Ironside A.C., fight night", scene: "ring" },
 
-  // Decoys. Rourke's own scrawl is pencilled on the photo.
+  // Rourke's scrawl is pencilled on the Baltimore stub.
   evidence: [
-    { id: "starlight", kind: "matchbook", label: "The Starlight Room", note: "R. — Thurs. 9 — J.B." },
-    { id: "bet-slip", kind: "ticket", label: "Lasko · Slip No. 0417", note: "BRENNAN KO 7 — $500" },
-    { id: "chloral", kind: "prescription", label: "Dr. L. Abrams", note: "chloral 10 gr h.s. — R.R." },
+    { id: "baltimore-stub", kind: "stub", label: "Baltimore Arena · Mar. 9, 1945", note: "Rourke vs. Dade · 10 rounds · Ringside, Row B · Admit One" },
+    { id: "chloral", kind: "prescription", label: "Dr. L. Abrams", note: "Chloral hydrate 10 gr at bedtime — Mrs. R. Rourke — 30 caps" },
+    { id: "vial-prints", kind: "fingerprint", label: "Pill vial, Rourke’s corner", note: "Found in the slop bucket, empty. Wiped clean. No prints at all." },
   ],
 
   cipher: {
-    hiddenOn: "photo",
-    plaintext: "MY OWN CORNER SOLD THE BALTIMORE FIGHT. THURSDAY I TELL THE COMMISSION.",
+    hiddenOn: "evidence:baltimore-stub",
+    plaintext: "THE BALTIMORE FIGHT WAS SOLD. THURSDAY I TELL THE COMMISSION.",
     shift: 22,
-    keepWords: ["BALTIMORE", "COMMISSION"],
+    keepWords: ["BALTIMORE"],
     doodle: "bell",
   },
 
-  solution: { suspectId: "pell", motiveId: "fix", weaponId: "bottle" },
+  solution: { suspectId: "dunn", motiveId: "fix", weaponId: "bottle" },
 
   endings: {
     closed: {
@@ -139,16 +139,16 @@ export default {
         "and booked a Thursday with the commission. Sal lifted Rita’s sleeping pills at the gym, emptied them into a " +
         "fresh bottle after the sixth, and handed it over. Rourke was going down from the chloral before Brennan’s punch landed.",
       saved:
-        "The charges against Joe Brennan are dropped, and he keeps his license.",
+        "Joe Brennan keeps his license. He fights again in the spring, at the Ironside.",
     },
     cold: {
       headline: "Gone Cold",
       text:
         "It was Sal Dunn, Rourke’s own trainer, burying the fight he sold in Baltimore. After the sixth he poured the " +
-        "kid a fresh water bottle, doped with chloral lifted from Rita Rourke’s handbag.",
+        "kid a fresh water bottle, doped with the chloral he had lifted from Rita Rourke at the gym.",
       cost:
-        "Joe Brennan was convicted of manslaughter and never fought again. Sal Dunn kept training fighters, " +
-        "and he kept selling fights.",
+        "The commission called it a ring death and closed the file. Joe Brennan hung up his gloves. Two years later " +
+        "another of Sal Dunn’s fighters lost a fight he was winning.",
     },
   },
 

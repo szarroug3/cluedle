@@ -268,9 +268,14 @@
   gap: 4px;
   margin-top: 2px;
   overflow: hidden;
-  transform: rotate(-2.5deg);
-  transform-origin: left center;
 }
+/* Pencil on a photo or a handwritten scrap: slanted, like everything else written by hand. */
+.scrawl.hand { transform: rotate(-2.5deg); transform-origin: left center; }
+/* Typed or printed: one more straight line of the document, in the same ink. */
+.scrawl.typed,
+.scrawl.print { margin-top: 3px; white-space: nowrap; font: inherit; color: inherit; letter-spacing: inherit; }
+.scrawl.typed .doodle,
+.scrawl.print .doodle { width: 10px; height: 12px; stroke-width: 2; }
 .doodle {
   flex: none;
   width: 12px;
@@ -318,6 +323,80 @@
 }
 
 .evidence-prescription { width: 196px; padding-left: 40px; }
+
+/* Typed notes (telegrams, receipts) sit straight; handwritten ones keep their slant. */
+.evidence-note.typed {
+  transform: none;
+  font-family: var(--font-type);
+  font-size: 12.5px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+/* A telegram: a pale form with a printed band and pasted-on typed strips. */
+.evidence-telegram {
+  width: 224px;
+  padding-top: 0;
+  background-image: var(--noise), linear-gradient(170deg, #e7e4ec, #d2cdd9);
+}
+.evidence-telegram .evidence-label {
+  margin: 0 -12px 6px;
+  padding: 6px 12px;
+  border-bottom: 2px solid var(--purple);
+  font-family: var(--font-news);
+  font-weight: 900;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--purple);
+}
+.evidence-telegram .evidence-note { text-transform: uppercase; background: rgba(255, 255, 255, 0.45); padding: 3px 5px; }
+
+/* A letter: ruled writing paper, ink instead of pencil. */
+.evidence-letter {
+  width: 220px;
+  background-image:
+    repeating-linear-gradient(to bottom, transparent 0 19px, rgba(47, 90, 168, 0.22) 19px 20px),
+    var(--noise),
+    linear-gradient(170deg, #f3efe7, var(--paper-shade));
+}
+.evidence-letter .evidence-note { color: #2b2850; font-size: 20px; line-height: 20px; }
+
+/* A calling card: small, white, with an engraved name. */
+.evidence-card {
+  width: 196px;
+  padding: 12px 14px;
+  border-radius: 2px;
+  background-image: var(--noise), linear-gradient(170deg, #fbf8f2, #e9e4da);
+  text-align: center;
+}
+.evidence-card .evidence-label {
+  font-family: var(--font-news);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--ink);
+  border-bottom: 1px solid rgba(31, 27, 38, 0.3);
+  padding-bottom: 6px;
+}
+
+/* A receipt: narrow, with a torn bottom edge and a dotted rule. */
+.evidence-receipt {
+  width: 176px;
+  padding-bottom: 14px;
+  background-image: var(--noise), linear-gradient(175deg, #f1eee8, #dcd7cf);
+  clip-path: polygon(0 0, 100% 0, 100% 94%, 92% 100%, 84% 95%, 76% 100%, 68% 95%, 60% 100%, 52% 95%, 44% 100%, 36% 95%, 28% 100%, 20% 95%, 12% 100%, 4% 95%, 0 100%);
+}
+.evidence-receipt .evidence-label { text-align: center; padding-bottom: 5px; border-bottom: 1px dashed rgba(31, 27, 38, 0.45); }
+
+/* A tag: a card with a punched, reinforced hole. */
+.evidence-tag {
+  width: 196px;
+  padding-left: 36px;
+  border-radius: 3px 12px 12px 3px;
+  background-image: var(--noise), linear-gradient(170deg, #dcd6e2, #c4bccd);
+}
 .rx {
   position: absolute;
   left: 10px;
@@ -474,26 +553,6 @@
 .stamp-guilty .stamp-face { color: var(--red); }
 .stamp-liar .stamp-face { color: var(--purple); }
 
-/* A spool of red thread between dark flanges. */
-.spool {
-  position: relative;
-  width: 46px;
-  height: 58px;
-  border-radius: 4px;
-  background: repeating-linear-gradient(170deg, var(--red) 0 3px, var(--red-dark) 3px 5px);
-}
-.spool::before,
-.spool::after {
-  content: "";
-  position: absolute;
-  left: -6px;
-  right: -6px;
-  height: 9px;
-  border-radius: 3px;
-  background: linear-gradient(#4b3c50, #251c29);
-}
-.spool::before { top: -4px; }
-.spool::after { bottom: -4px; }
 
 /* Guesses left: five cartridge bases. */
 .guess-row { display: flex; gap: 6px; }
@@ -557,13 +616,8 @@
   stroke-linecap: round;
 }
 .string:hover .string-line { stroke: var(--red-dark); stroke-dasharray: 6 4; }
-.stage.threading .string,
 .stage.drawing-string .string { pointer-events: none; }
 
-.spool { cursor: pointer; transition: transform 0.15s; }
-.spool:hover { transform: translateY(-3px); }
-.spool.active { box-shadow: 0 0 0 3px var(--paper), 0 0 18px 4px rgba(179, 38, 58, 0.7); }
-.stage.threading .pin-item { cursor: crosshair; }
 .pin-item.string-first > .pushpin { box-shadow: 0 0 0 4px var(--paper), 0 0 12px 4px var(--red); }
 
 /* Drawing a string by dragging: a dashed thread follows the pointer, and the card under it lights up. */
@@ -573,11 +627,188 @@
 .pin-item.string-target > .pushpin { box-shadow: 0 0 0 4px var(--paper), 0 0 12px 4px var(--red); }
 .pin-item { user-select: none; -webkit-user-select: none; }
 
-/* Out of string: the spool dims, and shakes if you try to tie another. */
-.spool.empty { opacity: 0.35; }
-.spool.refuse { animation: spool-refuse 0.35s; }
-@keyframes spool-refuse {
-  25% { transform: translateX(-5px) rotate(-6deg); }
-  50% { transform: translateX(5px) rotate(6deg); }
-  75% { transform: translateX(-3px); }
+/* Hovering a card shows a loose end of red thread on its pin: pull from here to tie string. */
+.pin-item > .pushpin::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  width: 44px;
+  height: 58px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 46'><path d='M6 4 C 14 10, 6 18, 16 24 S 30 30, 26 40' fill='none' stroke='%23b3263a' stroke-width='2.6' stroke-linecap='round'/></svg>") no-repeat center / contain;
+  opacity: 0;
+  transform: rotate(-10deg) scale(0.6);
+  transform-origin: top left;
+  transition: opacity 0.15s, transform 0.2s;
+  pointer-events: none;
 }
+.pin-item:hover > .pushpin::after,
+.pin-item.string-first > .pushpin::after {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+.stage.holding .pin-item:hover > .pushpin::after,
+.stage.drawing-string .pin-item:not(.string-first) > .pushpin::after { opacity: 0; }
+
+/* At the cap, a short note says why no new string was tied. */
+.string-note {
+  position: absolute;
+  left: 50%;
+  bottom: 124px;
+  z-index: 95;
+  padding: 8px 16px;
+  border-radius: 3px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-type);
+  font-size: 15px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+.string-note.shown { opacity: 1; transform: translate(-50%, 0); }
+
+
+/* ---- More kinds of evidence ---- */
+
+/* A classified ad clipped from the paper: small print in a ruled box. */
+.evidence-classified {
+  width: 200px;
+  padding: 8px 10px;
+  border: 1px solid rgba(31, 27, 38, 0.55);
+  background-image: var(--news-grain), linear-gradient(175deg, #d9d7d3, #c5c2bd);
+  background-size: 160px 160px, auto;
+}
+.evidence-classified .evidence-label {
+  font-family: var(--font-news);
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-align: center;
+  color: var(--ink);
+  border-bottom: 1px solid rgba(31, 27, 38, 0.5);
+  padding-bottom: 4px;
+}
+.evidence-classified .evidence-note.typed { font-family: var(--font-story); font-size: 11.5px; letter-spacing: 0; text-align: justify; }
+
+/* An envelope: address in ink, a stamp and a round postmark in the corner. */
+.evidence-envelope {
+  width: 230px;
+  min-height: 104px;
+  padding: 12px 14px 12px;
+  background-image: var(--noise), linear-gradient(170deg, #ece6dc, #d8d1c5);
+}
+.evidence-envelope .evidence-label { width: 120px; font-size: 10px; }
+.evidence-envelope .evidence-note { margin-top: 20px; padding-left: 26px; color: #2b2850; }
+.stamp {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 26px;
+  height: 32px;
+  background: var(--purple);
+  outline: 2px dotted #ece6dc;
+  outline-offset: -3px;
+}
+.postmark {
+  position: absolute;
+  top: 12px;
+  right: 30px;
+  width: 38px;
+  height: 38px;
+  border: 2px solid rgba(31, 27, 38, 0.45);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 4px transparent, 18px 0 0 -16px rgba(31, 27, 38, 0.45);
+}
+
+/* A typed report or memo: carbon-copy blue type under a heading rule. */
+.evidence-report {
+  width: 240px;
+  background-image: var(--noise), linear-gradient(175deg, #eceaf0, #d7d3de);
+}
+.evidence-report .evidence-label { border-bottom: 2px solid rgba(31, 27, 38, 0.6); padding-bottom: 4px; color: var(--ink); }
+.evidence-report .evidence-note.typed { color: #2c3f74; }
+
+/* A ledger or register page: ruled rows. */
+.evidence-ledger {
+  width: 236px;
+  background-image: var(--noise), linear-gradient(170deg, #efe9dd, #dcd4c6);
+}
+.evidence-ledger .evidence-label { color: var(--red); }
+.ledger-row { padding: 2px 0; border-bottom: 1px solid rgba(47, 90, 168, 0.35); }
+
+/* A bank slip: a printed form with a tinted band. */
+.evidence-slip {
+  width: 214px;
+  padding-top: 0;
+  background-image: var(--noise), linear-gradient(170deg, #e4e6ef, #cdd1df);
+}
+.evidence-slip .evidence-label {
+  margin: 0 -12px 6px;
+  padding: 5px 12px;
+  background: rgba(47, 90, 168, 0.18);
+  color: var(--blue);
+  letter-spacing: 0.16em;
+}
+
+/* A punched stub: perforated left edge and two punch holes. */
+.evidence-stub {
+  width: 196px;
+  padding-left: 22px;
+  padding-right: 44px;
+  border-left: 3px dotted rgba(31, 27, 38, 0.5);
+  background-image: var(--noise), linear-gradient(170deg, #e6e1ea, #cfc8d6);
+}
+.stub-holes { position: absolute; right: 10px; top: 8px; display: flex; gap: 6px; }
+.stub-holes span { width: 9px; height: 9px; border-radius: 50%; background: var(--cork-dark); box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6); }
+
+/* A fingerprint card: two inked prints above a typed caption. */
+.evidence-fingerprint { width: 200px; background-image: var(--noise), linear-gradient(170deg, #f4f1ea, #e1dbd0); }
+.prints { display: flex; justify-content: center; gap: 16px; color: #26222e; margin-bottom: 4px; }
+.prints svg { width: 34px; height: 42px; }
+.evidence-fingerprint .evidence-label { text-align: center; }
+
+/* A key on a tag: an iron key drawn beside the tag's hole. */
+.evidence-key {
+  width: 200px;
+  padding-left: 36px;
+  border-radius: 3px 12px 12px 3px;
+  background-image: var(--noise), linear-gradient(170deg, #dcd6e2, #c4bccd);
+}
+.key-art { display: block; width: 80px; height: 24px; margin: 0 0 4px; fill: none; stroke: #3b3742; stroke-width: 3; stroke-linecap: round; }
+
+/* The newspaper's personals line, where a code can hide in the clipping itself. */
+.personals {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(31, 27, 38, 0.4);
+  font-family: var(--font-story);
+  font-size: 12px;
+}
+.personals-label {
+  flex: none;
+  font-family: var(--font-news);
+  font-weight: 900;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* The case's mark, tucked in a corner of the paper that hides the code. */
+.paper-doodle { position: absolute; z-index: 1; color: var(--pencil); opacity: 0.85; pointer-events: none; }
+.paper-doodle .doodle { width: 16px; height: 18px; }
+.paper-doodle.top-right { top: 6px; right: 8px; transform: rotate(8deg); }
+.paper-doodle.bottom-right { bottom: 5px; right: 8px; transform: rotate(-6deg); }
+.paper-doodle.bottom-left { bottom: 5px; left: 8px; transform: rotate(5deg); }
+.evidence-telegram .paper-doodle, .evidence-report .paper-doodle, .evidence-ledger .paper-doodle,
+.evidence-classified .paper-doodle, .evidence-slip .paper-doodle, .evidence-stub .paper-doodle,
+.evidence-receipt .paper-doodle, .evidence-fingerprint .paper-doodle { color: var(--ink); opacity: 0.7; }
+.photo-image { position: relative; }
+.photo-image .paper-doodle { color: rgba(239, 233, 221, 0.75); }
+.dateline .paper-doodle { position: static; display: inline-block; margin-left: 8px; vertical-align: middle; color: var(--ink); }
+.dateline .paper-doodle .doodle { width: 12px; height: 13px; }

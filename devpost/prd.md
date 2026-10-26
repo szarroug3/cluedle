@@ -15,7 +15,7 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 2. **How to play (first visit only).** Before the first case opens, a short how-to-play explains the stamps, the five guesses, the hidden cipher, and the red string. It can be reopened later from the board.
 3. **The board.** Opening the file shows the murder board: the newspaper-clipping story, 6 suspect cards (each holding that person's statement), 6 motive cards, 6 weapon cards, a tray with the **GUILTY** and **LIAR** stamps, a red-string spool, and the five guesses remaining.
 4. **Read.** The player reads the story, and clicks a suspect card to read that person's statement. They can draw red string between any pins to track their thinking.
-5. **Find and crack the cipher (any time, optional).** Every scrap on the board can be brought forward to read up close, and one of them, a pencil scrawl, is encrypted. Nothing marks which. A sharp-eyed player works out which scrap is the code, finds its key in the story, and decodes it on paper. They write the message on the **blank card** pinned to the board, using its two sliding letter strips as a helper (clicking a letter writes it), and pin it. They get three tries; each wrong answer runs ink over more of the scrawl for good.
+5. **Find and crack the cipher (any time, optional).** Every scrap on the board can be brought forward to read up close, and one of them carries a line in code, written in the same hand or type as the paper around it. Nothing marks which. The decoded message is a small extra clue, never the answer. A sharp-eyed player works out which scrap is the code, finds its key in the story, and decodes it on paper. They write the message on the **blank card** pinned to the board, using its two sliding letter strips as a helper (clicking a letter writes it), and pin it. They get three tries; each wrong answer runs ink over more of the code for good.
 6. **Accuse.** The player picks up the **GUILTY** stamp, stamps a suspect card, a motive card, and a weapon card, and confirms. The guess shows how many of the three are right, but not which.
 7. **Miss → new clue.** A wrong accusation uses a guess and pins up a new plain clue.
 8. **Catch the liar (any time, optional).** The player stamps **LIAR** on a suspect's card and picks what really happened from a few options. It's free, but they get one shot.
@@ -27,7 +27,7 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 
 - **Case file cover** — the first thing seen each day. Case number, date, title, **Open the file**.
 - **How to play** — a short overlay shown once before the first case, and reopenable from the board.
-- **The murder board** — the one main surface. Everything in the case lives here as pinned items: newspaper-clipping story, suspect cards, motive cards, weapon cards, unlocked clues, scraps of evidence (one of them the cipher scrawl), and the blank card. The stamp tray, red-string spool, and guesses remaining sit at the edge of the board.
+- **The murder board** — the one main surface. Everything in the case lives here as pinned items: newspaper-clipping story, suspect cards, motive cards, weapon cards, unlocked clues, scraps of evidence (the code hides in one of them, the photo, or the clipping), and the blank card. The stamp tray and guesses remaining sit at the edge of the board.
 - **Statement** — a suspect's statement brought forward over the board when their card is clicked.
 - **Close look** — any scrap brought forward over the board to read; every scrap looks the same here.
 - **Blank card** — brought forward over the board, with a space to write the decoded message, two sliding A–Z strips as a helper (click a letter to write it), **Pin it**, and the tries remaining. Closing it returns to the board.
@@ -43,7 +43,7 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 ## Features and Behavior
 
 ### Daily Case
-- One case per day, the same for every player, chosen by date from ten hand-written cases.
+- One case per day, the same for every player, chosen by date from 33 hand-written cases.
 - Each case has: a story, 6 suspects (each with a witness statement, exactly one of which lies), 6 motives, 6 weapons, plain clues that unlock on wrong guesses, one hidden cipher clue whose key is in the story, the true solution (who, why, and how), and both endings (closed and gone cold).
 - Every witness is a suspect, so each statement lives on its suspect's card.
 - Six of each, three parts to every accusation, and feedback that says only how many parts are right, so working through the cards in order can't brute-force the case; it takes reasoning from the clues.
@@ -77,22 +77,25 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 
 ### Finding and Cracking the Cipher
 Source: `scope.md > The Unique Kernel`.
-- The encrypted clue is hidden on the board from the start as part of the scenery (for example, a pencil scrawl in a photo's margin), among decoy scraps written in the same hand. Nothing announces it.
-- Every scrap, the scrawl included, opens the same plain close-up. The game never says which scrap is the code; the player works it out and decodes it themselves, on paper.
+- The encrypted clue is hidden on the board from the start as part of the scenery: a row in a ledger, a line in a police report, a personals ad in the clipping, a note on the photo. It is written in the same hand or type as the paper it sits on, so it reads as part of that paper. Nothing announces it.
+- Each case's three evidence scraps are its own: different kinds of paper (matchbooks, telegrams, ledgers, pawn tickets, fingerprint cards and so on), so no two cases look alike.
+- The decoded message is a small extra clue: a time, a fact, a hint at the motive. It never names the killer.
+- Every scrap, the one holding the code included, opens the same plain close-up. The game never says which scrap is the code; the player works it out and decodes it themselves, on paper.
 - The **blank card** is pinned to the board from the start. It holds a space to write the decoded message and two side-by-side A–Z strips the player can slide up or down to line up letters; clicking a letter writes it into the answer. The strips are only a helper: they never decode or check anything.
 - The player writes the message and presses **Pin it**. Only letters count; spacing, punctuation, and capitals don't, and a typo or two is forgiven. Letters already lost to ink may be guessed or left out.
-- Three tries. A right answer flips the real message into place and leaves it written on the blank card. Each wrong answer permanently runs ink over more of the scrawl, so the rest is harder to decode and a crack on the second or third try reveals less.
+- Three tries. A right answer flips the real message into place and leaves it written on the blank card. Each wrong answer permanently runs ink over more of the code, so the rest is harder to decode and a crack on the second or third try reveals less.
 - After three wrong tries, the blank card no longer takes answers.
 - Cracking never uses a guess. A player who never finds or cracks the cipher can still solve the case.
 - [ ] Every scrap opens the same close-up, with nothing marking the cipher.
+- [ ] No decoded message names the culprit.
 - [ ] Sliding the strips never reveals or checks anything.
 - [ ] Writing the right message on the first try shows the full message.
 - [ ] A right message after one or two wrong tries shows it with more blotted out.
-- [ ] After three wrong tries, the blank card no longer takes answers and the scrawl stays scrambled.
+- [ ] After three wrong tries, the blank card no longer takes answers and the code stays scrambled.
 - [ ] Cipher tries never change the guesses remaining.
 
 ### Red String
-- The player can draw red string between any two pinned items and remove a string. It's only for the player's own thinking; it doesn't affect the case or the rank.
+- The player draws red string by dragging from one pin head to another (on a touch screen, press and hold the pin first). Hovering a pin head shows a thread, so it's clear the pin ties string. Clicking a string removes it. A board holds up to 40 strings. It's only for the player's own thinking; it doesn't affect the case or the rank.
 - [ ] A string drawn between two pins stays visible until removed.
 - [ ] Drawing or removing string never changes guesses, ranks, or the outcome.
 
@@ -163,10 +166,9 @@ Source: `scope.md > The POC Boundary` (cheap version).
 - **Progress kept all day** — reloading can't reset cipher tries or the LIAR shot.
 
 ## What We're Building
-Everything under `## Features and Behavior` and `## States and Boundaries`, with ten hand-written cases drafted by Claude and played and edited by the learner. Static web app opened in a browser; no AI at runtime.
+Everything under `## Features and Behavior` and `## States and Boundaries`, with 33 hand-written cases drafted by Claude and played and edited by the learner. Static web app opened in a browser; no AI at runtime.
 
 ## Deferred From the POC
-- **Red-string physics** — string that sags and sways; polish once the core works (`scope.md > Later`).
 - **Correct red-string links counting toward the rank** — needs the game to know which links are "correct" (`scope.md > Later`).
 - **Cases beyond ten** — more content once the first ten are played and tuned (`scope.md > Later`).
 - **Streaks and stats across days** — implied by a daily game, not needed to prove the kernel.
@@ -183,4 +185,4 @@ Everything under `## Features and Behavior` and `## States and Boundaries`, with
 
 ## Open Questions
 - **Rank point values and bands** — a starting point; tune while playtesting in `5-build`.
-- **How hidden is too hidden for the cipher scrawl** — to be tuned while writing and playtesting the cases in `5-build`.
+- ~~How hidden is too hidden for the cipher~~ — settled in playtesting: the code is written in the style of the paper it sits on, its doodle sits in a corner away from it, and every case's scraps are different.

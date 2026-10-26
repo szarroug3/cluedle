@@ -7,9 +7,9 @@ export default {
   clipping: {
     masthead: "The Riverside Courier",
     headline: "Lodge Owner Dies in Fall on Icy Stairs",
-    dateline: "CRESTED PASS, Colo., Feb. 9, 1947",
+    dateline: "CRESTED PASS, Colo., Feb. 8, 1947",
     body:
-      "Erik Halverson, 64, master of the Halverson Lodge, was found dead at the foot of its back stairs Sunday at " +
+      "Erik Halverson, 57, master of the Halverson Lodge, was found dead at the foot of its back stairs Saturday at " +
       "dawn, under a fresh fall of snow.\n" +
       "The blizzard has buried the pass road under nineteen inches of new snow and cut the telephone line. Six souls are " +
       "shut in at the lodge with the body; the plow is not expected before Tuesday.\n" +
@@ -37,7 +37,7 @@ export default {
     },
     {
       id: "anton",
-      name: "Anton Rusk",
+      name: "Anton Moberg",
       role: "The ski instructor",
       description: "Teaches the guests to ski by day. Teaches Mrs. Halverson gin rummy most nights.",
       statement: {
@@ -46,12 +46,12 @@ export default {
       },
     },
     {
-      id: "pell",
-      name: "Howard Lindgren",
+      id: "prentiss",
+      name: "Howard Prentiss",
       role: "The lawyer",
       description: "Keeps the Halverson family trust. Came up to redraw papers and has been slow to show Erik the books.",
       statement: {
-        text: "I spent the evening in my room with Erik’s papers. He wanted the changes signed Saturday, once the road opened.",
+        text: "I spent the evening in my room with Erik’s papers. He wanted the changes signed first thing in the morning.",
         isLie: false,
       },
     },
@@ -76,8 +76,8 @@ export default {
       },
     },
     {
-      id: "dorothy",
-      name: "Dorothy Kemp",
+      id: "kemp",
+      name: "Hazel Kemp",
       role: "The guest",
       description: "Widow of a skier killed on Halverson’s run in ’39. Books the same room every February.",
       statement: {
@@ -102,30 +102,30 @@ export default {
     { id: "shovel", name: "A snow shovel", detail: "Back porch" },
     { id: "ice-axe", name: "An ice axe", detail: "Boot room" },
     { id: "rolling-pin", name: "A rolling pin", detail: "Kitchen" },
-    { id: "cane", name: "A silver-head cane", detail: "Lindgren’s room" },
+    { id: "cane", name: "A silver-head cane", detail: "Prentiss’s room" },
   ],
 
   clues: [
-    "The coroner: one heavy blow to the crown of the skull. A man who slips down stairs strikes the back of his head.",
+    "One heavy blow to the crown of the skull, says the doctor who skied up. A man who slips on stairs hits the back of his head.",
     "The trophy curling stone on the bar shelf sits an inch off its dust ring, its granite wiped clean.",
-    "A note in Anton Rusk’s coat pocket, in a woman’s hand: “If he signs Saturday, we have nothing.”",
+    "Unsigned, tucked in a book in Greta Halverson’s room: “If he signs Saturday, we have nothing.”",
     "The gin score pad stops at ten past ten. Wet boot prints in Anton’s size run from the kitchen door to the trophy shelf.",
   ],
 
   photo: { caption: "Halverson Lodge, winter ’46", scene: "lodge" },
 
-  // Decoys, plus Erik's ski-tow ticket, which carries the scrawl.
+  // Erik's code is pencilled on the photo.
   evidence: [
-    { id: "brown-palace", kind: "matchbook", label: "The Brown Palace, Denver", note: "re: sale — 35,000 — E.H." },
-    { id: "tow-ticket", kind: "ticket", label: "Halverson Lodge · Ski Tow", note: "punch 3 of 10 — E.H." },
-    { id: "codeine", kind: "prescription", label: "Dr. L. Moss, Leadville", note: "codeine ½ gr — E.H. knee" },
+    { id: "prentiss-card", kind: "card", label: "Howard Prentiss, Attorney", note: "Erik — papers ready. Saturday, ten sharp. H.P." },
+    { id: "denver-wire", kind: "telegram", label: "Western Union · Denver", note: "OFFER 35000 HOLDS TO MARCH 1 STOP STAFF NOT RETAINED STOP" },
+    { id: "trust-check", kind: "slip", label: "Halverson Trust · Check 214", note: "Jan. 30 · Pay H. Prentiss · $6,000 · “advance on fees”" },
   ],
 
   cipher: {
-    hiddenOn: "evidence:tow-ticket",
-    plaintext: "SHE PLAYS GIN WITH THE SKI MAN EVERY NIGHT. LINDGREN CUTS HER OUT SATURDAY.",
+    hiddenOn: "photo",
+    plaintext: "SHE KEEPS THE LODGE ONLY AS LONG AS SHE NEVER MARRIES AGAIN.",
     shift: 19,
-    keepWords: ["SKI", "SATURDAY"],
+    keepWords: ["MARRIES"],
     doodle: "snowflake",
   },
 
@@ -135,20 +135,20 @@ export default {
     closed: {
       headline: "Case Closed",
       text:
-        "Anton Rusk dealt gin with Greta Halverson until the clock struck ten, then slipped out with the trophy curling " +
+        "Anton Moberg dealt gin with Greta Halverson until the clock struck ten, then slipped out with the trophy curling " +
         "stone. When Erik came down the back stairs for firewood, Anton was waiting. He left the body on the salted " +
-        "steps for the snow to cover, and Greta swore he never left his chair. Saturday’s will would have left them " +
-        "nothing.",
+        "steps for the snow to cover, and Greta swore he never left his chair. Saturday’s will let her keep the lodge " +
+        "only if she never married again.",
       saved: "Teo Varga keeps his job. Greta Halverson is charged with lying to cover for Anton.",
     },
     cold: {
       headline: "Gone Cold",
       text:
-        "It was Anton Rusk, to stop a new will that cut Greta Halverson out. He struck Erik down with the trophy " +
+        "It was Anton Moberg, to stop a new will that took the lodge from Greta Halverson if she remarried. He struck Erik down with the trophy " +
         "curling stone, and Greta swore he never left the card table.",
       cost:
-        "The fall was ruled an accident and Teo Varga was turned out for the ice. By summer Greta and Anton " +
-        "had sold the lodge and moved west together.",
+        "The fall was ruled an accident and Teo Varga was turned out for the ice. By summer Greta had sold the lodge " +
+        "to Denver and married Anton in Reno.",
     },
   },
 

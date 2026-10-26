@@ -9,41 +9,41 @@ export default {
     headline: "Timber Baron Strangled at Masked Ball",
     dateline: "RIVERSIDE HEIGHTS, Feb. 16, 1947",
     body:
-      "Gideon Ashcombe, 64, the timber baron, was found strangled in his library Saturday night while some two " +
+      "Gideon Treadwell, 71, the timber baron, was found strangled in his library Saturday night while some two " +
       "hundred masked guests waltzed below at his annual February masquerade.\n" +
-      "Ashcombe greeted the crowd at nine in his famous gilt Venetian mask, the one with thirteen painted tears. His " +
+      "Treadwell greeted the crowd at nine in his famous gilt Venetian mask, the one with thirteen painted tears. His " +
       "housekeeper found him at a quarter to twelve, minutes before the unmasking.\n" +
       "A witness saw a guest in a scarlet Cardinal’s robe leave the library shortly before. Police questioned the " +
-      "son, Rupert Ashcombe, who wore the Cardinal at midnight. No arrest has been made.",
+      "son, Rupert Treadwell, who wore the Cardinal at midnight. No arrest has been made.",
   },
 
   // Every witness is a suspect, so each statement lives on its suspect's card. Exactly one lies.
   suspects: [
     {
       id: "rupert",
-      name: "Rupert Ashcombe",
+      name: "Rupert Treadwell",
       role: "The son",
       description: "Six foot three and drowning in debt. Inherits the estate. Came as the Red Cardinal, robe cut to fit him.",
       statement: {
-        text: "Took a dare at eleven and traded rigs. Wore diamonds till ten to twelve, then got my robe back without its sash.",
+        text: "Took a dare at eleven and traded rigs. Got my robe back at ten to twelve, short its sash.",
         isLie: false,
       },
     },
     {
       id: "delia",
-      name: "Delia Ashcombe",
+      name: "Delia Treadwell",
       role: "The wife",
-      description: "The second Mrs. Ashcombe, half his age. Came as Columbine in pink ribbons. Dances often with the bandleader.",
+      description: "The second Mrs. Treadwell, half his age. Came as Columbine in pink ribbons. Dances often with the bandleader.",
       statement: {
         text: "Gideon went up at twenty past eleven to see a man about “the Friday business.” He wouldn’t tell me who.",
         isLie: false,
       },
     },
     {
-      id: "pell",
+      id: "pryor",
       name: "Laurence Pryor",
       role: "The lawyer",
-      description: "Family lawyer, small and neat. Keeps the Ashcombe trust books. Came as Harlequin, in black and gold diamonds.",
+      description: "Family lawyer, small and neat. Keeps the Treadwell trust books. Came as Harlequin, in black and gold diamonds.",
       statement: {
         text: "I wore the Harlequin from the first waltz to the unmasking and never left the ballroom. The band can vouch for me.",
         isLie: true,
@@ -56,20 +56,20 @@ export default {
       },
     },
     {
-      id: "varga",
+      id: "ferraro",
       name: "Nico Ferraro",
       role: "The bandleader",
-      description: "Leads the orchestra from a bandstand with a view of the whole room. Sends Mrs. Ashcombe roses every week.",
+      description: "Leads the orchestra from a bandstand with a view of the whole room. Sends Mrs. Treadwell roses every week.",
       statement: {
         text: "The Harlequin stood by my bandstand from eleven till near midnight, calling for songs. Tall fella; sleeves halfway up his arms.",
         isLie: false,
       },
     },
     {
-      id: "whitlow",
-      name: "Opal Whitlow",
+      id: "mayhew",
+      name: "Opal Mayhew",
       role: "The columnist",
-      description: "Society columnist for the Courier. Ashcombe was suing her for libel over a column about his mills.",
+      description: "Society columnist for the Courier. Treadwell was suing her for libel over a column about his mills.",
       statement: {
         text: "I watched the Cardinal for my column. He left the ballroom at eleven and came back at twenty to twelve. Didn’t dance again.",
         isLie: false,
@@ -79,7 +79,7 @@ export default {
       id: "crowe",
       name: "Maud Crowe",
       role: "The housekeeper",
-      description: "Thirty years in the house. Ashcombe turned her daughter out without a reference last spring.",
+      description: "Thirty years in the house. Treadwell turned her daughter out without a reference last spring.",
       statement: {
         text: "At half past eleven the Cardinal left the library, his robe dragging on the carpet behind him. Found the master at a quarter to.",
         isLie: false,
@@ -89,7 +89,7 @@ export default {
 
   motives: [
     { id: "trust", text: "To hide a looted trust fund" },
-    { id: "inheritance", text: "To inherit the Ashcombe estate" },
+    { id: "inheritance", text: "To inherit the Treadwell estate" },
     { id: "debts", text: "To wipe out gambling debts" },
     { id: "lover", text: "To run off with a lover" },
     { id: "libel", text: "To stop a libel suit" },
@@ -106,47 +106,47 @@ export default {
   ],
 
   clues: [
-    "The coroner: strangled from behind with a broad band of soft cloth. No wire, no wound, no poison.",
-    "Threads caught in the mark on his throat are scarlet silk. Mrs. Ashcombe’s Columbine ribbons are pink satin.",
+    "The family doctor: strangled from behind with a broad band of soft cloth. No wire, no wound, no poison.",
+    "Threads caught in the mark on his throat are scarlet silk. Mrs. Treadwell’s Columbine ribbons are pink satin.",
     "A bank letter on the library desk: “Your trust accounts are $60,000 short. Auditors Friday, with your lawyer present.”",
     "In the cloakroom, a scarlet silk sash wadded into the pocket of a small overcoat. The claim check reads L.P.",
   ],
 
-  photo: { caption: "Ashcombe House, on the hill", scene: "mansion" },
+  photo: { caption: "Treadwell House, on the hill", scene: "mansion" },
 
-  // Decoys, plus Ashcombe's dance card, which carries the scrawl.
+  // A half-burnt note from the library grate carries the code; the costume tag matters to the swap.
   evidence: [
-    { id: "silver-slipper", kind: "matchbook", label: "The Silver Slipper", note: "BRadley 4-2290 — N.V." },
-    { id: "costume-tag", kind: "ticket", label: "Moreau’s Costumes · No. 214", note: "Harlequin, sz. small — L.P." },
-    { id: "dance-card", kind: "ticket", label: "Ashcombe Ball · Dance Card", note: "4th waltz — D.A., 10:15" },
+    { id: "grate-note", kind: "letter", label: "Half-burnt note, library grate", note: "Gideon — we settle the Friday business tonight, not on paper." },
+    { id: "costume-tag", kind: "tag", label: "Moreau’s Costumes · No. 214", note: "Harlequin, sz. small. Hired to L.P. Due back Monday." },
+    { id: "depot-stub", kind: "stub", label: "Union Depot · Chicago", note: "Two one-way, Sunday 7:10 a.m. Bought by N. Ferraro." },
   ],
 
   cipher: {
-    hiddenOn: "evidence:dance-card",
-    plaintext: "LIBRARY AT HALF PAST ELEVEN. THE MAN WHO KEEPS THE TRUST BOOKS. ALONE.",
+    hiddenOn: "evidence:grate-note",
+    plaintext: "LIBRARY AT TWENTY PAST ELEVEN. COME ALONE.",
     shift: 13,
-    keepWords: ["LIBRARY", "TRUST"],
+    keepWords: ["LIBRARY"],
     doodle: "mask",
   },
 
-  solution: { suspectId: "pell", motiveId: "trust", weaponId: "sash" },
+  solution: { suspectId: "pryor", motiveId: "trust", weaponId: "sash" },
 
   endings: {
     closed: {
       headline: "Case Closed",
       text:
-        "Laurence Pryor had bled the Ashcombe trust of $60,000, and the auditors were due Friday. At eleven he dared " +
+        "Laurence Pryor had bled the Treadwell trust of $60,000, and the auditors were due Friday. At eleven he dared " +
         "Rupert into trading costumes, climbed to the library in the Red Cardinal’s robe, and strangled Gideon with its " +
         "scarlet sash. Then he traded back. Everyone who saw the Cardinal named Rupert.",
-      saved: "The charges against Rupert Ashcombe are dropped. He was dancing in Harlequin’s diamonds the whole time.",
+      saved: "Rupert Treadwell comes home from the county jail. He spent the murder dancing in a borrowed Harlequin, sleeves to his elbows.",
     },
     cold: {
       headline: "Gone Cold",
       text:
-        "It was Laurence Pryor, hiding $60,000 looted from the Ashcombe trust. He swapped costumes with Rupert and " +
+        "It was Laurence Pryor, hiding $60,000 looted from the Treadwell trust. He swapped costumes with Rupert and " +
         "strangled Gideon with the Red Cardinal’s scarlet sash.",
       cost:
-        "Rupert Ashcombe was convicted and executed that winter. Pryor stayed on as the family’s lawyer.",
+        "Rupert Treadwell was convicted of the murder and of the missing $60,000 besides. Laurence Pryor handled his appeal, and lost it.",
     },
   },
 

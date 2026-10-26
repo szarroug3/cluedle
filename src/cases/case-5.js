@@ -76,7 +76,7 @@ export default {
       },
     },
     {
-      id: "pell",
+      id: "merriweather",
       name: "Ida Merriweather",
       role: "The cannery owner",
       description: "Wants Gull Point for a new cannery. Silas told her the light would stand long after she was gone.",
@@ -106,7 +106,7 @@ export default {
   ],
 
   clues: [
-    "The coroner: no water in the lungs, no pills in the blood. Wren was dead before he went in, from one blow behind the ear.",
+    "Post-mortem: no water in the lungs, no pills in the blood. Wren was dead before he went in, from one blow behind the ear.",
     "Wren to the harbormaster, Jan. 6: “Same boat running dark at 1 a.m. Act, or I go to Customs.” It was never answered.",
     "Dredged from the mud below the cottage slip: a belaying pin with gray hair on it. Dories carry none; trawlers do.",
     "Customs searched the Mary Clare: forty cases of untaxed whisky under the ice, and Wren’s logbook in the wheelhouse.",
@@ -114,18 +114,18 @@ export default {
 
   photo: { caption: "Gull Point Light, summer ’46", scene: "harbor" },
 
-  // Decoys, plus Wren's fuel receipt, which carries the scrawl on its back.
+  // Wren's lamp-room log carries the scrawl as one odd entry.
   evidence: [
-    { id: "gulls-nest", kind: "matchbook", label: "The Gull’s Nest", note: "tab R.T. $6.40 — pd. 11 pm" },
-    { id: "fuel-receipt", kind: "ticket", label: "Riverside Ice & Fuel", note: "kero. 40 gal — S.W. 1/9" },
-    { id: "seconal", kind: "prescription", label: "Dr. L. Abernathy", note: "seconal 1½ gr hs — S.W." },
+    { id: "watch-log", kind: "ledger", label: "Gull Pt. lamp-room log", note: "1/11 lit 4:55, S.W. | watch to E.B. 12:00 | fog bell from 2:10" },
+    { id: "cannery-letter", kind: "letter", label: "Merriweather Packing Co.", note: "Mr. Wren, my offer for the point stands. Think of Hester. I.M." },
+    { id: "deposit", kind: "slip", label: "Harbor Savings Bank", note: "Dep. cash $1,150.00 · Acct. Mary Clare · Jan. 11, 1947" },
   ],
 
   cipher: {
-    hiddenOn: "evidence:fuel-receipt",
-    plaintext: "SHE RUNS DARK AT ONE. GREEN WHEELHOUSE. IF I TURN UP DROWNED, I DID NOT FALL.",
+    hiddenOn: "evidence:watch-log",
+    plaintext: "A BOAT RUNS DARK PAST THE LIGHT AT ONE. IF I TURN UP DROWNED, I DID NOT FALL.",
     shift: 3,
-    keepWords: ["GREEN", "WHEELHOUSE"],
+    keepWords: ["DROWNED"],
     doodle: "key",
   },
 

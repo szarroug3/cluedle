@@ -45,7 +45,7 @@ export default {
       role: "The partner",
       description: "Owns forty-nine percent of the club. Has begged Rex to sell him the rest for two years.",
       statement: {
-        text: "I was in the kitchen pantry counting champagne till nearly twelve. Ask the pantry boy.",
+        text: "Back of the house most of the hour, seeing to the champagne. Somebody has to.",
         isLie: false,
       },
     },
@@ -106,7 +106,7 @@ export default {
   ],
 
   clues: [
-    "Coroner: no wound. Poison by mouth, seconds before he fell. Bitter almonds on his lips; that means cyanide.",
+    "The police surgeon: no wound. Poison by mouth, seconds before he fell. Bitter almonds on his lips, which means cyanide.",
     "The glass in Ashby’s hand: a frosted coupe with violet dregs. The Blue Moon Room mixes that drink for one man only.",
     "The kitchen polishes its silver with a dip that is mostly cyanide. The pantry tin is a spoonful short since supper.",
     "The pantry boy: Mr. Gage sent him out for ice at a quarter to twelve, then walked out past the empty bar.",
@@ -114,18 +114,19 @@ export default {
 
   photo: { caption: "The Blue Moon Room, New Year’s Eve", scene: "nightclub" },
 
-  // Decoys: Bixby's envelope, Benny's coat-check alibi, Iris's sleeping pills. The scrawl is on the photo.
+  // The partners' card gives the motive, the coat check catches Benny, the prints show whose glass it was.
+  // The scrawl is Rex's own personals ad to his bartender.
   evidence: [
-    { id: "stardust", kind: "matchbook", label: "The Stardust Lounge", note: "500 by Fri. — W.B." },
-    { id: "coat-check", kind: "ticket", label: "Blue Moon Coat Room · No. 45", note: "11:45 — B. & D. xx" },
-    { id: "veronal-slip", kind: "prescription", label: "Dr. L. Amberley", note: "veronal 5 gr hs — I.M." },
+    { id: "partners", kind: "card", label: "Malone & Gage · Est. 1939", note: "If one of us goes, the other takes the lot. — R.M. & S.G." },
+    { id: "coat-check", kind: "receipt", label: "Blue Moon Coat Check", note: "Check 45, mink · 11:45 two coffees to the booth, B. & D." },
+    { id: "coupe-prints", kind: "fingerprint", label: "Frosted coupe, owner’s table", note: "Bartender’s prints on the stem. Ashby’s over them." },
   ],
 
   cipher: {
-    hiddenOn: "photo",
-    plaintext: "SURVIVING PARTNER TAKES ALL. REX WONT SELL. MIDNIGHT THEN.",
+    hiddenOn: "clipping",
+    plaintext: "TO B.F. - SOMEBODY KEEPS ASKING WHICH GLASS IS MINE. NEVER LEAVE IT ALONE. R.M.",
     shift: 11,
-    keepWords: ["PARTNER", "MIDNIGHT"],
+    keepWords: ["GLASS"],
     doodle: "moon",
   },
 

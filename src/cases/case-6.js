@@ -9,7 +9,7 @@ export default {
     headline: "Hotel Owner Slain During Christmas Ball",
     dateline: "RIVERSIDE, Dec. 22, 1946",
     body:
-      "Leland Whitcomb, 64, owner of the Grand Meridian Hotel, was found stabbed to death in his twelfth-floor suite " +
+      "Leland Whitcomb, 59, owner of the Grand Meridian Hotel, was found stabbed to death in his twelfth-floor suite " +
       "early Sunday while three hundred guests danced at the hotel’s Christmas ball below.\n" +
       "The brass clock on his desk, knocked to the carpet, had stopped at 11:40. Police believe it marks the moment " +
       "of the attack. In the lobby, the Meridian’s great clock, kept five minutes fast since 1907 so no guest would " +
@@ -40,24 +40,24 @@ export default {
       id: "sutter",
       name: "Raymond Sutter",
       role: "The lawyer",
-      description: "Whitcomb’s lawyer. Drew up a new will last week that cuts the widow off. Keeps a room on eight.",
+      description: "Whitcomb’s lawyer. Drew up a new will last week, still unsigned, that cuts the widow off. Room on eight.",
       statement: {
         text: "I spent the evening in Room 814 with Leland’s papers. I never went up to twelve, and never set foot in the ball.",
         isLie: false,
       },
     },
     {
-      id: "pell",
+      id: "prewitt",
       name: "Gordon Prewitt",
       role: "The manager",
-      description: "Manager for nineteen years. He keeps the ledgers and signs every bank slip himself.",
+      description: "Manager for nineteen years, on a salary that hasn’t moved since ’38. Lunches with the buyer’s men.",
       statement: {
         text: "From eleven on I was in the Starlight Room shaking hands. Three hundred guests saw me. Ask any of them.",
         isLie: false,
       },
     },
     {
-      id: "benny",
+      id: "duvall",
       name: "Joey Duvall",
       role: "The elevator man",
       description: "Has run the main car eleven years. Whitcomb meant to put in an automatic lift come the new year.",
@@ -89,7 +89,7 @@ export default {
   ],
 
   motives: [
-    { id: "funds", text: "To hide stolen hotel funds" },
+    { id: "snub", text: "Revenge for a public snub" },
     { id: "inheritance", text: "To inherit the Grand Meridian" },
     { id: "affair", text: "To keep a love affair quiet" },
     { id: "sale", text: "To force the sale of the hotel" },
@@ -107,50 +107,50 @@ export default {
   ],
 
   clues: [
-    "The coroner: a single stab beneath the ribs, from a narrow blade with no cutting edge. No struggle, no poison.",
+    "Medical examiner: a single stab beneath the ribs, from a narrow blade with no cutting edge. No struggle, no poison.",
     "The coffee Whitcomb signed for at 10:15 was found full and stone cold. He never poured a cup.",
     "The desk clock lay face-down on thick carpet, its glass unbroken. Its hands had been turned forward by hand.",
-    "Whitcomb’s diary, Saturday: “Told G.P. the auditors come Monday. He went white as a sheet.”",
+    "Whitcomb’s diary, Saturday: “G.P. is on Dorrance’s payroll. $10,000 to him the day I sell. I won’t.”",
   ],
 
   photo: { caption: "The Grand Meridian lobby, 1938", scene: "hotel" },
 
-  // Decoys, plus Whitcomb's room-service check, which carries the scrawl.
+  // The house detective's report carries the scrawl as one garbled line; the ad hints at an inside fee.
   evidence: [
-    { id: "starlight", kind: "matchbook", label: "The Starlight Room", note: "814 — half past 10 — C." },
-    { id: "room-service", kind: "ticket", label: "Grand Meridian · Room Svc.", note: "coffee, Ste 1200 — 10:15 L.W." },
-    { id: "seconal", kind: "prescription", label: "Dr. H. Lowell", note: "seconal 1½ gr nightly — C.W." },
+    { id: "house-report", kind: "report", label: "House Detective · Ste 1200", note: "12:10 a.m. Back-stair door on 12 wedged open. Coffee untouched." },
+    { id: "key-814", kind: "key", label: "Grand Meridian · Room 814", note: "left at the desk 11:35 by Mrs. W." },
+    { id: "finders-fee", kind: "classified", label: "Business Opportunities", note: "Finder’s fee on any downtown hotel sold to us. Dorrance Realty" },
   ],
 
   cipher: {
-    hiddenOn: "evidence:room-service",
-    plaintext: "THE LEDGERS ARE TEN THOUSAND SHORT. ONLY ONE MAN SIGNS THE BANK SLIPS.",
+    hiddenOn: "evidence:house-report",
+    plaintext: "THE MAIN CAR NEVER WENT ABOVE EIGHT ALL NIGHT. WHOEVER WENT TO TWELVE WALKED.",
     shift: 5,
-    keepWords: ["LEDGERS", "SLIPS"],
+    keepWords: ["EIGHT", "WALKED"],
     doodle: "clock",
   },
 
-  solution: { suspectId: "pell", motiveId: "funds", weaponId: "letter-opener" },
+  solution: { suspectId: "prewitt", motiveId: "sale", weaponId: "letter-opener" },
 
   endings: {
     closed: {
       headline: "Case Closed",
       text:
-        "Gordon Prewitt had skimmed ten thousand dollars from the Meridian on bank slips only he signed. When Whitcomb " +
-        "told him the auditors were coming, Prewitt took the back stairs at 10:25 and stabbed him with his own letter " +
-        "opener. Then he turned the desk clock forward to 11:40, laid it face-down, and went down to shake three " +
-        "hundred hands.",
+        "Gordon Prewitt was on Max Dorrance’s payroll, with $10,000 coming the day the Meridian sold. When Whitcomb " +
+        "turned Dorrance down for good, Prewitt saw that a widow would sell. He took the back stairs at 10:25 and stabbed " +
+        "Whitcomb with his own letter opener. Then he turned the desk clock forward to 11:40, laid it face-down, and went " +
+        "down to shake three hundred hands.",
       saved:
         "Celeste Whitcomb was gone for an hour and wouldn’t say where. With Prewitt charged, nobody asks her again.",
     },
     cold: {
       headline: "Gone Cold",
       text:
-        "It was Gordon Prewitt, hiding the ten thousand dollars he’d skimmed from the hotel. He stabbed Whitcomb with the " +
-        "letter opener at half past ten, then set the desk clock forward to 11:40 and went down to the ball.",
+        "It was Gordon Prewitt, who stood to collect $10,000 from Max Dorrance once the hotel was sold. He stabbed " +
+        "Whitcomb with the letter opener at half past ten, then set the desk clock forward to 11:40 and went down to the ball.",
       cost:
-        "Celeste Whitcomb wouldn’t say where she’d been without ruining Sutter, so she said nothing. She was convicted " +
-        "in March, and Prewitt kept running the hotel.",
+        "Nobody was charged. Celeste sold the Meridian to Dorrance that spring, and the wreckers had it down by fall. " +
+        "Prewitt’s $10,000 bought him a bungalow in Sarasota.",
     },
   },
 

@@ -1,7 +1,6 @@
 // Red string between pins, for the player's own thinking. Drag from one card to another to tie a
-// string, or click the spool, then pin A, then pin B; the spool stays in hand for the next one until
-// it's clicked again or another tool is picked up. Click a string to take it down. The rules never
-// read it.
+// string (on a touch screen, press and hold the card first). Hovering a card shows a loose end of
+// thread on its pin. Click a string to take it down. The rules never read it.
 //
 // Each string is a short chain of points under gravity (Verlet integration): a new string drops and
 // settles, and strings sway when something nearby is clicked or the pointer brushes them. Each
@@ -25,29 +24,23 @@ function svg(tag, attrs = {}) {
 
 export function createString(stage, { strings, onChange }) {
   const board = stage.querySelector(".board");
-  const spool = stage.querySelector(".spool");
-  spool.setAttribute("role", "button");
-  spool.setAttribute("aria-label", "Red string: tie a string between two pins");
-  spool.tabIndex = 0;
-
   const layer = svg("svg", { class: "string-layer", "aria-hidden": "true" });
   board.append(layer);
-  const spoolLabel = spool.parentElement.querySelector(".rail-label");
 
-  // At the cap the spool dims and says so; taking a string down frees one up.
+  // At the cap, trying to tie another shows a short note; taking a string down frees one up.
   const full = () => strings.length >= MAX_STRINGS;
-  function updateSpool() {
-    spool.classList.toggle("empty", full());
-    if (spoolLabel) spoolLabel.textContent = full() ? "Out of string" : "String";
-  }
+  const note = document.createElement("div");
+  note.className = "string-note";
+  note.setAttribute("role", "status");
+  stage.append(note);
+  let noteTimer = null;
   function refuse() {
-    spool.classList.remove("refuse");
-    void spool.offsetWidth;
-    spool.classList.add("refuse");
+    note.textContent = "Out of string. Take one down to tie another.";
+    note.classList.add("shown");
+    clearTimeout(noteTimer);
+    noteTimer = setTimeout(() => note.classList.remove("shown"), 2200);
   }
 
-  let threading = false;
-  let first = null;
   let ropes = []; // one per string: { a, b, points: [{ x, y, px, py }], rest, group, hit, line, awake }
   let drawing = null; // the string following the pointer while the player drags, if any
   let running = false;
@@ -198,14 +191,6 @@ export function createString(stage, { strings, onChange }) {
     }
   }
 
-  function setThreading(on) {
-    threading = on;
-    first?.classList.remove("string-first");
-    first = null;
-    stage.classList.toggle("threading", on);
-    spool.classList.toggle("active", on);
-  }
-
   // Tie a new string between two pins, unless it's the same pin or the pair is already tied.
   function addString(a, b, carried = null) {
     const exists = strings.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
@@ -221,19 +206,6 @@ export function createString(stage, { strings, onChange }) {
     layer.append(rope.group);
     render(rope);
     wake(rope);
-    updateSpool();
-    if (full()) setThreading(false);
-  }
-
-  function tie(item) {
-    if (!first) {
-      first = item;
-      item.classList.add("string-first");
-      return;
-    }
-    addString(first.dataset.pin, item.dataset.pin);
-    first.classList.remove("string-first");
-    first = null;
   }
 
   // Dragging from a card draws a string that follows the pointer; letting go on another card ties
@@ -337,16 +309,6 @@ export function createString(stage, { strings, onChange }) {
   // The browser can take a touch over (to scroll or zoom); drop the drag rather than leave it stuck.
   window.addEventListener("pointercancel", cancelDrag);
 
-  spool.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      setThreading(!threading);
-    }
-  });
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && threading) setThreading(false);
-  });
-
   // The pointer brushing a string sets it swaying a little.
   let lastBrush = 0;
   board.addEventListener("pointermove", (event) => {
@@ -363,21 +325,10 @@ export function createString(stage, { strings, onChange }) {
   });
 
   rebuild({ hanging: true });
-  updateSpool();
 
   return {
     // Handles a click if it belongs to the string; returns whether it did.
     handleClick(event) {
-      if (event.target.closest(".spool")) {
-        if (full() && !threading) refuse();
-        else setThreading(!threading);
-        return true;
-      }
-      if (threading) {
-        const item = event.target.closest(".pin-item");
-        if (item) tie(item);
-        return true;
-      }
       // Taking one string down removes just that one; the click itself sways its neighbours.
       const group = event.target.closest(".string");
       const rope = group && ropes.find((r) => r.group === group);
@@ -386,16 +337,11 @@ export function createString(stage, { strings, onChange }) {
         ropes.splice(ropes.indexOf(rope), 1);
         strings.splice(strings.findIndex(([x, y]) => x === rope.a && y === rope.b), 1);
         onChange(strings);
-        updateSpool();
         return true;
       }
       return false;
     },
     // Re-hang every string from its pins, e.g. after restoring progress.
     redraw: () => rebuild({ hanging: true }),
-    // Put the spool down, e.g. when another tool is picked up.
-    stop() {
-      if (threading) setThreading(false);
-    },
   };
 }

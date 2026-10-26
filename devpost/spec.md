@@ -8,7 +8,7 @@ status: approved
 ## How This Works, In Plain Language
 Cluedle is a single web page made of plain HTML, CSS, and JavaScript, with no framework and no build step.
 
-- **The cases are data files.** Each of the ten cases is a JavaScript file that describes the story, suspects and their statements (which one lies), motives, weapons, clues in unlock order, the hidden cipher, the solution, and both endings. The game never generates anything; it only reads these files.
+- **The cases are data files.** Each of the 33 cases is a JavaScript file that describes the story, suspects and their statements (which one lies), motives, weapons, clues in unlock order, the hidden cipher, the solution, and both endings. The game never generates anything; it only reads these files.
 - **The rules are a separate, tested layer.** Small JavaScript modules decide today's case, check an accusation, handle the LIAR shot, run the cipher and its blotting, count points for the rank, and write the share card. They don't touch the screen, so automated tests can check every rule by itself.
 - **The board is the screen layer.** Other modules draw the case file, the how-to-play, the murder board, the stamps, the red string, the decoder card, and the ending, and pass the player's actions to the rules.
 - **Progress lives in the browser.** After every action, the game saves the player's progress for today in `localStorage`, a small notebook the browser keeps for one site. Reopening the page reads it back, so a reload never resets cipher tries or the LIAR shot.
@@ -23,7 +23,7 @@ PRD ref: `prd.md > The Core Journey`.
 3. **How to play.** If `cluedle:seenHowTo` isn't set, `howToPlay.js` shows the overlay and sets it when closed.
 4. **The board.** `board.js` lays out the case's pins from the case file data and redraws anything already in the progress: past stamps, unlocked clues, strings, cipher state.
 5. **Red string.** `string.js` adds or removes a string between two pins and saves it. Rules never read it.
-6. **Cipher.** Clicking any scrap, the scrawl included, opens the same close-up from `decoder.js`. Clicking the blank card opens it with its two letter strips. **Pin it** calls `cipher.js` with the written answer. Right → the real message flips in, with blots for earlier misses, and stays on the blank card. Wrong → one more blot stage on the scrawl. The result is saved.
+6. **Cipher.** Clicking any scrap, the one holding the code included, opens the same close-up from `decoder.js`. Clicking the blank card opens it with its two letter strips. **Pin it** calls `cipher.js` with the written answer. Right → the real message flips in, with blots for earlier misses, and stays on the blank card. Wrong → one more blot stage on the code. The result is saved.
 7. **Accuse.** `stamps.js` collects a GUILTY stamp on a suspect, a motive, and a weapon. Confirm calls `rules.js`, which counts how many parts are right, records the guess, and says whether a clue unlocks or the case has ended. The stamps are numbered, the spent guess on the rail shows its count, a new clue pins up, and progress is saved.
 8. **LIAR.** `stamps.js` collects a LIAR stamp on a suspect card, then the player picks a truth about that suspect's statement. `rules.js` records the one shot, and the stamp recolors.
 9. **Ending.** When `rules.js` says closed or cold, `rank.js` scores the run (closed only), and `ending.js` shows the ending and rank.
@@ -46,7 +46,7 @@ Nothing here needs an account, a key, or a paid plan.
 - **Start it:** from the project folder, run `npx serve .` (or `python3 -m http.server 8000`), then open the address it prints, for example `http://localhost:3000`.
 - **Run the tests:** `npm test` (runs `node --test`).
 - **Demo recording:** open the local address and record the board with a screen recorder. The video should show finding and cracking the cipher, a wrong guess pinning a clue, the LIAR stamp, solving the case, the rank, and pasting the share card.
-- **Showing a specific case:** adding `?case=2` to the address loads that case instead of today's, and `?fresh` ignores saved progress. This is a demo and testing aid, so all ten cases can be recorded on any day.
+- **Showing a specific case:** adding `?case=2` to the address loads that case instead of today's, and `?fresh` ignores saved progress. This is a demo and testing aid, so every case can be recorded on any day.
 - **Live:** https://szarroug3.github.io/cluedle/ (GitHub Pages, served from `main`). Add `?case=N&fresh` to play a specific case from scratch.
 - **Source:** https://github.com/szarroug3/cluedle
 - **Optional playable link (nice to have):** GitHub Pages serves the repository's static files as is, so the same files work there with no changes. Deploy steps belong to `6-ship`. GitHub commands should target github.com explicitly. [GitHub Pages docs](https://docs.github.com/en/pages).
@@ -129,7 +129,7 @@ A short overlay covering the stamps, the five guesses, "something on this board 
 PRD ref: `prd.md > Case File and How to Play`.
 
 ### Murder Board (`src/ui/board.js`)
-- Lays out pins from the case data: the newspaper clipping, suspect cards (clicking one brings its statement forward), motive cards, weapon cards, clue slots, evidence scraps with the hidden scrawl, and the blank card. The edges hold the stamp tray, the string spool, the guesses left (five bullet holes or matches), and **?**.
+- Lays out pins from the case data: the newspaper clipping, suspect cards (clicking one brings its statement forward), motive cards, weapon cards, clue slots, the photo, three evidence scraps (the code hides in one of them, the photo, or the clipping's personals), and the blank card. The edges hold the stamp tray, the guesses left (five bullet holes or matches), and **?**.
 - Positions come from a fixed layout per pin type, with an optional `pos` per pin in the case data for hand-tuning.
 - Every pin has a stable id, which string, stamps, and progress use.
 PRD ref: `prd.md > Screens and Layout`.
@@ -141,13 +141,13 @@ PRD ref: `prd.md > Screens and Layout`.
 PRD ref: `prd.md > Accusing With the GUILTY Stamp`, `prd.md > Catching the Liar With the LIAR Stamp`.
 
 ### Red String (`src/ui/string.js`)
-- An SVG layer over the board. Click the spool to start, click pin A, then pin B, to tie a string. Click a string to remove it.
-- Strings are drawn as slightly sagging curves between pin heads. No physics.
+- An SVG layer over the board. Drag from one pin head to another to tie a string (on touch, a 350 ms press arms the drag). Hovering a pin head shows a thread. Click a string to remove it. At most 40 strings; a note says so when the board is full.
+- Each string is a light rope simulation (Verlet points with gravity and damping) that sags and sways, and sleeps once it settles so an idle board costs nothing.
 - Saved in progress as pin-id pairs and redrawn on load.
 PRD ref: `prd.md > Red String`.
 
 ### Close Look and Blank Card (`src/ui/decoder.js`)
-- **Close look:** any scrap (decoys and the scrawl alike) brought forward to read, with blots drawn as ink. No controls, so nothing marks the cipher.
+- **Close look:** any scrap brought forward to read, drawn as its own kind of paper. A code line is written in that paper's style (handwritten, typed, or newsprint), with blots drawn as ink. No controls, so nothing marks the cipher.
 - **Blank card:** a space to write the decoded message, two side-by-side A–Z strips that each slide up or down (drag, or their ▲▼ arrows) and wrap around, the gap between them shown in the middle, letters that write themselves into the answer when clicked, Space and ⌫ keys, **Pin it**, and tries left.
 - On a right answer, it plays the reveal: the real message flips into place left to right, and blotted letters stay as ink. As the card closes, the blank card on the board fills in with the message.
 PRD ref: `prd.md > Finding and Cracking the Cipher`.
@@ -170,13 +170,15 @@ PRD ref: `prd.md > Case Ending`, `prd.md > Share Card`, `prd.md > States and Bou
   motives:    [{ id, text }],                             // 6
   weapons:    [{ id, name, detail }],                     // 6
   clues:      [string],          // plain clues, in unlock order (4: one per possible miss)
-  photo:      { caption, scene },  // a pinned photograph; scene is glasshouse, theater, or train
-  evidence:   [{ id, kind, label, note }],  // decoy scraps (matchbook, ticket, prescription) in the same pencil hand as the scrawl;
-                                            // every scrap opens the same close-up
+  photo:      { caption, scene },  // a pinned photograph; scene is one of glasshouse, theater, train, nightclub, harbor, hotel, mansion, office, ring, lodge
+  evidence:   [{ id, kind, label, note }],  // 3 scraps; kind is one of 16 papers: matchbook, ticket, prescription, letter,
+                                            // card, tag, key, envelope (handwritten); telegram, receipt, classified, report,
+                                            // ledger, slip, stub, fingerprint (typed). Every scrap opens the same close-up
   cipher: {
-    hiddenOn: "photo",           // which pin hides the scrawl: "photo" or "evidence:<id>"
-    doodle: "anchor",            // pencil doodle signing the scrawl, a hint toward the key: anchor, star, or train
-    plaintext: "...",
+    hiddenOn: "photo",           // where the code hides: "photo", "clipping" (a personals line), or "evidence:<id>"
+    doodle: "anchor",            // drawn in a corner of the paper holding the code, a hint toward the key:
+                                 // anchor, star, train, moon, key, clock, mask, pen, bell, snowflake
+    plaintext: "...",            // a small extra clue; never names the culprit
     shift: 7,                    // 1–25; its key is hidden in the clipping, alongside decoy numbers
     keepWords: ["..."]           // never blotted
   },
@@ -270,7 +272,7 @@ cluedle/
 - **Every witness is a suspect**, so each statement lives on its suspect's card and the LIAR stamp goes on the card.
 - **Exactly one lying statement per case** instead of "at least one." The LIAR stamp is one shot and catching the liar is worth one fixed bonus, so a single liar keeps that fair and easy to score.
 - **Static curves for red string** instead of physics, as agreed in `scope.md > Later`.
-- **Rotation by date, modulo the ten cases**, instead of a calendar of unique cases. The cycle repeats every ten days; adding more cases only means adding files.
+- **Rotation by date, modulo the number of cases**, instead of a calendar of unique cases. The cycle repeats every 33 days; adding more cases only means adding files.
 - **Textures from CSS** instead of photographed images. It's fast to build and no assets to source; images can be added later.
 - **No end-to-end browser test suite.** The rules are tested automatically, and the screens are checked by playing in the browser at each build step. A browser-automation tool would add setup that doesn't help prove the idea.
 
@@ -287,6 +289,6 @@ cluedle/
 2. **Distinctiveness, given Murdle** (https://murdle.com). Checked on 2026-10-24. Murdle is a daily logic-grid puzzle: all the evidence is given up front, it includes a coded note and statements where the guilty party lies, and you deduce who, how, where, and why in one go. So encrypted notes and liars alone aren't what sets Cluedle apart. What Murdle doesn't have, and Cluedle does: a Wordle-style loop where each wrong guess pays out new evidence and a count of how many parts were right; a cipher you have to *find* on the board, whose key is in the story, and that blots out with each miss; a tactile murder board with stamps and string instead of a text grid; detective ranks; and an ending that says what failing cost. The demo should lead with those moments.
 
 ### Open issues
-- **How hidden the cipher scrawl should be** — tuned while writing and playtesting cases (from `prd.md > Open Questions`).
+- ~~How hidden the cipher should be~~ — settled in playtesting: the code takes the hand or type of its host paper, the doodle sits in a corner, and scraps are unique per case.
 - **Rank point values and bands** — tuned while playtesting (from `prd.md > Open Questions`).
 - **Not verified:** `npx serve`'s current default port, which the README should state as "the address it prints." To check on first run.

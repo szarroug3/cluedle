@@ -25,7 +25,7 @@ export default {
       role: "The fiancée",
       description: "Engaged to Felix for a month. Her family lost everything in ’29, and his didn’t.",
       statement: {
-        text: "Felix said goodnight at eleven and locked his door. I heard the bolt go. I never saw him again.",
+        text: "Felix said goodnight at eleven and I heard his bolt go. I couldn’t sleep, so I went along to watch the cards.",
         isLie: false,
       },
     },
@@ -35,7 +35,7 @@ export default {
       role: "The rival",
       description: "Deals diamonds out of New York. Swore in print he’d see Hargrove ruined by Christmas.",
       statement: {
-        text: "I played gin rummy in the club car till one. The doctor sat in for a hand, then left around midnight.",
+        text: "I played gin in the club car till two, with Miss Lindqvist watching every hand. The doctor sat in once, left near midnight.",
         isLie: false,
       },
     },
@@ -106,7 +106,7 @@ export default {
   ],
 
   clues: [
-    "The coroner: one deep puncture beneath the left ear, thin as a needle. No struggle, no poison.",
+    "Autopsy at Toledo: one deep puncture beneath the left ear, thin as a needle. No struggle, no poison.",
     "A woman’s hatpin, wiped clean, turned up in the vestibule ashtray. Miss Thorne says it’s hers.",
     "The porter’s coat pocket held a crisp fifty-dollar bill. He earns that in a month.",
     "A doctor’s bag aboard the Night Owl has a lining freshly re-stitched in black thread.",
@@ -114,18 +114,18 @@ export default {
 
   photo: { caption: "The Night Owl, Union Station", scene: "train" },
 
-  // Decoys, plus Hargrove's luggage tag, which carries the scrawl.
+  // Hargrove's telegram carries the code. The pass key explains the bolted door; the envelope's program puts the congress in May.
   evidence: [
-    { id: "drake", kind: "matchbook", label: "The Drake Hotel", note: "WAbash 2-4410 — Mon." },
-    { id: "luggage-tag", kind: "ticket", label: "Night Owl · Car 7, Berth 3", note: "hold for F.H." },
-    { id: "chloral", kind: "prescription", label: "Dr. S. Reyes", note: "chloral 10 gr nightly — A.T." },
+    { id: "wire", kind: "telegram", label: "Western Union · New York", note: "F HARGROVE CAR 7 NIGHT OWL STOP BUYER MEETS YOU TOLEDO STOP" },
+    { id: "pass-key", kind: "key", label: "Pullman Co. · Car 7", note: "Porter’s pass key. Opens every door in the car, bolt and all." },
+    { id: "congress", kind: "envelope", label: "Ohio State Medical Assn.", note: "Dr. S. Reyes, Chicago · Program enclosed: Toledo, May 12–14" },
   ],
 
   cipher: {
-    hiddenOn: "evidence:luggage-tag",
-    plaintext: "THE DOCTOR ASKED TO SEE THE STONE TWICE. KEEP IT LOCKED AWAY FROM HIM.",
+    hiddenOn: "evidence:wire",
+    plaintext: "BUYER HAS THE STONE TESTED AT TOLEDO AT DAWN. KEEP IT ON YOU TILL THEN.",
     shift: 12,
-    keepWords: ["STONE"],
+    keepWords: ["STONE", "DAWN"],
     doodle: "train",
   },
 

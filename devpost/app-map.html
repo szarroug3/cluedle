@@ -51,7 +51,7 @@
   <div class="card">
     <p><strong>Three layers, kept apart on purpose:</strong></p>
     <ul>
-      <li><strong>Cases</strong>: <code>src/cases/</code>. Ten hand-written cases, as data. The game never generates anything.</li>
+      <li><strong>Cases</strong>: <code>src/cases/</code>. 33 hand-written cases, as data. The game never generates anything.</li>
       <li><strong>Rules</strong>: <code>src/game/</code>. Plain functions with no screen code, all checked by <code>npm test</code>.</li>
       <li><strong>Screen</strong>: <code>src/ui/</code> and <code>styles/</code>. The board, stamps, string, and cards. <code>src/main.js</code> wires the screen to the rules and saves progress in the browser's <code>localStorage</code>.</li>
     </ul>
@@ -83,7 +83,7 @@
     <li><strong>Rank points and bands:</strong> <code>src/game/rank.js</code>, <code>const POINTS</code> and <code>const RANKS</code>.</li>
     <li><strong>How forgiving the blank card is:</strong> <code>src/game/cipher.js</code>, <code>export function matchesMessage</code>.</li>
     <li><strong>The palette:</strong> <code>styles/base.css</code>, the variables at the top (<code>--red</code>, <code>--blue</code>, <code>--purple</code>). There's no orange, yellow, or green, by design.</li>
-    <li><strong>A case's photo or scrawl doodle:</strong> <code>src/ui/board.js</code> <code>PHOTO_SCENES</code>, and <code>src/ui/decoder.js</code> <code>DOODLES</code>.</li>
+    <li><strong>A case's photo or cipher doodle:</strong> <code>src/ui/board.js</code> <code>PHOTO_SCENES</code>, and <code>src/ui/decoder.js</code> <code>DOODLES</code>.</li>
     <li><strong>How the red string hangs and swings:</strong> <code>src/ui/string.js</code>, <code>SLACK</code>, <code>GRAVITY</code>, and <code>DAMPING</code>.</li>
   </ul>
 

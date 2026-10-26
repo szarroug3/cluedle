@@ -16,7 +16,8 @@ const MAGNIFIER = `
     <path class="try-handle" d="M18.2 19.2L26.5 27.5"/>
   </svg>`;
 
-// The little pencil doodle signing each case's scrawl; it points toward where the key is hidden.
+// A small mark on the paper that hides the code, away from the code itself; it points toward where
+// the key is hidden in the story.
 export const DOODLES = {
   anchor: `<svg class="doodle" viewBox="0 0 20 24" aria-hidden="true">
     <circle cx="10" cy="4" r="2.6"/>
@@ -82,6 +83,37 @@ export function openOverlay(stage, card, onClose) {
   document.addEventListener("keydown", onKey);
 }
 
+// Scraps of evidence come in many kinds of paper. Some are handwritten; these are typed or printed.
+export const TYPED_KINDS = ["telegram", "receipt", "classified", "report", "ledger", "slip", "stub", "fingerprint"];
+
+// Small drawings some kinds of paper carry, shared by the board and the close-up.
+const PRINT = `<svg viewBox="0 0 40 50"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+  <path d="M20 6c-9 0-14 8-14 18s5 20 14 20 14-10 14-20S29 6 20 6"/><path d="M20 11c-6 0-10 6-10 13s4 15 10 15 10-8 10-15-4-13-10-13"/>
+  <path d="M20 16c-4 0-6 4-6 8s2 10 6 10 6-5 6-10-2-8-6-8"/><path d="M20 21c-2 0-2 2-2 3s0 5 2 5 2-3 2-5-1-3-2-3"/></g></svg>`;
+export const PAPER_ART = {
+  prescription: `<span class="rx">\u211e</span>`,
+  tag: `<span class="tag-hole"></span>`,
+  key: `<span class="tag-hole"></span><svg class="key-art" viewBox="0 0 80 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M21 12h52v7M63 12v6M55 12v5"/></svg>`,
+  stub: `<span class="stub-holes"><span></span><span></span></span>`,
+  envelope: `<span class="stamp"></span><span class="postmark"></span>`,
+  fingerprint: `<span class="prints">${PRINT}${PRINT}</span>`,
+};
+
+// The doodle as a mark tucked in one corner of the paper. Which corner depends on the case, so it
+// doesn't always sit in the same place.
+export function doodleMark(doodle, seed) {
+  const corners = ["top-right", "bottom-right", "bottom-left"];
+  const corner = corners[[...seed].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % corners.length];
+  const mark = el("span", `paper-doodle ${corner}`);
+  mark.innerHTML = DOODLES[doodle];
+  return mark;
+}
+
+// A ledger's note is its rows, separated by " | ".
+export function ledgerRows(note) {
+  return note.split(" | ").map((row) => el("div", "ledger-row", row));
+}
+
 // One ink splat in a letter's place. Its shape, tilt, size, and height above or below the line
 // are picked by position, so the same letter always looks the same and no two neighbours match.
 export function inkBlot(position) {
@@ -112,14 +144,27 @@ export function renderInked(container, text) {
 }
 
 // Any scrap, the scrawl included, opens the same plain close-up.
-export function openCloseLook(stage, { kind, label, note, doodle }) {
+// A scrap brought forward to read. If it carries the hidden code, the code is part of what it says,
+// set in the same hand or type as the rest of the scrap.
+export function openCloseLook(stage, { kind, label, note, code, doodle, seed = "" }) {
   const card = el("div", `paper close-look evidence-${kind}`);
   card.setAttribute("role", "dialog");
   card.setAttribute("aria-label", label);
-  const writing = el("div", "close-look-note hand");
-  renderInked(writing, note);
-  if (doodle) writing.insertAdjacentHTML("beforeend", DOODLES[doodle]);
-  card.append(el("div", "evidence-label", label), writing);
+  card.insertAdjacentHTML("afterbegin", PAPER_ART[kind] ?? "");
+  const style = TYPED_KINDS.includes(kind) ? "typed" : "hand";
+  card.append(el("div", "evidence-label", label));
+  if (note) {
+    const writing = el("div", `close-look-note ${style}`);
+    if (kind === "ledger") writing.append(...ledgerRows(note));
+    else writing.textContent = note;
+    card.append(writing);
+  }
+  if (code) {
+    const coded = el("div", `close-look-note close-look-code ${style}`);
+    renderInked(coded, code);
+    card.append(coded);
+    if (doodle) card.append(doodleMark(doodle, seed));
+  }
   openOverlay(stage, card);
 }
 

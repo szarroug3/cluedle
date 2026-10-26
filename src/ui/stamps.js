@@ -248,11 +248,6 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
         pickUp("liar");
         return true;
       }
-      // The spool trades places with a stamp in hand.
-      if (event.target.closest(".spool")) {
-        putDown();
-        return false;
-      }
       if (!held) return false;
       if (held === "liar") {
         const card = event.target.closest(".pin-suspect");

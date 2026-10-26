@@ -11,7 +11,7 @@ Everything is hand-written and rule-based. There's no AI at runtime, no server, 
 - Pick up the GUILTY stamp, stamp a suspect, a motive, and a weapon, then make the accusation. Each guess tells you how many of the three are right, never which ones. Every miss pins up a new clue.
 - Click a suspect to read their statement. One of them is lying. Stamp LIAR on that suspect's card and say what really happened. You get one shot, and it doesn't use a guess.
 - One scrap on the board is written in code. Work out which one, find its key in the story, decode it on paper, and write the message on the blank card. You get three tries, and every wrong one runs more ink over the code.
-- Click the spool, then two pins, to tie string between them. Click a string to take it down. It's only for your own thinking.
+- Drag from one card to another to tie red string between them. On a phone, press and hold a card first. Click a string to take it down. It's only for your own thinking.
 - The fewer guesses you need, the higher your rank, from Amateur Sleuth up to Basically Sherlock. Cracking the code and catching the liar count too. Then copy a spoiler-free share card.
 
 ## Run it
@@ -28,7 +28,7 @@ Progress is saved in your browser for the day. A new case comes out at local mid
 
 ### Demo and testing aids
 
-- `?case=2` plays case 2 on any day (there are ten cases).
+- `?case=2` plays case 2 on any day (there are 33 cases).
 - `?fresh` ignores saved progress.
 
 They work together: `http://localhost:3000/?case=3&fresh`.
@@ -45,7 +45,7 @@ This runs the tests with Node's built-in test runner. They cover the game rules,
 
 - `index.html`: the page.
 - `styles/`: the look (palette, board, stamps, cards).
-- `src/cases/`: the ten hand-written cases, as data.
+- `src/cases/`: the 33 hand-written cases, as data.
 - `src/game/`: the rules. Plain JavaScript with no DOM, and all tested.
 - `src/ui/`: the board and everything drawn on it.
 - `src/main.js`: connects the board to the rules and saves progress.

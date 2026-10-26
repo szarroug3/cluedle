@@ -31,6 +31,12 @@ test("cases on back-to-back days never share a cipher key", () => {
   });
 });
 
+const PLAYED_BEFORE_CIPHER_RULE = ["last-curtain"];
+const EVIDENCE_KINDS = [
+  "matchbook", "ticket", "prescription", "telegram", "letter", "card", "receipt", "tag",
+  "classified", "envelope", "report", "ledger", "slip", "stub", "fingerprint", "key",
+];
+
 for (const c of cases) {
   // Six of each, so working through the cards in order can't always win in five guesses.
   test(`${c.id}: has a title, story, and 6 suspects, motives, and weapons with unique ids`, () => {
@@ -69,16 +75,26 @@ for (const c of cases) {
   });
 
   test(`${c.id}: the scrawl is hidden on a real pin, with a known doodle and photo scene`, () => {
-    const spots = ["photo", ...c.evidence.map((e) => `evidence:${e.id}`)];
+    const spots = ["photo", "clipping", ...c.evidence.map((e) => `evidence:${e.id}`)];
     assert.ok(spots.includes(c.cipher.hiddenOn), `nowhere called ${c.cipher.hiddenOn}`);
     assert.ok(["anchor", "star", "train", "moon", "key", "clock", "mask", "pen", "bell", "snowflake"].includes(c.cipher.doodle));
     assert.ok(["glasshouse", "theater", "train", "nightclub", "harbor", "hotel", "mansion", "office", "ring", "lodge"].includes(c.photo.scene));
     assert.equal(c.evidence.length, 3);
+    for (const e of c.evidence) assert.ok(EVIDENCE_KINDS.includes(e.kind), `unknown scrap kind ${e.kind}`);
   });
 
   test(`${c.id}: the cipher key appears in the story, as a numeral or a word`, () => {
     const word = NUMBER_WORDS[c.cipher.shift];
     assert.match(c.clipping.body, new RegExp(`\\b(${c.cipher.shift}|${word})\\b`, "i"));
+  });
+
+  // The cipher is a small extra clue, never the answer: it may not name the culprit. Cases that had
+  // already been played when this rule came in keep their original cipher.
+  test(`${c.id}: the decoded message doesn't name the culprit`, { skip: PLAYED_BEFORE_CIPHER_RULE.includes(c.id) }, () => {
+    const culprit = c.suspects.find((s) => s.id === c.solution.suspectId);
+    for (const part of culprit.name.toUpperCase().replace(/[^A-Z ]/g, "").split(" ")) {
+      if (part.length > 2) assert.ok(!new RegExp(`\\b${part}\\b`).test(c.cipher.plaintext), `the cipher names ${culprit.name}`);
+    }
   });
 
   test(`${c.id}: both endings are written`, () => {

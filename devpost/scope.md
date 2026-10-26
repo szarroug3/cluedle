@@ -29,10 +29,10 @@ A static web app opened in a browser shows today's case on a murder board. In on
 The "oh, that's cool" beat: noticing the hidden clue, then watching it unscramble once you spot its key in the story.
 
 ## The POC Boundary
-- Ten hand-written cases (Claude drafts them, the learner plays and edits them), with the daily case chosen by date. Grown from three during the final review, for the showcase.
+- 33 hand-written cases (Claude drafts them, the learner plays and edits them), with the daily case chosen by date. Grown from three to ten during the final review, then to 33 after launch.
 - Each case has a story, 6 suspects (each with a witness statement, exactly one of which lies), 6 motives, 6 weapons, plain clues that unlock on wrong guesses, and one or two encrypted clues hidden on the board whose key is hidden in the story.
 - Guessing who, why, and how, with per-guess feedback saying how many of the three are right (not which), five guesses max, and "the case goes cold" on a loss.
-- Finding and cracking an encrypted clue, at any time, reveals it without spending a guess. A player who never finds it can still solve the case.
+- Finding and cracking an encrypted clue, at any time, reveals it without spending a guess. The message is a small extra clue and never names the killer. A player who never finds it can still solve the case.
 - A detective rank (e.g. Amateur up to Seasoned Detective) based on what's already in the core: guesses used, cipher found and cracked, liar caught. Exact ranks and rules are set in the PRD.
 - The murder-board look: corkboard, pinned suspect cards, newspaper-clipping story, and clues pinned as they unlock.
 - Red string the player draws between pins to track their own thinking.

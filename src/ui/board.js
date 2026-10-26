@@ -1,6 +1,6 @@
 // The murder board: lays out every pin from the case data on a fixed 1600×1000 stage.
 import { BLOT } from "../game/cipher.js";
-import { DOODLES, inkBlot } from "./decoder.js";
+import { inkBlot, TYPED_KINDS, PAPER_ART, ledgerRows, doodleMark } from "./decoder.js";
 
 export const STAGE_WIDTH = 1600;
 export const STAGE_HEIGHT = 1000;
@@ -35,9 +35,9 @@ const LAYOUT = {
   ],
   photo: { x: 1066, y: 440, r: 3 },
   evidence: [
-    { x: 1338, y: 430, r: -4 },
-    { x: 512, y: 720, r: 1.5 },
-    { x: 1332, y: 590, r: 2.5 },
+    { x: 1316, y: 430, r: -4 },
+    { x: 506, y: 698, r: 1.5 },
+    { x: 1316, y: 600, r: 2.5 },
   ],
   clues: [
     { x: 34, y: 580, r: -1 },
@@ -203,16 +203,25 @@ function pinItem(pinId, kind, slot, override, paper) {
   return item;
 }
 
-function clippingPaper(clipping) {
+function clippingPaper(caseData, scrawlText) {
+  const { clipping } = caseData;
   const paper = el("article", "paper clipping");
   paper.append(
     el("div", "masthead", clipping.masthead),
     el("h1", "headline", clipping.headline),
     el("div", "dateline", clipping.dateline),
   );
+  // When the code hides in the personals, the case's mark sits up by the dateline as a printer's ornament.
+  if (caseData.cipher.hiddenOn === "clipping") paper.querySelector(".dateline").append(doodleMark(caseData.cipher.doodle, caseData.id));
   const body = el("div", "story");
   for (const para of clipping.body.split("\n")) body.append(el("p", null, para));
   paper.append(body);
+  // The code can hide in the paper's own personals column, in the same print as the story.
+  if (caseData.cipher.hiddenOn === "clipping") {
+    const personals = el("div", "personals");
+    personals.append(el("span", "personals-label", "Personals"), scrawl(scrawlText, "print"));
+    paper.append(personals);
+  }
   return paper;
 }
 
@@ -252,16 +261,19 @@ function photoPaper(caseData, scrawlText) {
   const image = el("div", "photo-image");
   image.innerHTML = PHOTO_SCENES[caseData.photo.scene];
   paper.append(image, el("figcaption", "photo-caption", caseData.photo.caption));
-  if (caseData.cipher.hiddenOn === "photo") paper.append(scrawl(scrawlText, caseData.cipher.doodle));
+  if (caseData.cipher.hiddenOn === "photo") {
+    paper.append(scrawl(scrawlText, "hand"));
+    image.append(doodleMark(caseData.cipher.doodle, caseData.id));
+  }
   return paper;
 }
 
-// The hidden encrypted clue: pencil like the other scraps, only the start of the message,
-// signed with the case's doodle that points to the key. Nothing announces it.
-function scrawl(text, doodle) {
-  const node = el("div", "scrawl hand");
+// The hidden encrypted clue: only the start of the message. It takes on the look of whatever it's
+// hidden in (pencil on a photo, typed on a report, small print in the personals), so nothing
+// announces it. The case's doodle sits elsewhere on the same paper.
+function scrawl(text, style) {
+  const node = el("div", `scrawl ${style}`);
   node.dataset.pin = "scrawl";
-  node.dataset.doodle = doodle;
   fillScrawl(node, text);
   return node;
 }
@@ -269,7 +281,6 @@ function scrawl(text, doodle) {
 function fillScrawl(node, text) {
   node.replaceChildren();
   [...`${text.slice(0, 22).trim()}\u2026`].forEach((ch, i) => node.append(ch === BLOT ? inkBlot(i) : ch));
-  node.insertAdjacentHTML("beforeend", DOODLES[node.dataset.doodle]);
 }
 
 // Each wrong answer runs more ink over the scrawl.
@@ -277,12 +288,22 @@ export function updateScrawl(stage, text) {
   fillScrawl(stage.querySelector('[data-pin="scrawl"]'), text);
 }
 
-// Scraps of evidence: a printed label with a handwritten note. The case may hide the scrawl on one.
+// Scraps of evidence: a printed label with a note, handwritten or typed depending on the kind of
+// paper. The case may hide the code inside one, as one more line of what the scrap says.
 function evidencePaper(item, caseData, scrawlText) {
   const paper = el("div", `paper evidence evidence-${item.kind}`);
-  if (item.kind === "prescription") paper.append(el("span", "rx", "\u211e"));
-  paper.append(el("div", "evidence-label", item.label), el("div", "evidence-note hand", item.note));
-  if (caseData.cipher.hiddenOn === `evidence:${item.id}`) paper.append(scrawl(scrawlText, caseData.cipher.doodle));
+  paper.insertAdjacentHTML("afterbegin", PAPER_ART[item.kind] ?? "");
+  const style = TYPED_KINDS.includes(item.kind) ? "typed" : "hand";
+  const note = el("div", `evidence-note ${style}`);
+  if (item.kind === "ledger") note.append(...ledgerRows(item.note));
+  else note.textContent = item.note;
+  paper.append(el("div", "evidence-label", item.label), note);
+  if (caseData.cipher.hiddenOn === `evidence:${item.id}`) {
+    const code = scrawl(scrawlText, style);
+    if (item.kind === "ledger") code.classList.add("ledger-row");
+    note.append(code);
+    paper.append(doodleMark(caseData.cipher.doodle, caseData.id));
+  }
   return paper;
 }
 
@@ -351,8 +372,6 @@ function rail(caseData, caseNumber) {
   }
   tray.append(stamps, el("div", "rail-label", "Stamps"));
 
-  const spool = el("div", "rail-group");
-  spool.append(el("div", "spool"), el("div", "rail-label", "String"));
 
   const guesses = el("div", "rail-group");
   const detectives = el("div", "guess-row");
@@ -367,7 +386,7 @@ function rail(caseData, caseNumber) {
   const tag = el("div", "case-tag");
   tag.append(el("div", "case-number", `Case #${caseNumber}`), el("div", "case-title", caseData.title));
 
-  bar.append(help, tray, spool, guesses, tag);
+  bar.append(help, tray, guesses, tag);
   return bar;
 }
 
@@ -376,7 +395,7 @@ export function renderBoard(caseData, { caseNumber, scrawlText }) {
   const board = el("section", "board");
   board.setAttribute("aria-label", `Murder board: ${caseData.title}`);
 
-  board.append(pinItem("clipping", "clipping", LAYOUT.clipping, caseData.clipping.pos, clippingPaper(caseData.clipping)));
+  board.append(pinItem("clipping", "clipping", LAYOUT.clipping, caseData.clipping.pos, clippingPaper(caseData, scrawlText)));
 
   caseData.suspects.forEach((s, i) =>
     board.append(pinItem(`suspect:${s.id}`, "suspect", LAYOUT.suspects[i], s.pos, suspectPaper(s, i))),

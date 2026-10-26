@@ -129,25 +129,30 @@ function restoreBoard() {
 }
 
 stage.addEventListener("click", (event) => {
-  // Picking up a stamp or opening the how-to-play puts the string down.
-  if (event.target.closest(".stamp-guilty, .stamp-liar, .help-button")) string.stop();
   if (stamps.handleClick(event)) return;
   if (string.handleClick(event)) return;
   if (event.target.closest(".help-button")) {
     showHowToPlay(stage);
     return;
   }
-  if (event.target.closest('[data-pin="scrawl"]')) {
+  // The code lives inside a scrap, the clipping, or the photo; opening it shows the code in place.
+  const code = () => ({ code: scrawlText(), doodle: cipher.doodle, seed: caseData.id });
+  const foundCode = () => {
     progress.cipher = { ...progress.cipher, found: true };
     save();
-    const where = cipher.hiddenOn === "photo" ? caseData.photo.caption : caseData.evidence.find((e) => `evidence:${e.id}` === cipher.hiddenOn).label;
-    openCloseLook(stage, { kind: "scrawl", label: where, note: scrawlText(), doodle: cipher.doodle });
-    return;
-  }
+  };
   const scrap = event.target.closest(".pin-evidence");
   if (scrap) {
-    const id = scrap.dataset.pin.replace("evidence:", "");
-    openCloseLook(stage, caseData.evidence.find((e) => e.id === id));
+    const item = caseData.evidence.find((e) => `evidence:${e.id}` === scrap.dataset.pin);
+    const hidesCode = cipher.hiddenOn === scrap.dataset.pin;
+    if (hidesCode) foundCode();
+    openCloseLook(stage, { ...item, ...(hidesCode ? code() : {}) });
+    return;
+  }
+  if (event.target.closest('[data-pin="scrawl"]')) {
+    foundCode();
+    const where = cipher.hiddenOn === "photo" ? { kind: "photo-note", label: caseData.photo.caption } : { kind: "classified", label: `${caseData.clipping.masthead} \u00b7 Personals` };
+    openCloseLook(stage, { ...where, ...code() });
     return;
   }
   if (event.target.closest('[data-pin="blank-card"]')) {
