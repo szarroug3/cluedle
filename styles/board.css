@@ -470,7 +470,7 @@
   height: 104px;
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 30px;
   padding: 0 36px;
   border-radius: 6px;
   background: linear-gradient(#2c2232, #18121c);
@@ -584,8 +584,10 @@
 .case-title {
   font-family: var(--font-news);
   font-weight: 900;
-  font-size: 30px;
+  font-size: 26px;
+  line-height: 1.1;
   color: var(--paper);
+  white-space: nowrap;
 }
 
 /* Red string: over the cards, under the lamp's shading. Only the string itself takes clicks. */
@@ -627,7 +629,10 @@
 .pin-item.string-target > .pushpin { box-shadow: 0 0 0 4px var(--paper), 0 0 12px 4px var(--red); }
 .pin-item { user-select: none; -webkit-user-select: none; }
 
-/* Hovering a card shows a loose end of red thread on its pin: pull from here to tie string. */
+/* Hovering a pin shows a loose end of red thread on it: pull from here to tie string. A wider,
+   invisible ring round the pin makes it easier to catch. */
+.pushpin { cursor: crosshair; }
+.pushpin::before { content: ""; position: absolute; inset: -11px; border-radius: 50%; }
 .pin-item > .pushpin::after {
   content: "";
   position: absolute;
@@ -642,12 +647,13 @@
   transition: opacity 0.15s, transform 0.2s;
   pointer-events: none;
 }
-.pin-item:hover > .pushpin::after,
+.pushpin:hover::after,
 .pin-item.string-first > .pushpin::after {
   opacity: 1;
   transform: rotate(0deg) scale(1);
 }
-.stage.holding .pin-item:hover > .pushpin::after,
+.stage.holding .pushpin:hover::after,
+.stage.marking .pushpin:hover::after,
 .stage.drawing-string .pin-item:not(.string-first) > .pushpin::after { opacity: 0; }
 
 /* At the cap, a short note says why no new string was tied. */
@@ -702,7 +708,7 @@
 }
 .evidence-envelope .evidence-label { width: 120px; font-size: 10px; }
 .evidence-envelope .evidence-note { margin-top: 20px; padding-left: 26px; color: #2b2850; }
-.stamp {
+.postage {
   position: absolute;
   top: 10px;
   right: 12px;
@@ -812,3 +818,128 @@
 .photo-image .paper-doodle { color: rgba(239, 233, 221, 0.75); }
 .dateline .paper-doodle { position: static; display: inline-block; margin-left: 8px; vertical-align: middle; color: var(--ink); }
 .dateline .paper-doodle .doodle { width: 12px; height: 13px; }
+
+/* ---- Moving cards ---- */
+
+/* Cards without their own click can be picked up and moved by their paper. */
+.pin-clipping, .pin-motive, .pin-weapon, .pin-photo, .pin-clue { cursor: grab; }
+.pin-item.moving {
+  transform: rotate(var(--rot, 0deg)) scale(1.03);
+  filter: drop-shadow(5px 18px 12px rgba(0, 0, 0, 0.6));
+}
+.stage.moving-card,
+.stage.moving-card * { cursor: grabbing !important; }
+.pin-item.lifting { transform: rotate(var(--rot, 0deg)) scale(1.03); }
+
+/* ---- The player's notes: index cards, the notepad, and the rail tools ---- */
+
+.index-card {
+  width: 170px;
+  min-height: 104px;
+  padding: 18px 12px 10px;
+  background:
+    linear-gradient(var(--red) 0 0) 0 16px / 100% 1px no-repeat,
+    repeating-linear-gradient(transparent 0 21px, rgba(47, 90, 168, 0.35) 21px 22px) 0 16px / 100% calc(100% - 16px) no-repeat,
+    #f6f2ea;
+}
+.pin-note { cursor: grab; }
+.index-text {
+  margin: 0;
+  font-family: var(--font-hand);
+  font-size: 23px;
+  line-height: 22px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.desk-tools { display: flex; align-items: flex-end; gap: 14px; height: 52px; margin-bottom: 8px; }
+
+/* A short stack of blank index cards; the top one lifts on hover. */
+.card-stack {
+  position: relative;
+  width: 58px;
+  height: 40px;
+  border: 0;
+  background: #f6f2ea;
+  box-shadow: 2px 2px 0 #d9d2c4, 4px 4px 0 #c9c1b2, 0 6px 10px rgba(0, 0, 0, 0.45);
+  border-top: 3px solid var(--red);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.card-stack::after {
+  content: "+";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-hand);
+  font-size: 30px;
+  color: var(--ink-soft);
+}
+.card-stack:hover:not(:disabled) { transform: translateY(-4px) rotate(-3deg); }
+.card-stack:disabled { opacity: 0.35; cursor: default; }
+
+.notepad-button {
+  position: relative;
+  width: 40px;
+  height: 52px;
+  border: 0;
+  border-top: 7px solid #2a2232;
+  background: var(--paper);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.notepad-button:hover { transform: translateY(-4px) rotate(2deg); }
+.notepad-lines {
+  position: absolute;
+  inset: 8px 6px 6px;
+  background: repeating-linear-gradient(transparent 0 6px, rgba(47, 90, 168, 0.45) 6px 7px);
+}
+
+/* Two grease pencils standing in a cup; the one in hand rises. */
+/* The pencils stay in reach above an open card, so the player can mark what they're reading. */
+.rail-group.pencils { position: relative; }
+.stage:has(.overlay :is(.statement-open, .close-look)) .rail-group.pencils { z-index: 101; }
+.pencil-cup { display: flex; align-items: flex-end; gap: 8px; height: 52px; }
+.pencil {
+  position: relative;
+  width: 12px;
+  height: 50px;
+  border: 0;
+  padding: 0;
+  border-radius: 2px 2px 3px 3px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.pencil::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -9px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 10px solid var(--tip);
+}
+.pencil-red { background: var(--red); --tip: var(--red-dark); }
+.pencil-blue { background: var(--blue); --tip: #1d3c74; }
+.pencil:hover { transform: translateY(-4px); }
+.pencil.lifted { transform: translateY(-14px) rotate(-8deg); box-shadow: 0 0 0 3px var(--paper); }
+
+/* ---- Pencil marks ---- */
+
+.stage.marking :is(.story, .suspect-desc, .clue-text, .statement-desc, .statement-quote, .close-look-note:not(.close-look-code)) {
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: text;
+}
+.stage.marking-red ::selection { background: rgba(179, 38, 58, 0.3); }
+.stage.marking-blue ::selection { background: rgba(47, 90, 168, 0.3); }
+.pencil-mark {
+  color: inherit;
+  background: linear-gradient(transparent 60%, var(--mark) 60% 90%, transparent 90%);
+  border-radius: 2px;
+}
+.pencil-mark.mark-red { --mark: rgba(179, 38, 58, 0.45); }
+.pencil-mark.mark-blue { --mark: rgba(47, 90, 168, 0.42); }
+.stage.marking .pencil-mark { cursor: pointer; }

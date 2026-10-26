@@ -284,5 +284,7 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
       for (const kind of KINDS) pending[kind] = null;
       putDown();
     },
+    // Set the stamp back in the tray, e.g. when the player picks up a pencil instead.
+    putDown,
   };
 }

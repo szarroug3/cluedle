@@ -1,6 +1,7 @@
-// Red string between pins, for the player's own thinking. Drag from one card to another to tie a
-// string (on a touch screen, press and hold the card first). Hovering a card shows a loose end of
-// thread on its pin. Click a string to take it down. The rules never read it.
+// Red string between pins, for the player's own thinking. Drag from a card's pin to another card to
+// tie a string (on a touch screen, press and hold the pin first). Hovering a pin shows a loose end of
+// thread on it. Click a string to take it down. The rules never read it. Dragging a card anywhere
+// else moves it (see move.js), and its strings follow.
 //
 // Each string is a short chain of points under gravity (Verlet integration): a new string drops and
 // settles, and strings sway when something nearby is clicked or the pointer brushes them. Each
@@ -56,6 +57,14 @@ export function createString(stage, { strings, onChange }) {
     if (!head) return null;
     const box = head.getBoundingClientRect();
     return toBoard(box.left + box.width / 2, box.top + box.height / 2);
+  }
+  // The pin is small, so a press anywhere close to it counts as grabbing the string.
+  const HEAD_REACH = 20;
+  function onHead(item, clientX, clientY) {
+    const head = headOf(item.dataset.pin);
+    if (!head) return false;
+    const at = toBoard(clientX, clientY);
+    return Math.hypot(at.x - head.x, at.y - head.y) <= HEAD_REACH;
   }
 
   // A rope between two points: straight, already hanging (when restoring), or carrying on from the
@@ -208,9 +217,9 @@ export function createString(stage, { strings, onChange }) {
     wake(rope);
   }
 
-  // Dragging from a card draws a string that follows the pointer; letting go on another card ties
-  // it. A press that never really moves stays an ordinary click. On a touch screen a swipe has to
-  // stay a scroll, so drawing starts only after a long press on the card.
+  // Dragging from a card's pin draws a string that follows the pointer; letting go on another card
+  // ties it. A press that never really moves stays an ordinary click. On a touch screen a swipe has
+  // to stay a scroll, so drawing starts only after a long press on the pin.
   const DRAG_START = 8;
   const LONG_PRESS = 350;
   let drag = null;
@@ -248,9 +257,9 @@ export function createString(stage, { strings, onChange }) {
   const cancelDrag = () => endDrag(null);
 
   board.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0 || stage.classList.contains("holding")) return;
+    if (event.button !== 0 || stage.classList.contains("holding") || stage.classList.contains("marking")) return;
     const item = event.target.closest(".pin-item");
-    if (!item || event.target.closest(".string")) return;
+    if (!item || event.target.closest(".string") || !onHead(item, event.clientX, event.clientY)) return;
     drag = { item, x: event.clientX, y: event.clientY, drawing: false, touch: event.pointerType !== "mouse", armed: false };
     // On touch, holding still on the card arms it: the pin lights up and the next move draws.
     if (drag.touch) {
@@ -343,5 +352,27 @@ export function createString(stage, { strings, onChange }) {
     },
     // Re-hang every string from its pins, e.g. after restoring progress.
     redraw: () => rebuild({ hanging: true }),
+    onHead,
+    // A card moved: its strings' ends go with its pin, and the strings sway to catch up.
+    follow(pinId) {
+      for (const rope of ropes) {
+        if (rope.a !== pinId && rope.b !== pinId) continue;
+        const from = headOf(rope.a);
+        const to = headOf(rope.b);
+        const ends = [rope.points[0], rope.points[SEGMENTS]];
+        [from, to].forEach((at, i) => Object.assign(ends[i], { x: at.x, y: at.y, px: at.x, py: at.y }));
+        rope.rest = (Math.hypot(to.x - from.x, to.y - from.y) * SLACK) / SEGMENTS;
+        wake(rope);
+      }
+    },
+    // A card came off the board: take down every string tied to it.
+    drop(pinId) {
+      for (const rope of ropes.filter((r) => r.a === pinId || r.b === pinId)) {
+        rope.group.remove();
+        ropes.splice(ropes.indexOf(rope), 1);
+      }
+      for (let i = strings.length - 1; i >= 0; i--) if (strings[i].includes(pinId)) strings.splice(i, 1);
+      onChange(strings);
+    },
   };
 }

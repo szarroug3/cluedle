@@ -141,10 +141,23 @@ PRD ref: `prd.md > Screens and Layout`.
 PRD ref: `prd.md > Accusing With the GUILTY Stamp`, `prd.md > Catching the Liar With the LIAR Stamp`.
 
 ### Red String (`src/ui/string.js`)
-- An SVG layer over the board. Drag from one pin head to another to tie a string (on touch, a 350 ms press arms the drag). Hovering a pin head shows a thread. Click a string to remove it. At most 40 strings; a note says so when the board is full.
+- An SVG layer over the board. Drag from one pin head (or within 20px of it) to another pin to tie a string (on touch, a 350 ms press arms the drag). Hovering a pin head shows a thread. Click a string to remove it. At most 40 strings; a note says so when the board is full.
 - Each string is a light rope simulation (Verlet points with gravity and damping) that sags and sways, and sleeps once it settles so an idle board costs nothing.
 - Saved in progress as pin-id pairs and redrawn on load.
 PRD ref: `prd.md > Red String`.
+
+### Moving Cards (`src/ui/move.js`)
+- Dragging a card anywhere but its pin moves it, clamped inside the board; a long press arms it on touch. The moved card goes to the top of the pile, and `string.follow(pinId)` moves its strings' ends.
+- Saved as `positions[pinId] = { x, y }` and put back after the board and clues are restored.
+
+### Notes (`src/ui/notes.js`)
+- Index cards: `note:<id>` pins built from `progress.notes`, landing in the open corner below the photo. Clicking one opens it to write (90 characters) or take down, which drops its strings with `string.drop(pinId)`. Up to 10.
+- Notepad: an overlay with a ruled textarea (3,000 characters), saved as you type.
+
+### Grease Pencils (`src/ui/pencil.js`)
+- Red and blue pencils on the rail; holding one sets `.marking` on the stage, which makes the story, suspect descriptions, statements, clues, and close-up scrap notes selectable. While a statement or close-up is open the pencils sit above it so they can still be picked up and stops cards moving or tying string. Picking up a pencil puts the stamp down, and the other way round.
+- Letting go of a selection inside one markable text adds a mark by character offset (`addMark`, tested): snapped to whole words and merged with overlapping marks of the same colour. Marks are drawn by wrapping text in `<mark>` and redrawn whenever a statement opens or a clue is pinned.
+PRD ref: `prd.md > The Player's Own Working`.
 
 ### Close Look and Blank Card (`src/ui/decoder.js`)
 - **Close look:** any scrap brought forward to read, drawn as its own kind of paper. A code line is written in that paper's style (handwritten, typed, or newsprint), with blots drawn as ink. No controls, so nothing marks the cipher.
@@ -200,11 +213,15 @@ One cipher per case for the proof of concept (see `## What Was Simplified and Wh
   guesses: [{ suspectId, motiveId, weaponId, rightCount }],   // how many of the three are right
   liar: null | { suspectId, truthIndex, correct },
   cipher: { found: false, wrongTries: 0, cracked: false },
-  strings: [["pinA", "pinB"]]
+  strings: [["pinA", "pinB"]],
+  positions: { pinId: { x, y } },                               // cards the player moved
+  notes: [{ id, text, x, y, r }],                               // index cards
+  notepad: "",
+  marks: [{ id, target, start, end, color }]                    // target: "clipping", "suspect:<id>", "clue:<n>", "desc:<id>", "statement:<id>", "look:evidence:<id>"
 }
 ```
 - **Where it lives:** `localStorage["cluedle:progress:<dateKey>"]`.
-- **How it updates:** `main.js` saves the whole object after every rule call and every string change.
+- **How it updates:** `main.js` saves the whole object after every rule call and every change to strings, card positions, notes, or marks.
 - **When the player leaves and comes back:** the same day, everything is restored. A new day starts fresh, and old days are deleted.
 - **Seen how-to:** `localStorage["cluedle:seenHowTo"] = "1"`.
 - Derived each time from progress, not stored: unlocked clues (the number of wrong guesses), the rank, and the share text.
@@ -238,6 +255,9 @@ cluedle/
 │       ├── board.js
 │       ├── stamps.js
 │       ├── string.js
+│       ├── move.js
+│       ├── notes.js
+│       ├── pencil.js
 │       ├── decoder.js
 │       └── ending.js
 ├── tests/
@@ -246,6 +266,7 @@ cluedle/
 │   ├── cipher.test.js
 │   ├── rank.test.js
 │   ├── share.test.js
+│   ├── pencil.test.js
 │   └── cases.test.js       # every case is well formed and solvable (see below)
 ├── package.json            # "start": "npx serve .", "test": "node --test"; no dependencies
 ├── README.md               # what Cluedle is, how to run it, how to play

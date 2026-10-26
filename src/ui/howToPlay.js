@@ -13,7 +13,8 @@ const STEPS = [
   ["Five guesses", "Each accusation tells you how many of the three you got right, never which. Every miss pins up a new clue."],
   ["The liar", "Click a suspect to read their statement. One of them is lying. Stamp LIAR on their card and say what really happened. One shot; it costs no guesses."],
   ["The message", "Something on this board is hiding a message. Find it, crack it on paper, and write it on the blank card. Three tries, and every wrong one costs ink."],
-  ["Red string", "Drag from one card to another to tie string between them. On a phone, press and hold a card first. Click a string to take it down. It doesn\u2019t affect your score."],
+  ["Red string", "Drag from a card\u2019s pin to another card to tie string between them. On a phone, press and hold the pin first. Click a string to take it down."],
+  ["Your working", "Drag a card by its paper to move it; its strings follow. Take an index card from the rail to pin up a note, keep longer notes in the notepad, and mark words red or blue with the pencils, even on a card you have open. None of it affects your score."],
   ["Your rank", "The fewer guesses you need, the higher your rank. Cracking the code and catching the liar count too. A new case comes out every day."],
 ];
 

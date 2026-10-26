@@ -95,7 +95,7 @@ export const PAPER_ART = {
   tag: `<span class="tag-hole"></span>`,
   key: `<span class="tag-hole"></span><svg class="key-art" viewBox="0 0 80 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M21 12h52v7M63 12v6M55 12v5"/></svg>`,
   stub: `<span class="stub-holes"><span></span><span></span></span>`,
-  envelope: `<span class="stamp"></span><span class="postmark"></span>`,
+  envelope: `<span class="postage"></span><span class="postmark"></span>`,
   fingerprint: `<span class="prints">${PRINT}${PRINT}</span>`,
 };
 
@@ -146,8 +146,9 @@ export function renderInked(container, text) {
 // Any scrap, the scrawl included, opens the same plain close-up.
 // A scrap brought forward to read. If it carries the hidden code, the code is part of what it says,
 // set in the same hand or type as the rest of the scrap.
-export function openCloseLook(stage, { kind, label, note, code, doodle, seed = "" }) {
+export function openCloseLook(stage, { kind, label, note, code, doodle, seed = "", pin = "" }) {
   const card = el("div", `paper close-look evidence-${kind}`);
+  card.dataset.look = pin;
   card.setAttribute("role", "dialog");
   card.setAttribute("aria-label", label);
   card.insertAdjacentHTML("afterbegin", PAPER_ART[kind] ?? "");
@@ -166,6 +167,7 @@ export function openCloseLook(stage, { kind, label, note, code, doodle, seed = "
     if (doodle) card.append(doodleMark(doodle, seed));
   }
   openOverlay(stage, card);
+  return card;
 }
 
 // A suspect's statement, brought forward when their card is clicked.
@@ -173,6 +175,7 @@ export function openStatement(stage, suspect) {
   const card = el("div", "paper statement-open");
   card.setAttribute("role", "dialog");
   card.setAttribute("aria-label", `Statement of ${suspect.name}`);
+  card.dataset.suspect = suspect.id;
   card.append(
     el("div", "card-label", "Statement of"),
     el("h2", "statement-name", suspect.name),
@@ -181,6 +184,7 @@ export function openStatement(stage, suspect) {
     el("p", "statement-quote", `“${suspect.statement.text}”`),
   );
   openOverlay(stage, card);
+  return card;
 }
 
 // Two side-by-side columns of A–Z. Each slides up or down (drag it, or use its arrows) and wraps

@@ -6,6 +6,9 @@ import { renderBoard, updateScrawl, fillBlankCard, pinClue, markGuessSpent, STAG
 import { openCloseLook, openBlankCard, openStatement } from "./ui/decoder.js";
 import { createStamps } from "./ui/stamps.js";
 import { createString } from "./ui/string.js";
+import { createMover } from "./ui/move.js";
+import { createNotes } from "./ui/notes.js";
+import { createPencil } from "./ui/pencil.js";
 import { showEnding } from "./ui/ending.js";
 import { showCaseFile } from "./ui/caseFile.js";
 import { showHowToPlay } from "./ui/howToPlay.js";
@@ -37,6 +40,11 @@ const blank = () => ({
   liar: null,
   cipher: { found: false, wrongTries: 0, cracked: false },
   strings: [],
+  // The player's own working: moved cards, index cards, the notepad, and pencil marks.
+  positions: {},
+  notes: [],
+  notepad: "",
+  marks: [],
 });
 const restored = params.has("fresh") ? null : saved.load(slot, today);
 const returning = restored?.caseId === caseData.id;
@@ -107,13 +115,19 @@ const stamps = createStamps(stage, {
     save();
     const { rightCount, status, unlockedClueIndex } = step.result;
     markGuessSpent(stage, progress.guesses.length - 1, rightCount);
-    if (unlockedClueIndex != null) pinClue(stage, unlockedClueIndex, caseData.clues[unlockedClueIndex]);
+    if (unlockedClueIndex != null) {
+      pinClue(stage, unlockedClueIndex, caseData.clues[unlockedClueIndex]);
+      pencil.apply(stage);
+    }
     if (status !== "playing") setTimeout(showCaseEnding, 700);
     return step;
   },
 });
 
 const string = createString(stage, { strings: progress.strings, onChange: save });
+const mover = createMover(stage, { positions: progress.positions, string, onChange: save });
+const notes = createNotes(stage, { progress, string, mover, onChange: save });
+const pencil = createPencil(stage, { marks: progress.marks, onChange: save, onPickUp: () => stamps.putDown() });
 
 // Put everything from saved progress back on the board.
 function restoreBoard() {
@@ -125,12 +139,21 @@ function restoreBoard() {
   if (progress.cipher.cracked) fillBlankCard(stage, readable());
   if (progress.liar) stamps.drawLiar(progress.liar.suspectId, progress.liar.correct);
   if (progress.status !== "playing") stamps.end();
+  notes.restore();
+  mover.restore();
+  pencil.apply(stage);
   string.redraw();
 }
 
 stage.addEventListener("click", (event) => {
-  if (stamps.handleClick(event)) return;
+  if (pencil.handleClick(event)) return;
+  if (stamps.handleClick(event)) {
+    // Only one thing in hand at a time.
+    if (stage.classList.contains("holding")) pencil.putDown();
+    return;
+  }
   if (string.handleClick(event)) return;
+  if (notes.handleClick(event)) return;
   if (event.target.closest(".help-button")) {
     showHowToPlay(stage);
     return;
@@ -146,7 +169,7 @@ stage.addEventListener("click", (event) => {
     const item = caseData.evidence.find((e) => `evidence:${e.id}` === scrap.dataset.pin);
     const hidesCode = cipher.hiddenOn === scrap.dataset.pin;
     if (hidesCode) foundCode();
-    openCloseLook(stage, { ...item, ...(hidesCode ? code() : {}) });
+    pencil.apply(openCloseLook(stage, { ...item, pin: scrap.dataset.pin, ...(hidesCode ? code() : {}) }));
     return;
   }
   if (event.target.closest('[data-pin="scrawl"]')) {
@@ -162,7 +185,7 @@ stage.addEventListener("click", (event) => {
   const suspectCard = event.target.closest(".pin-suspect");
   if (suspectCard) {
     const id = suspectCard.dataset.pin.replace("suspect:", "");
-    openStatement(stage, caseData.suspects.find((s) => s.id === id));
+    pencil.apply(openStatement(stage, caseData.suspects.find((s) => s.id === id)));
   }
 });
 

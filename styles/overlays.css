@@ -521,3 +521,56 @@
 .close-look .paper-doodle.top-right { top: 14px; right: 60px; }
 .close-look .paper-doodle.bottom-right { bottom: 12px; right: 18px; }
 .close-look .paper-doodle.bottom-left { bottom: 12px; left: 18px; }
+
+/* An index card brought forward to write on, and the notepad. */
+.index-card-open {
+  width: 420px;
+  min-height: 0;
+  padding: 34px 26px 18px;
+}
+.index-input,
+.notepad-input {
+  display: block;
+  width: 100%;
+  border: 0;
+  outline: none;
+  resize: none;
+  background: transparent;
+  font-family: var(--font-hand);
+  color: var(--ink);
+}
+.index-input { height: 132px; font-size: 32px; line-height: 44px; }
+.index-card-open {
+  background:
+    linear-gradient(var(--red) 0 0) 0 30px / 100% 1px no-repeat,
+    repeating-linear-gradient(transparent 0 43px, rgba(47, 90, 168, 0.35) 43px 44px) 0 30px / 100% 150px no-repeat,
+    #f6f2ea;
+}
+.index-remove {
+  margin-top: 10px;
+  border: 0;
+  background: none;
+  color: var(--red);
+  font-family: var(--font-type);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+.index-remove:hover { text-decoration: underline; }
+
+.notepad {
+  width: 560px;
+  padding: 26px 30px 24px 56px;
+  border-top: 14px solid #2a2232;
+  background:
+    linear-gradient(90deg, transparent 40px, rgba(179, 38, 58, 0.45) 40px 41px, transparent 41px),
+    var(--paper);
+}
+.notepad-input {
+  height: 420px;
+  margin-top: 8px;
+  font-size: 28px;
+  line-height: 36px;
+  background: repeating-linear-gradient(transparent 0 35px, rgba(47, 90, 168, 0.35) 35px 36px);
+  background-attachment: local;
+}
