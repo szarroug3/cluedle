@@ -201,8 +201,7 @@ export function openStatement(stage, suspect) {
 // Two side-by-side columns of A–Z. Each slides up or down (drag it, or use its arrows) and wraps
 // around, so lining them up pairs each scrambled letter with its real one. Clicking a letter writes
 // it into the answer. The strips are only a helper; they never decode or check anything.
-function letterStrips(onLetter) {
-  const offsets = [0, 0];
+function letterStrips(onLetter, { offsets = [0, 0], onSlide } = {}) {
   const gap = el("div", "strip-gap");
   const columns = offsets.map((_, side) => {
     const column = el("div", "strip");
@@ -228,8 +227,9 @@ function letterStrips(onLetter) {
   }
 
   function slide(side, steps) {
-    offsets[side] += steps;
+    offsets[side] = (((offsets[side] + steps) % 26) + 26) % 26;
     draw();
+    onSlide?.(offsets);
   }
 
   // Dragging a strip by one row slides it one letter; a press without a drag is a click.
@@ -311,8 +311,9 @@ function letterStrips(onLetter) {
 }
 
 // The blank card: write the decoded message and pin it. `readable()` is the message as it can
-// still be read (with blots), shown when the answer is right.
-export function openBlankCard(stage, { state, readable, onSubmit, onClose }) {
+// still be read (with blots), shown when the answer is right. `draft` is where the player left the
+// strips and their unfinished answer; `onDraft` hears every change, so closing loses nothing.
+export function openBlankCard(stage, { state, readable, onSubmit, onClose, draft, onDraft, onReveal }) {
   let current = state;
 
   const card = el("div", "paper blank-card-open");
@@ -324,6 +325,7 @@ export function openBlankCard(stage, { state, readable, onSubmit, onClose }) {
   answer.spellcheck = false;
   answer.placeholder = "Write what it really says…";
   answer.setAttribute("aria-label", "Your decoded message");
+  answer.value = draft.text;
   const revealed = el("div", "revealed");
 
   const tries = el("div", "tries");
@@ -372,7 +374,8 @@ export function openBlankCard(stage, { state, readable, onSubmit, onClose }) {
     revealed,
     footer,
   );
-  card.append(letterStrips(write), writing);
+  const offsets = [...draft.offsets];
+  card.append(letterStrips(write, { offsets, onSlide: () => onDraft({ offsets: [...offsets], text: answer.value }) }), writing);
 
   function refresh() {
     const locked = isLocked(current);
@@ -414,6 +417,7 @@ export function openBlankCard(stage, { state, readable, onSubmit, onClose }) {
     current = result.state;
     if (result.correct) {
       reveal();
+      onReveal?.();
     } else {
       card.classList.remove("shake");
       void card.offsetWidth;
@@ -422,7 +426,10 @@ export function openBlankCard(stage, { state, readable, onSubmit, onClose }) {
     refresh();
   }
 
-  answer.addEventListener("input", refresh);
+  answer.addEventListener("input", () => {
+    refresh();
+    onDraft({ offsets: [...offsets], text: answer.value });
+  });
   answer.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
@@ -436,5 +443,10 @@ export function openBlankCard(stage, { state, readable, onSubmit, onClose }) {
   if (current.cracked) renderInked(revealed, readable());
   refresh();
   openOverlay(stage, card, onClose);
-  if (!current.cracked) answer.focus();
+  // Once it's cracked, the message can be marked with the pencils, the same as on the board.
+  onReveal?.();
+  if (!current.cracked) {
+    answer.focus();
+    answer.setSelectionRange(answer.value.length, answer.value.length);
+  }
 }

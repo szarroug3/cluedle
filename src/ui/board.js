@@ -315,7 +315,7 @@ function blankCardPaper() {
   paper.setAttribute("role", "button");
   paper.setAttribute("aria-label", "Blank card: write a decoded message");
   paper.tabIndex = 0;
-  paper.append(el("div", "card-label", "Decoded message"), el("p", "blank-card-hint", "Cracked the code? Click to write the message here."));
+  paper.append(el("div", "card-label", "Decoded message"), el("p", "blank-card-hint", "Found a code? Click to decode it here."));
   return paper;
 }
 

@@ -38,7 +38,11 @@ const blank = () => ({
   status: "playing",
   guesses: [],
   liar: null,
+  // A suspect confirmed as the liar whose "what really happened" isn't answered yet.
+  liarWaiting: null,
   cipher: { found: false, wrongTries: 0, cracked: false },
+  // Where the player left the blank card's strips and their unfinished answer.
+  decoder: { offsets: [0, 0], text: "" },
   strings: [],
   // The player's own working: moved cards, index cards, the notepad, and pencil marks.
   positions: {},
@@ -74,6 +78,12 @@ function openCard() {
   openBlankCard(stage, {
     state: progress.cipher,
     readable,
+    draft: progress.decoder,
+    onReveal: () => pencil.apply(stage),
+    onDraft(draft) {
+      progress.decoder = draft;
+      save();
+    },
     onSubmit(answer) {
       const result = attempt(progress.cipher, cipher, answer, caseData.id);
       progress.cipher = result.state;
@@ -83,7 +93,10 @@ function openCard() {
     },
     // Filled in as the card closes, so the player sees it land on the board.
     onClose() {
-      if (progress.cipher.cracked) fillBlankCard(stage, readable());
+      if (progress.cipher.cracked) {
+        fillBlankCard(stage, readable());
+        pencil.apply(stage);
+      }
     },
   });
 }
@@ -106,10 +119,14 @@ const stamps = createStamps(stage, {
   onFirstUse: () => saved.markStampsUsed(),
   onReopen: showCaseEnding,
   suspects: caseData.suspects,
+  onCommitLiar(suspectId) {
+    progress.liarWaiting = suspectId;
+    save();
+  },
   onFlagLiar(suspectId, truthIndex) {
     const step = flagLiar(progress, caseData.suspects, suspectId, truthIndex);
     if (step.rejected) return step;
-    Object.assign(progress, step.state);
+    Object.assign(progress, step.state, { liarWaiting: null });
     save();
     return step;
   },
@@ -145,6 +162,7 @@ function restoreBoard() {
   for (let i = 0; i < unlockedClues(progress); i++) pinClue(stage, i, caseData.clues[i], { animate: false });
   if (progress.cipher.cracked) fillBlankCard(stage, readable());
   if (progress.liar) stamps.drawLiar(progress.liar.suspectId, progress.liar.correct);
+  else if (progress.liarWaiting) stamps.drawLiarWaiting(progress.liarWaiting);
   if (progress.status !== "playing") stamps.end();
   notes.restore();
   mover.restore();

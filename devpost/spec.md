@@ -155,13 +155,13 @@ PRD ref: `prd.md > Red String`.
 - Notepad: a floating panel on the stage, above the board and any open card, with a ruled textarea (3,000 characters) saved as you type. Its binding drags it; the rail button and its × close it. The notes rail button, like the pencils, stays clickable over an open statement or close-up.
 
 ### Grease Pencils (`src/ui/pencil.js`)
-- Red and blue pencils on the rail; holding one sets `.marking` on the stage, which makes the story, suspect descriptions, statements, clues, and close-up scrap notes selectable. While a statement or close-up is open the pencils sit above it so they can still be picked up and stops cards moving or tying string. Picking up a pencil puts the stamp down, and the other way round.
-- Letting go of a selection inside one markable text adds a mark by character offset (`addMark`, tested): snapped to whole words and merged with overlapping marks of the same colour. Marks are drawn by wrapping text in `<mark>` and redrawn whenever a statement opens or a clue is pinned.
+- Red and blue pencils on the rail; holding one sets `.marking` on the stage, which makes the story, suspect descriptions, statements, clues, the decoded message, and scrap notes (on the board and up close) selectable, and turns the pointer into that pencil. While a statement, clue, close-up, or the blank card is open the pencils sit above it so they can still be picked up and stops cards moving or tying string. Picking up a pencil puts the stamp down, and the other way round.
+- Letting go of a selection inside one markable text adds a mark by character offset (`addMark`, tested): snapped to whole words (never across a paragraph or row edge) and merged with marks of the same colour it shares characters with. Marks are drawn by wrapping text in `<mark>` and redrawn whenever a statement opens or a clue is pinned.
 PRD ref: `prd.md > The Player's Own Working`.
 
 ### Close Look and Blank Card (`src/ui/decoder.js`)
 - **Close look:** any scrap brought forward to read, drawn as its own kind of paper. A code line is written in that paper's style (handwritten, typed, or newsprint), with blots drawn as ink. No controls, so nothing marks the cipher.
-- **Blank card:** a space to write the decoded message, two side-by-side A–Z strips that each slide up or down (drag, or their ▲▼ arrows) and wrap around, the gap between them shown in the middle, letters that write themselves into the answer when clicked, Space and ⌫ keys, **Pin it**, and tries left.
+- **Blank card:** a space to write the decoded message, two side-by-side A–Z strips that each slide up or down (drag, or their ▲▼ arrows) and wrap around, the gap between them shown in the middle, letters that write themselves into the answer when clicked, Space and ⌫ keys, **Pin it**, and tries left. Where the strips sit and the unfinished answer are saved as `progress.decoder` on every change, so closing the card and coming back picks up where the player left off.
 - On a right answer, it plays the reveal: the real message flips into place left to right, and blotted letters stay as ink. As the card closes, the blank card on the board fills in with the message.
 PRD ref: `prd.md > Finding and Cracking the Cipher`.
 
@@ -212,12 +212,14 @@ One cipher per case for the proof of concept (see `## What Was Simplified and Wh
   status: "playing" | "closed" | "cold",
   guesses: [{ suspectId, motiveId, weaponId, rightCount }],   // how many of the three are right
   liar: null | { suspectId, truthIndex, correct },
+  liarWaiting: null | suspectId,                                // confirmed, but "what really happened" not answered yet
   cipher: { found: false, wrongTries: 0, cracked: false },
   strings: [["pinA", "pinB"]],
   positions: { pinId: { x, y } },                               // cards the player moved
   notes: [{ id, text, x, y, r }],                               // index cards
   notepad: "",
-  marks: [{ id, target, start, end, color }]                    // target: "clipping", "suspect:<id>", "clue:<n>", "desc:<id>", "statement:<id>", "look:evidence:<id>"
+  decoder: { offsets: [0, 0], text: "" },                       // the blank card's strips and unfinished answer
+  marks: [{ id, target, start, end, color }]                    // target: "clipping", "suspect:<id>", "clue:<n>", "desc:<id>", "statement:<id>", "look:evidence:<id>", "decoded"
 }
 ```
 - **Where it lives:** `localStorage["cluedle:progress:<dateKey>"]`.
@@ -267,6 +269,7 @@ cluedle/
 │   ├── rank.test.js
 │   ├── share.test.js
 │   ├── pencil.test.js
+│   ├── modules.test.js     # every screen module loads
 │   └── cases.test.js       # every case is well formed and solvable (see below)
 ├── package.json            # "start": "npx serve .", "test": "node --test"; no dependencies
 ├── README.md               # what Cluedle is, how to run it, how to play

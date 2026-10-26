@@ -1,6 +1,6 @@
 // Grease pencils, red and blue, for marking words. Pick one up from the rail (even with a card open),
-// then select words in the newspaper story, a suspect's description or statement, a clue, or a scrap
-// brought up close, and they're underlined in that colour. With a pencil in hand, clicking a mark rubs it out. Marks are saved by their place in
+// then select words in the newspaper story, a suspect's description or statement, a clue, the
+// decoded message, or a scrap (on the board or up close), and they're underlined in that colour. With a pencil in hand, clicking a mark rubs it out. Marks are saved by their place in
 // the text, so they come back on the next visit.
 
 const COLORS = ["red", "blue"];
@@ -18,11 +18,15 @@ const MARKABLE = [
   { selector: ".pin-suspect .suspect-desc", target: (node) => node.closest(".pin-item").dataset.pin },
   { selector: ".pin-suspect .suspect-statement", target: (node) => `statement:${node.closest(".pin-item").dataset.pin.replace("suspect:", "")}` },
   { selector: ".pin-clue .clue-text", target: (node) => node.closest(".pin-item").dataset.pin },
+  { selector: ".blank-card .decoded-text", target: () => "decoded" },
+  { selector: ".blank-card-open .revealed", target: () => "decoded" },
   { selector: ".clue-open .clue-text", target: (node) => `clue:${node.closest("[data-clue]").dataset.clue}` },
   // The close-up shares its marks with the card on the board.
   { selector: ".statement-open .statement-desc", target: (node) => `suspect:${node.closest("[data-suspect]").dataset.suspect}` },
   { selector: ".statement-open .statement-quote", target: (node) => `statement:${node.closest("[data-suspect]").dataset.suspect}` },
   { selector: ".close-look .close-look-note:not(.close-look-code)", target: (node) => `look:${node.closest("[data-look]").dataset.look}` },
+  // A scrap on the board shares its marks with its close-up.
+  { selector: ".pin-evidence .evidence-note", target: (node) => `look:${node.closest(".pin-item").dataset.pin}` },
 ];
 
 function markableOf(node) {
@@ -40,6 +44,26 @@ function offsetIn(host, node, offset) {
   range.selectNodeContents(host);
   range.setEnd(node, offset);
   return range.toString().length;
+}
+
+// Where in a host's text one block (a paragraph, a ledger row) gives way to the next.
+function blockOf(node) {
+  let element = node.parentElement;
+  while (element && getComputedStyle(element).display === "inline") element = element.parentElement;
+  return element;
+}
+function breaksIn(host) {
+  const breaks = new Set();
+  const walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
+  let at = 0;
+  let previous = null;
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const block = blockOf(node);
+    if (previous && block !== previous) breaks.add(at);
+    previous = block;
+    at += node.length;
+  }
+  return breaks;
 }
 
 // Wrap characters [start, end) of a host's text in a mark, splitting text nodes as needed.
@@ -64,16 +88,17 @@ function wrap(host, start, end, mark) {
 }
 
 // A new mark snaps out to whole words and swallows any mark of the same colour it overlaps, so
-// marking across an old mark extends it. Returns the marks to keep, with the new one last; or the
-// marks unchanged if the selection held no words.
-export function addMark(marks, text, { target, start, end, color }) {
+// marking across an old mark extends it. `breaks` are the places where one line or paragraph ends
+// and the next begins with nothing between them in the text; snapping never crosses one. Returns
+// the marks to keep, with the new one last; or the marks unchanged if the selection held no words.
+export function addMark(marks, text, { target, start, end, color }, breaks = new Set()) {
   const word = /[\w’'$.,:-]/;
   while (start < end && /\s/.test(text[start])) start++;
   while (end > start && /\s/.test(text[end - 1])) end--;
   if (start >= end) return marks;
-  while (start > 0 && word.test(text[start - 1])) start--;
-  while (end < text.length && word.test(text[end])) end++;
-  const overlaps = (m) => m.target === target && m.color === color && m.start <= end && m.end >= start;
+  while (start > 0 && !breaks.has(start) && word.test(text[start - 1])) start--;
+  while (end < text.length && !breaks.has(end) && word.test(text[end])) end++;
+  const overlaps = (m) => m.target === target && m.color === color && m.start < end && m.end > start;
   for (const m of marks.filter(overlaps)) {
     start = Math.min(start, m.start);
     end = Math.max(end, m.end);
@@ -131,11 +156,12 @@ export function createPencil(stage, { marks, onChange, onPickUp }) {
     const range = selection.getRangeAt(0);
     const start = markableOf(range.startContainer);
     const end = markableOf(range.endContainer);
-    selection.removeAllRanges();
+    // Selections elsewhere (say, in the answer box) are left alone.
     if (!start || !end || start.host !== end.host) return;
+    selection.removeAllRanges();
     const from = offsetIn(start.host, range.startContainer, range.startOffset);
     const to = offsetIn(start.host, range.endContainer, range.endOffset);
-    const next = addMark(marks, start.host.textContent, { target: start.target, start: from, end: to, color: held });
+    const next = addMark(marks, start.host.textContent, { target: start.target, start: from, end: to, color: held }, breaksIn(start.host));
     if (next === marks) return;
     marks.splice(0, marks.length, ...next);
     onChange();

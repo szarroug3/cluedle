@@ -39,7 +39,7 @@ function placeMark(mark, number) {
   mark.style.setProperty("--stamp-rot", `${-12 + ((number - 1) % 5) * 6}deg`);
 }
 
-export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, suspects, onFlagLiar, onReopen, beckon, onFirstUse }) {
+export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, suspects, onFlagLiar, onCommitLiar, onReopen, beckon, onFirstUse }) {
   ensureInkFilter();
   const board = stage.querySelector(".board");
   const trays = { guilty: stage.querySelector(".stamp-guilty"), liar: stage.querySelector(".stamp-liar") };
@@ -54,6 +54,9 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
   let beckoning = beckon; // the stamps glow until a player first picks one up
   const trayLabel = stage.querySelector(".tray + .rail-label");
   let liarUsed = false;
+  // A LIAR stamp confirmed on a real liar but not yet answered: { suspect, mark }. The question
+  // comes back when the player clicks that card or the LIAR stamp.
+  let awaiting = null;
   const pending = { suspect: null, motive: null, weapon: null };
 
   const ghost = el("div", "held-stamp");
@@ -91,6 +94,7 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
     trays.guilty.classList.toggle("lifted", held === "guilty");
     trays.liar.classList.toggle("lifted", held === "liar");
     trays.liar.classList.toggle("used", liarUsed);
+    trays.liar.classList.toggle("waiting", Boolean(awaiting));
     stage.classList.toggle("holding", Boolean(held));
     ghost.hidden = !held;
     ghost.classList.toggle("liar", held === "liar");
@@ -150,33 +154,73 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
     putDown();
   });
 
-  // LIAR: stamp the card, confirm the one shot, then pick what really happened. Backing out
-  // before confirming costs nothing; leaving after confirming uses the shot.
-  function stampLiar(card) {
-    const { id } = pinOf(card);
-    const suspect = suspects.find((s) => s.id === id);
-    putDown();
-    const mark = el("div", "stamp-mark liar-mark pending", "LIAR");
+  // The LIAR stamp's mark on a card: waiting for an answer, right, or wrong.
+  function liarMark(card, state) {
+    const mark = el("div", `stamp-mark liar-mark ${state}`, "LIAR");
     placeMark(mark, 2);
     card.querySelector(".paper").append(mark);
+    return mark;
+  }
 
-    let committed = false;
-    let settled = false;
-    function finish(truthIndex) {
-      if (settled) return;
-      settled = true;
-      liarUsed = true;
-      const result = onFlagLiar(id, truthIndex);
-      mark.classList.remove("pending");
-      mark.classList.add(result?.correct ? "right" : "wrong");
-      refresh();
-      return result;
-    }
+  function finishLiar(suspect, mark, truthIndex) {
+    awaiting = null;
+    liarUsed = true;
+    const result = onFlagLiar(suspect.id, truthIndex);
+    mark.classList.remove("pending", "awaiting");
+    mark.classList.add(result?.correct ? "right" : "wrong");
+    refresh();
+    return result;
+  }
 
+  // "So what really happened?": the choices for a confirmed liar. Closing without choosing keeps
+  // the question waiting.
+  function askTruth(slip, body, suspect, mark) {
+    const close = () => slip.closest(".overlay")?.querySelector(".overlay-close").click();
+    const options = el("div", "liar-options");
+    suspect.statement.truthOptions.forEach((text, index) => {
+      const option = el("button", "liar-option", text);
+      option.type = "button";
+      option.addEventListener("click", () => {
+        const result = finishLiar(suspect, mark, index);
+        body.replaceChildren(
+          el("p", "liar-verdict", result?.correct ? "Caught in the lie." : "Wrong call. That\u2019s not what happened."),
+        );
+        setTimeout(close, 1400);
+      });
+      options.append(option);
+    });
+    body.replaceChildren(el("p", "liar-question", "So what really happened?"), options);
+  }
+
+  function liarSlip(suspect) {
     const slip = el("div", "paper liar-slip");
     slip.setAttribute("role", "dialog");
     slip.setAttribute("aria-label", `Call ${suspect.name} a liar`);
     const body = el("div", "liar-body");
+    slip.append(el("div", "card-label", "Liar?"), el("h2", "statement-name", suspect.name), body);
+    return { slip, body };
+  }
+
+  // Bring a waiting LIAR question back up.
+  function reopenLiar() {
+    const { suspect, mark } = awaiting;
+    const { slip, body } = liarSlip(suspect);
+    openOverlay(stage, slip);
+    askTruth(slip, body, suspect, mark);
+    body.prepend(el("p", "statement-quote", `\u201c${suspect.statement.text}\u201d`));
+  }
+
+  // LIAR: stamp the card, confirm the one shot, then pick what really happened. Backing out
+  // before confirming costs nothing. Confirming spends the shot on that suspect; the answer can
+  // wait until the player comes back to it.
+  function stampLiar(card) {
+    const { id } = pinOf(card);
+    const suspect = suspects.find((s) => s.id === id);
+    putDown();
+    const mark = liarMark(card, "pending");
+
+    let committed = false;
+    const { slip, body } = liarSlip(suspect);
     const confirm = el("button", "liar-button", "Stamp it");
     confirm.type = "button";
     body.append(
@@ -184,35 +228,24 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
       el("p", "liar-warning", "You only get one shot at this."),
       confirm,
     );
-    slip.append(el("div", "card-label", "Liar?"), el("h2", "statement-name", suspect.name), body);
 
-    const close = () => slip.closest(".overlay")?.querySelector(".overlay-close").click();
     confirm.addEventListener("click", () => {
       committed = true;
       if (!suspect.statement.isLie) {
-        finish(null);
+        finishLiar(suspect, mark, null);
         body.replaceChildren(el("p", "liar-verdict", "Telling the truth, as far as anyone can tell. The shot\u2019s spent."));
         return;
       }
-      const options = el("div", "liar-options");
-      suspect.statement.truthOptions.forEach((text, index) => {
-        const option = el("button", "liar-option", text);
-        option.type = "button";
-        option.addEventListener("click", () => {
-          const result = finish(index);
-          body.replaceChildren(
-            el("p", "liar-verdict", result?.correct ? "Caught in the lie." : "Wrong call. That\u2019s not what happened."),
-          );
-          setTimeout(close, 1400);
-        });
-        options.append(option);
-      });
-      body.replaceChildren(el("p", "liar-question", "So what really happened?"), options);
+      awaiting = { suspect, mark };
+      liarUsed = true;
+      mark.classList.replace("pending", "awaiting");
+      onCommitLiar?.(id);
+      refresh();
+      askTruth(slip, body, suspect, mark);
     });
 
     openOverlay(stage, slip, () => {
-      if (committed) finish(null);
-      else mark.remove();
+      if (!committed) mark.remove();
     });
   }
 
@@ -248,8 +281,15 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
         return true;
       }
       if (event.target.closest(".stamp-liar")) {
-        pickUp("liar");
-        follow(event);
+        if (awaiting) reopenLiar();
+        else {
+          pickUp("liar");
+          follow(event);
+        }
+        return true;
+      }
+      if (!held && awaiting && event.target.closest(`[data-pin="suspect:${awaiting.suspect.id}"]`)) {
+        reopenLiar();
         return true;
       }
       if (!held) return false;
@@ -282,8 +322,20 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
       liarUsed = true;
       refresh();
     },
+    // Redraw a LIAR stamp still waiting for its answer (used when restoring progress).
+    drawLiarWaiting(suspectId) {
+      const card = board.querySelector(`[data-pin="suspect:${suspectId}"]`);
+      awaiting = { suspect: suspects.find((s) => s.id === suspectId), mark: liarMark(card, "awaiting") };
+      liarUsed = true;
+      refresh();
+    },
     end() {
       ended = true;
+      // A question never answered counts as a miss.
+      if (awaiting) {
+        awaiting.mark.classList.replace("awaiting", "wrong");
+        awaiting = null;
+      }
       board.querySelectorAll(".stamp-mark.pending").forEach((mark) => mark.remove());
       for (const kind of KINDS) pending[kind] = null;
       putDown();

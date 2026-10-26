@@ -70,7 +70,7 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 
 ### Catching the Liar With the LIAR Stamp
 - Each suspect's card shows their statement typed under their description. Clicking the card brings it forward to read.
-- The player stamps **LIAR** on a suspect's card, then picks what really happened from a few options about that suspect's statement.
+- The player stamps **LIAR** on a suspect's card, then picks what really happened from a few options about that suspect's statement. Confirming spends the shot; if they close the card before answering, the stamp waits on the card (pulsing) and clicking that card or the LIAR stamp brings the question back. An answer never given by the end of the case counts as a miss.
 - It doesn't use a guess, but the player gets one shot per case.
 - Right or wrong is shown by the LIAR stamp's color: blue for right, red for wrong.
 - [ ] Stamping LIAR and picking a truth doesn't change the guesses remaining.
@@ -91,6 +91,7 @@ Source: `scope.md > The Unique Kernel`.
 - [ ] Every scrap opens the same close-up, with nothing marking the cipher.
 - [ ] No decoded message names the culprit.
 - [ ] Sliding the strips never reveals or checks anything.
+- [ ] Closing the blank card and opening it again keeps the strips where they were and the answer written so far, the same day.
 - [ ] Writing the right message on the first try shows the full message.
 - [ ] A right message after one or two wrong tries shows it with more blotted out.
 - [ ] After three wrong tries, the blank card no longer takes answers and the code stays scrambled.
@@ -106,7 +107,7 @@ Added after launch, so players can build a timeline and keep track of their thin
 - **Moving cards:** dragging a card by its paper moves it anywhere on the board; its strings stay tied and follow. Dragging from its pin still ties string. On a touch screen, press and hold first.
 - **Index cards:** a stack of blank index cards on the rail. Taking one pins it to the board and opens it to write a short line. It moves and ties string like any card, and can be taken down, which takes its strings with it. Up to 10.
 - **Notepad:** a notepad on the rail opens a ruled page for longer notes. It lies open beside the board and stays open while a statement or scrap is up, so the player can read and write at once. It can be dragged aside by its binding and closed from the rail or its ×.
-- **Grease pencils:** a red and a blue pencil on the rail. They stay in reach while a statement, clue, or scrap is open. Marks on a statement or a clue show on the card and in its close-up alike. With one in hand, selecting words in the newspaper story, a suspect's description or statement, a clue, or a scrap brought up close marks them in that colour, snapped to whole words. Clicking a mark with a pencil in hand rubs it out. Only red and blue, per the color rule.
+- **Grease pencils:** a red and a blue pencil on the rail. They stay in reach while a statement, clue, scrap, or the blank card is open. Marks on a statement or a clue show on the card and in its close-up alike. With one in hand, selecting words in the newspaper story, a suspect's description or statement, a clue, the decoded message, or a scrap (on the board or up close) marks them in that colour, snapped to whole words. Clicking a mark with a pencil in hand rubs it out. The pointer turns into the pencil while it's in hand. Only red and blue, per the color rule.
 - [ ] A moved card stays where it was put after leaving and coming back the same day, and its strings follow it.
 - [ ] An index card can be written on, moved, tied with string, and taken down.
 - [ ] Notepad text is still there after leaving and coming back the same day.

@@ -466,6 +466,10 @@
   text-transform: uppercase;
   color: rgba(239, 233, 221, 0.3);
 }
+/* An empty slot is only an outline on the cork: it sits under every card and never takes the
+   pointer, so a card moved over it can still be hovered, clicked, and dragged. */
+.clue-slot { z-index: 0; pointer-events: none; }
+.pin-item { z-index: 1; }
 
 /* ---- The rail: tools at the bottom edge ---- */
 
@@ -908,7 +912,7 @@
 /* The pencils stay in reach above an open card, so the player can mark what they're reading. */
 .rail-group.pencils { position: relative; }
 .rail-group.desk { position: relative; }
-.stage:has(.overlay :is(.statement-open, .close-look, .clue-open)) :is(.rail-group.pencils, .rail-group.desk) { z-index: 101; }
+.stage:has(.overlay :is(.statement-open, .close-look, .clue-open, .blank-card-open)) :is(.rail-group.pencils, .rail-group.desk) { z-index: 101; }
 .notepad-button.open { transform: translateY(-6px); box-shadow: 0 0 0 3px var(--paper), 0 6px 10px rgba(0, 0, 0, 0.45); }
 .pencil-cup { display: flex; align-items: flex-end; gap: 8px; height: 52px; }
 .pencil {
@@ -937,11 +941,14 @@
 
 /* ---- Pencil marks ---- */
 
-.stage.marking :is(.story, .suspect-desc, .suspect-statement, .clue-text, .statement-desc, .statement-quote, .close-look-note:not(.close-look-code)) {
+.stage.marking :is(.story, .suspect-desc, .suspect-statement, .clue-text, .decoded-text, .revealed, .evidence-note, .statement-desc, .statement-quote, .close-look-note:not(.close-look-code)) {
   user-select: text;
   -webkit-user-select: text;
   cursor: text;
 }
+/* With a pencil in hand, the pointer is that pencil, tip at the point. */
+.stage.marking-red, .stage.marking-red * { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path d='M7 21 L21 7 L25 11 L11 25 Z' fill='%23b3263a' stroke='%231f1b26' stroke-width='1.2'/><path d='M7 21 L11 25 L3 27 Z' fill='%23efe9dd' stroke='%231f1b26' stroke-width='1.2'/><path d='M3 27 L4.6 23.2 L6.8 25.4 Z' fill='%23b3263a'/><path d='M21 7 L23 5 L27 9 L25 11 Z' fill='%23efe9dd' stroke='%231f1b26' stroke-width='1.2'/></svg>") 3 27, crosshair !important; }
+.stage.marking-blue, .stage.marking-blue * { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path d='M7 21 L21 7 L25 11 L11 25 Z' fill='%232f5aa8' stroke='%231f1b26' stroke-width='1.2'/><path d='M7 21 L11 25 L3 27 Z' fill='%23efe9dd' stroke='%231f1b26' stroke-width='1.2'/><path d='M3 27 L4.6 23.2 L6.8 25.4 Z' fill='%232f5aa8'/><path d='M21 7 L23 5 L27 9 L25 11 Z' fill='%23efe9dd' stroke='%231f1b26' stroke-width='1.2'/></svg>") 3 27, crosshair !important; }
 .stage.marking-red ::selection { background: rgba(179, 38, 58, 0.3); }
 .stage.marking-blue ::selection { background: rgba(47, 90, 168, 0.3); }
 .pencil-mark {
