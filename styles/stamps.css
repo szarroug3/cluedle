@@ -128,6 +128,15 @@
 .stamp-mark.liar-mark { color: var(--purple); top: auto; bottom: 34%; }
 .stamp-mark.liar-mark.right { color: var(--blue); }
 .stamp-mark.liar-mark.wrong { color: var(--red); opacity: 0.8; }
+/* The right liar with the wrong story: purple, with a note under the stamp. */
+.stamp-mark.liar-mark.partial { color: var(--purple); opacity: 0.9; }
+.liar-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.42em;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
 
 /* Until a player first picks one up, the stamps glow and the tray label invites them to. */
 .stamp.beckon .stamp-face { animation: beckon 1.6s ease-in-out infinite; }

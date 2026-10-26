@@ -36,11 +36,13 @@ export function accuse(state, solution, { suspectId, motiveId, weaponId }) {
 
 // The LIAR stamp: one shot per case, free (it never uses a guess), only while the case is open.
 // It's right only if the stamped suspect is the liar and the chosen truth is what really happened.
+// The right liar with the wrong story is `partial`: half credit.
 export function flagLiar(state, suspects, suspectId, truthIndex) {
   if (state.status !== "playing") return { rejected: true, reason: "ended", state };
   if (state.liar) return { rejected: true, reason: "used", state };
   const suspect = suspects.find((s) => s.id === suspectId);
   if (!suspect) return { rejected: true, reason: "unknown", state };
   const correct = suspect.statement.isLie && truthIndex === suspect.statement.truthIndex;
-  return { correct, state: { ...state, liar: { suspectId, truthIndex, correct } } };
+  const partial = suspect.statement.isLie && !correct;
+  return { correct, partial, state: { ...state, liar: { suspectId, truthIndex, correct, partial } } };
 }

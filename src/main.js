@@ -161,7 +161,7 @@ function restoreBoard() {
   });
   for (let i = 0; i < unlockedClues(progress); i++) pinClue(stage, i, caseData.clues[i], { animate: false });
   if (progress.cipher.cracked) fillBlankCard(stage, readable());
-  if (progress.liar) stamps.drawLiar(progress.liar.suspectId, progress.liar.correct);
+  if (progress.liar) stamps.drawLiar(progress.liar.suspectId, progress.liar.correct, progress.liar.partial);
   else if (progress.liarWaiting) stamps.drawLiarWaiting(progress.liarWaiting);
   if (progress.status !== "playing") stamps.end();
   notes.restore();

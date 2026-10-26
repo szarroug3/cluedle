@@ -87,7 +87,7 @@ PRD ref: `prd.md > Daily Case`, `prd.md > States and Boundaries`.
 
 ### Game Rules (`src/game/rules.js`)
 - `accuse(state, suspectId, motiveId, weaponId)` → `{ rightCount, solved, unlockedClueIndex, status }`. Only the count of right parts is returned, never which. It uses one guess, records it, unlocks the next clue on a miss, and ends the case on a solve or on the fifth miss.
-- `flagLiar(state, suspectId, truthIndex)` → `{ correct }`. Allowed once per case, and only while playing. It never changes guesses.
+- `flagLiar(state, suspectId, truthIndex)` → `{ correct, partial }`; `partial` is the right liar with the wrong story. Allowed once per case, and only while playing. It never changes guesses.
 - Rejects actions after the case has ended.
 PRD ref: `prd.md > Accusing With the GUILTY Stamp`, `prd.md > Clues Unlocking`, `prd.md > Catching the Liar With the LIAR Stamp`, `prd.md > Case Ending`.
 
@@ -101,13 +101,13 @@ PRD ref: `prd.md > Accusing With the GUILTY Stamp`, `prd.md > Clues Unlocking`, 
 PRD ref: `prd.md > Finding and Cracking the Cipher`.
 
 ### Rank (`src/game/rank.js`)
-- `points(progress)` → 0–10: guesses left after solving (0–4), cipher (3/2/1/0 for a first, second, or third-try crack, or none), and liar caught (3).
+- `points(progress)` → 0–10: guesses left after solving (0–4), cipher (3/2/1/0 for a first, second, or third-try crack, or none), and liar caught (3, or 1 for the right liar with the wrong story).
 - `rankFor(points)` → Amateur Sleuth (0–1), Private Eye (2–3), Hard-Boiled Investigator (4–5), Seasoned Detective (6–7), Basically Sherlock (8–10).
 - Values and bands live in one table at the top of the file so they're easy to tune.
 PRD ref: `prd.md > Detective Rank`.
 
 ### Share Card (`src/game/share.js`)
-- `shareText(caseNumber, case, progress, rank)` → the case-file card text from `prd.md > Share Card`: case number, CLOSED in N/5 or GONE COLD, one 🔵/🔴 row per guess (right parts first), cipher ☑️/❌, liar ☑️/❌, the rank (closed only), and the case's noir line.
+- `shareText(caseNumber, case, progress, rank)` → the case-file card text from `prd.md > Share Card`: case number, CLOSED in N/5 or GONE COLD, one 🔵/🔴 row per guess (right parts first), cipher ☑️/❌, liar ☑️/🟣/❌ (purple for the right liar with the wrong story), the rank (closed only), and the case's noir line.
 - Never includes suspect or motive names. Uses only red, purple, blue, and neutral emoji.
 PRD ref: `prd.md > Share Card`.
 
@@ -211,7 +211,7 @@ One cipher per case for the proof of concept (see `## What Was Simplified and Wh
   caseId, dateKey,
   status: "playing" | "closed" | "cold",
   guesses: [{ suspectId, motiveId, weaponId, rightCount }],   // how many of the three are right
-  liar: null | { suspectId, truthIndex, correct },
+  liar: null | { suspectId, truthIndex, correct, partial },
   liarWaiting: null | suspectId,                                // confirmed, but "what really happened" not answered yet
   cipher: { found: false, wrongTries: 0, cracked: false },
   strings: [["pinA", "pinB"]],
@@ -294,7 +294,7 @@ cluedle/
 ## What Was Simplified and Why
 - **One cipher per case** instead of "one or two." The rank, the share card, and the decoder all assume a single cipher, which keeps scoring simple. Supporting two would mean a list of cipher states and per-cipher points.
 - **Every witness is a suspect**, so each statement lives on its suspect's card and the LIAR stamp goes on the card.
-- **Exactly one lying statement per case** instead of "at least one." The LIAR stamp is one shot and catching the liar is worth one fixed bonus, so a single liar keeps that fair and easy to score.
+- **Exactly one lying statement per case** instead of "at least one." The LIAR stamp is one shot and catching the liar is worth a fixed bonus (a smaller one for the right liar with the wrong story), so a single liar keeps that fair and easy to score.
 - **Static curves for red string** instead of physics, as agreed in `scope.md > Later`.
 - **Rotation by date, modulo the number of cases**, instead of a calendar of unique cases. The cycle repeats every 33 days; adding more cases only means adding files.
 - **Textures from CSS** instead of photographed images. It's fast to build and no assets to source; images can be added later.

@@ -49,6 +49,13 @@ test("no suspect, motive, or weapon names, and no emoji outside the allowed set"
   }
 });
 
+test("the liar line shows caught, partly caught, or missed", () => {
+  const liarLine = (liar) => shareText(1, caseData, { ...closed, liar }, "Private Eye").split("\n").find((l) => l.startsWith("Cipher"));
+  assert.match(liarLine({ suspectId: "mae", truthIndex: 0, correct: true }), /Liar \u2611\uFE0F/);
+  assert.match(liarLine({ suspectId: "mae", truthIndex: 2, correct: false, partial: true }), /Liar \u{1F7E3}/u);
+  assert.match(liarLine(null), /Liar \u274C/);
+});
+
 test("the card ends with a link to play", () => {
   for (const progress of [closed, cold]) assert.equal(shareText(1, caseData, progress, "Private Eye").split("\n").at(-1), PLAY_URL);
 });

@@ -162,12 +162,18 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
     return mark;
   }
 
+  // Right (blue), the right liar with the wrong story (purple, half credit), or wrong (red).
+  function showLiarResult(mark, correct, partial) {
+    mark.classList.add(correct ? "right" : partial ? "partial" : "wrong");
+    if (partial) mark.append(el("span", "liar-note", "wrong story"));
+  }
+
   function finishLiar(suspect, mark, truthIndex) {
     awaiting = null;
     liarUsed = true;
     const result = onFlagLiar(suspect.id, truthIndex);
     mark.classList.remove("pending", "awaiting");
-    mark.classList.add(result?.correct ? "right" : "wrong");
+    showLiarResult(mark, result?.correct, result?.partial);
     refresh();
     return result;
   }
@@ -183,7 +189,15 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
       option.addEventListener("click", () => {
         const result = finishLiar(suspect, mark, index);
         body.replaceChildren(
-          el("p", "liar-verdict", result?.correct ? "Caught in the lie." : "Wrong call. That\u2019s not what happened."),
+          el(
+            "p",
+            "liar-verdict",
+            result?.correct
+              ? "Caught in the lie."
+              : result?.partial
+                ? "Right liar, wrong story. Half credit."
+                : "Wrong call. That\u2019s not what happened.",
+          ),
         );
         setTimeout(close, 1400);
       });
@@ -314,11 +328,9 @@ export function createStamps(stage, { names, guessNumber, lastGuess, onAccuse, s
       }
     },
     // Redraw a spent LIAR stamp (used when restoring progress).
-    drawLiar(suspectId, correct) {
+    drawLiar(suspectId, correct, partial) {
       const card = board.querySelector(`[data-pin="suspect:${suspectId}"]`);
-      const mark = el("div", `stamp-mark liar-mark ${correct ? "right" : "wrong"}`, "LIAR");
-      placeMark(mark, 2);
-      card.querySelector(".paper").append(mark);
+      showLiarResult(liarMark(card, ""), correct, partial);
       liarUsed = true;
       refresh();
     },

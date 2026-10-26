@@ -14,7 +14,7 @@ Everything is hand-written and rule-based. There's no AI at runtime, no server, 
 - Drag from a card's pin to another card to tie red string between them. On a phone, press and hold the pin first. Click a string to take it down.
 - Drag a card by its paper to move it, say to line things up in the order they happened. Its strings follow.
 - Take an index card from the rail to pin up a note of your own, which you can move and tie string to. The notepad holds longer notes and stays open while you read a statement or a scrap. The red and blue pencils mark words in the story, the statements, the clues, the decoded message, and the scraps; click a mark with a pencil in hand to rub it out. None of this affects your score.
-- The fewer guesses you need, the higher your rank, from Amateur Sleuth up to Basically Sherlock. Cracking the code and catching the liar count too. Then copy a spoiler-free share card.
+- The fewer guesses you need, the higher your rank, from Amateur Sleuth up to Basically Sherlock. Cracking the code and catching the liar count too; naming the right liar with the wrong story earns partial credit. Then copy a spoiler-free share card.
 
 ## Run it
 

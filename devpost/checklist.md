@@ -153,3 +153,4 @@ Activity mode: Focused alternative, with the learner running the tests in their 
 - Pencil marks stop at the edge of a line or paragraph: marking 9:18 in a ledger row no longer pulled in the "P.A." that ended the row above, and marks that only touch stay separate.
 - The pencils mark scraps on the board as well as up close (the two share marks), and the pointer becomes the pencil in hand.
 - A LIAR stamp confirmed but closed before answering now waits on the card and reopens the question when clicked; it used to count the shot as missed.
+- The right liar with the wrong story now earns partial credit: 1 point instead of 3, a purple LIAR stamp marked "wrong story", and 🟣 on the share card. Before, it scored the same as the wrong person. Asked for by the learner.

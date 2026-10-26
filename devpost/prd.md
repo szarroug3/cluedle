@@ -75,7 +75,8 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 - Right or wrong is shown by the LIAR stamp's color: blue for right, red for wrong.
 - [ ] Stamping LIAR and picking a truth doesn't change the guesses remaining.
 - [ ] After one LIAR attempt, the LIAR stamp can't be used again in that case.
-- [ ] Catching the liar correctly counts toward the detective rank.
+- [ ] Catching the liar correctly counts toward the detective rank. Stamping the right liar but picking the wrong story earns partial credit, shown as a purple stamp marked "wrong story".
+- [ ] Right liar with the wrong story counts less than catching them outright.
 
 ### Finding and Cracking the Cipher
 Source: `scope.md > The Unique Kernel`.
@@ -127,7 +128,7 @@ Source: `scope.md > The POC Boundary` (cheap version).
 - Earned from hidden points (0–10), only on a solved case:
   - Guesses left after solving: 0–4 points.
   - Cipher: 3 points first try, 2 second, 1 third, 0 if not cracked.
-  - Liar caught: 3 points.
+  - Liar caught: 3 points. The right liar with the wrong story: 1 point.
 - Bands: 0–1 Amateur Sleuth · 2–3 Private Eye · 4–5 Hard-Boiled Investigator · 6–7 Seasoned Detective · 8–10 Basically Sherlock.
 - A gone-cold case earns no rank.
 - The point values and bands are a starting point and can be tuned during `5-build` playtesting.
@@ -136,7 +137,7 @@ Source: `scope.md > The POC Boundary` (cheap version).
 - [ ] Solving on the fifth guess without the cipher or the liar earns Amateur Sleuth.
 
 ### Share Card
-- **Copy share card** copies a text result to the clipboard: case number, the guess history as emoji (one row per guess: a 🔵 for each right part and a 🔴 for each wrong one, in that order, so it never says which), cipher and liar results, and the rank. No spoilers: it never names the culprit, motive, or weapon.
+- **Copy share card** copies a text result to the clipboard: case number, the guess history as emoji (one row per guess: a 🔵 for each right part and a 🔴 for each wrong one, in that order, so it never says which), cipher and liar results (the liar as ☑️ caught, 🟣 right liar but wrong story, or ❌ missed), and the rank. No spoilers: it never names the culprit, motive, or weapon.
 - Uses only red and blue emoji, so the card reads on light and dark backgrounds.
 - **Case-file style**, for example:
 

@@ -7,13 +7,18 @@ const run = ({ misses, cipher = null, liar = false, status = "closed" }) => ({
   status,
   guesses: [...Array(misses)].map(() => guess(1)).concat(status === "closed" ? [guess(3)] : []),
   cipher: cipher === null ? { found: false, wrongTries: 0, cracked: false } : { found: true, wrongTries: cipher, cracked: true },
-  liar: liar ? { suspectId: "s", truthIndex: 0, correct: true } : null,
+  liar: liar === "partial" ? { suspectId: "s", truthIndex: 1, correct: false, partial: true } : liar ? { suspectId: "s", truthIndex: 0, correct: true } : null,
 });
 
 test("first-guess solve, first-try cipher, and the liar caught earns Basically Sherlock", () => {
   const progress = run({ misses: 0, cipher: 0, liar: true });
   assert.equal(points(progress), 10);
   assert.equal(rankFor(progress), "Basically Sherlock");
+});
+
+test("the right liar with the wrong story earns 1 point instead of 3", () => {
+  assert.equal(points(run({ misses: 4, liar: "partial" })) - points(run({ misses: 4 })), 1);
+  assert.equal(points(run({ misses: 4, liar: true })) - points(run({ misses: 4 })), 3);
 });
 
 test("a fifth-guess solve without the cipher or the liar earns Amateur Sleuth", () => {

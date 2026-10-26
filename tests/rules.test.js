@@ -72,6 +72,12 @@ test("catching the liar needs the right suspect and the right truth", () => {
   assert.equal(flagLiar(fresh, suspects, "teddy", null).correct, false);
 });
 
+test("the right liar with the wrong story is partly right", () => {
+  assert.equal(flagLiar(fresh, suspects, "mae", 2).partial, true);
+  assert.equal(flagLiar(fresh, suspects, "mae", 0).partial, false);
+  assert.equal(flagLiar(fresh, suspects, "teddy", null).partial, false);
+});
+
 test("the LIAR stamp never changes the guesses remaining", () => {
   const { state } = flagLiar(fresh, suspects, "mae", 0);
   assert.equal(guessesLeft(state), MAX_GUESSES);
