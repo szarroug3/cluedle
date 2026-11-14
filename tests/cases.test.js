@@ -77,7 +77,7 @@ for (const c of cases) {
   test(`${c.id}: the scrawl is hidden on a real pin, with a known doodle and photo scene`, () => {
     const spots = ["photo", "clipping", ...c.evidence.map((e) => `evidence:${e.id}`)];
     assert.ok(spots.includes(c.cipher.hiddenOn), `nowhere called ${c.cipher.hiddenOn}`);
-    assert.ok(["anchor", "star", "train", "moon", "key", "clock", "mask", "pen", "bell", "snowflake"].includes(c.cipher.doodle));
+    assert.ok(["anchor", "star", "train", "moon", "key", "clock", "mask", "pen", "bell", "snowflake", "turkey"].includes(c.cipher.doodle));
     assert.ok(["glasshouse", "theater", "train", "nightclub", "harbor", "hotel", "mansion", "office", "ring", "lodge"].includes(c.photo.scene));
     assert.equal(c.evidence.length, 3);
     for (const e of c.evidence) assert.ok(EVIDENCE_KINDS.includes(e.kind), `unknown scrap kind ${e.kind}`);

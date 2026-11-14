@@ -51,6 +51,11 @@ export const DOODLES = {
   snowflake: `<svg class="doodle" viewBox="0 0 24 24" aria-hidden="true">
     <path d="M12 2v20 M3.3 7l17.4 10 M3.3 17l17.4-10 M9.5 4l2.5 2 2.5-2 M9.5 20l2.5-2 2.5 2"/>
   </svg>`,
+  turkey: `<svg class="doodle" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 9.1C10.2 6.6 10.4 3.6 12 2.3c1.6 1.3 1.8 4.3 0 6.8 M9.4 12.4C6.6 10.8 5.2 7.6 6.4 5.6c2.2.3 3.8 3 3.7 5.9 M14.6 12.4c2.8-1.6 4.2-4.8 3-6.8-2.2.3-3.8 3-3.7 5.9 M7.9 14.6c-3-.2-5.3-2.2-5.1-4.2 2-.6 4.4.9 5.6 3 M16.1 14.6c3-.2 5.3-2.2 5.1-4.2-2-.6-4.4.9-5.6 3"/>
+    <ellipse cx="12" cy="16.6" rx="4.4" ry="3.8"/><circle cx="12" cy="10.9" r="1.8"/>
+    <path d="M11.5 12.7l.5 1 .5-1 M12.9 12.5q.7.9.2 1.8 M10.5 20.3v2 M13.5 20.3v2 M9.5 22.3h2 M12.5 22.3h2"/>
+  </svg>`,
 };
 
 function el(tag, className, text) {

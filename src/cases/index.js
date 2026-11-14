@@ -32,6 +32,7 @@ import case30 from "./case-30.js";
 import case31 from "./case-31.js";
 import case32 from "./case-32.js";
 import case33 from "./case-33.js";
+import case34 from "./case-34.js";
 
 export const cases = [
   case1,
@@ -67,4 +68,5 @@ export const cases = [
   case31,
   case32,
   case33,
+  case34,
 ];
